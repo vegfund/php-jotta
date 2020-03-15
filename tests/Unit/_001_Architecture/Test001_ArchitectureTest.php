@@ -190,7 +190,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers \Vegfund\Jotta\Client\Scopes\Scope::getRelativePath
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::getRootPath
      */
     public function test011_get_root_path()
     {
