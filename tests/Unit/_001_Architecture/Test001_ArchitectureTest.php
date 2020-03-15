@@ -276,4 +276,36 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(\SplFileInfo::class, $file);
         $this->assertSame(md5(file_get_contents(__FILE__)), $file->getMd5());
     }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::setUsername
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::getUsername
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::setDevice
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::getDevice
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::setMountPoint
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::getMountPoint
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::setBasePath
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::getBasePath
+     */
+    public function test025_scope_settings()
+    {
+        $mock = \Mockery::mock(Scope::class);
+        $mock->makePartial();
+
+        $username = Str::random(32);
+        $mock->setUsername($username);
+        $this->assertSame($username, $mock->getUsername());
+
+        $device = Str::random(32);
+        $mock->setDevice($device);
+        $this->assertSame(Jotta::DEVICE_JOTTA, $mock->getDevice());
+
+        $mountPoint = Str::random(32);
+        $mock->setMountPoint($mountPoint);
+        $this->assertSame($mountPoint, $mock->getMountPoint());
+
+        $basePath = Str::random(32);
+        $mock->setBasePath($basePath);
+        $this->assertSame($basePath, $mock->getBasePath());
+    }
 }
