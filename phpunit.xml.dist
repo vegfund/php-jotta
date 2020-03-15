@@ -26,12 +26,4 @@
         <env name="JOTTA_USERNAME" value="testing"/>
         <env name="JOTTA_PASSWORD" value="testing"/>
     </php>
-    <listeners>
-        <listener class="hollodotme\PHPUnit\TestListeners\TestDox\Markdown">
-            <arguments>
-                <string name="environment">Development</string>
-                <string name="ouputFile">tests/coverage/Coverage.md</string>
-            </arguments>
-        </listener>
-    </listeners>
 </phpunit>

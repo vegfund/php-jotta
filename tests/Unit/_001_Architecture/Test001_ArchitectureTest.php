@@ -15,6 +15,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers \Vegfund\Jotta\Jotta::client
+     * @covers \Vegfund\Jotta\Jotta::getClient
      */
     public function test001_init()
     {
@@ -27,6 +28,11 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\JottaClient::getScope
+     * @covers \Vegfund\Jotta\JottaClient::account
+     * @covers \Vegfund\Jotta\JottaClient::device
+     * @covers \Vegfund\Jotta\JottaClient::file
+     * @covers \Vegfund\Jotta\JottaClient::folder
+     * @covers \Vegfund\Jotta\JottaClient::mountPoint
      */
     public function test003_scopes()
     {
@@ -103,7 +109,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Scope::getRootPath
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::getRelativePath
      */
     public function test011_get_root_path()
     {
