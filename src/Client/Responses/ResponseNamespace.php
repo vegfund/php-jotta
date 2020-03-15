@@ -167,10 +167,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function attachKeyValues($children)
     {
-        $keyValues = $this->getKeyValueFields($children);
-
-        foreach ($this->keyValueMap as $field) {
-            $fieldType = 'string';
+        foreach ($this->getKeyValueFields($children) as $field) {
             if (\is_array($field)) {
                 list($field, $fieldType) = [
                     array_keys($field)[0],
@@ -179,7 +176,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
             }
 
             if (isset($keyValues['{}'.$field])) {
-                $this->{Str::camel($field)} = $this->castPrimitives($keyValues['{}'.$field], $fieldType);
+                $this->{Str::camel($field)} = $this->castPrimitives($keyValues['{}'.$field], $fieldType ?: 'string');
             }
         }
     }
