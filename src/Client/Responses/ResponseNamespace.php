@@ -112,7 +112,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
             $children = $data->parseInnerTree();
         }
 
-        if(is_array($children) && count($children) > 0) {
+        if(is_array($children)) {
             $this->attachKeyValues($children);
             $this->attachEnums($children);
             $this->attachObjectValues($children);
@@ -167,7 +167,10 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function attachKeyValues($children)
     {
-        foreach ($this->getKeyValueFields($children) as $field) {
+        $keyValues = $this->getKeyValueFields($children);
+
+        foreach ($this->keyValueMap as $field) {
+            $fieldType = 'string';
             if (\is_array($field)) {
                 list($field, $fieldType) = [
                     array_keys($field)[0],
@@ -176,7 +179,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
             }
 
             if (isset($keyValues['{}'.$field])) {
-                $this->{Str::camel($field)} = $this->castPrimitives($keyValues['{}'.$field], $fieldType ?: 'string');
+                $this->{Str::camel($field)} = $this->castPrimitives($keyValues['{}'.$field], $fieldType);
             }
         }
     }
@@ -234,10 +237,6 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function getKeyValueFields($children)
     {
-        if (null === $children) {
-            return [];
-        }
-
         $keyValueFields = [];
 
         foreach ($children as $child) {

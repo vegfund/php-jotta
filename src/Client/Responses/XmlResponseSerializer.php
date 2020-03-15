@@ -59,6 +59,7 @@ class XmlResponseSerializer
         $this->xmlService = $this->getXmlService();
         $this->xmlService->elementMap = ElementMapper::nms($namespace);
         $this->xml = $this->xmlService->parse($this->body);
+        $this->xmlRoot = $this->xml;
     }
 
     /**
@@ -79,7 +80,7 @@ class XmlResponseSerializer
      */
     public function getParsed()
     {
-        return $this->xmlRoot;
+        return $this->xml;
     }
 
     /**
