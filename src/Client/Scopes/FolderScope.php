@@ -75,7 +75,7 @@ class FolderScope extends Scope
             $requestPath,
             'post',
             [
-                'JMd5' => md5(''),
+                'JMd5'  => md5(''),
                 'JSize' => 0,
             ]
         );
@@ -120,37 +120,37 @@ class FolderScope extends Scope
 
         $report = [
             'folders' => [
-                'created' => [],
-                'restored' => [],
-                'existing' => [],
+                'created'     => [],
+                'restored'    => [],
+                'existing'    => [],
                 'troublesome' => [],
             ],
             'files' => [
-                'uploaded_fresh' => [],
-                'uploaded_forcibly' => [],
-                'ignored' => [],
-                'uploaded_newer' => [],
+                'uploaded_fresh'     => [],
+                'uploaded_forcibly'  => [],
+                'ignored'            => [],
+                'uploaded_newer'     => [],
                 'uploaded_different' => [],
-                'no_folder' => [],
-                'troublesome' => [],
+                'no_folder'          => [],
+                'troublesome'        => [],
             ],
             'sizes' => [
-                'uploaded_fresh' => 0,
-                'uploaded_forcibly' => 0,
-                'ignored' => 0,
-                'uploaded_newer' => 0,
+                'uploaded_fresh'     => 0,
+                'uploaded_forcibly'  => 0,
+                'ignored'            => 0,
+                'uploaded_newer'     => 0,
                 'uploaded_different' => 0,
-                'no_folder' => 0,
-                'troublesome' => 0,
+                'no_folder'          => 0,
+                'troublesome'        => 0,
             ],
             'metadata' => [],
         ];
 
         $reportMapping = [
             Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT => 'uploaded_newer_or_different',
-            Jotta::FILE_OVERWRITE_IF_NEWER => 'uploaded_newer',
-            Jotta::FILE_OVERWRITE_IF_DIFFERENT => 'uploaded_different',
-            Jotta::FILE_OVERWRITE_ALWAYS => 'uploaded_forcibly',
+            Jotta::FILE_OVERWRITE_IF_NEWER              => 'uploaded_newer',
+            Jotta::FILE_OVERWRITE_IF_DIFFERENT          => 'uploaded_different',
+            Jotta::FILE_OVERWRITE_ALWAYS                => 'uploaded_forcibly',
         ];
 
         $contents = [];
@@ -186,9 +186,9 @@ class FolderScope extends Scope
             }
 
             $fileScope = $this->getClient()->file([
-                'device' => $this->device,
+                'device'      => $this->device,
                 'mount_point' => $this->mountPoint,
-                'base_path' => $remotePath,
+                'base_path'   => $remotePath,
             ])->withoutExceptions();
 
             /*

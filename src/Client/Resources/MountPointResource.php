@@ -23,13 +23,13 @@ class MountPointResource extends AbstractResource
     public function arrayDefinition()
     {
         return [
-            'name' => $this->name,
-            'path' => $this->path,
-            'abspath' => $this->abspath,
-            'size' => $this->size,
+            'name'     => $this->name,
+            'path'     => $this->path,
+            'abspath'  => $this->abspath,
+            'size'     => $this->size,
             'modified' => $this->modified,
-            'device' => $this->device,
-            'user' => $this->user,
+            'device'   => $this->device,
+            'user'     => $this->user,
         ];
     }
 }

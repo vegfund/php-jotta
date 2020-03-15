@@ -4,19 +4,13 @@ namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
 use Vegfund\Jotta\Client\Exceptions\CliDevicesNotSupportedException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
-use Vegfund\Jotta\Client\Scopes\AccountScope;
-use Vegfund\Jotta\Client\Scopes\DeviceScope;
-use Vegfund\Jotta\Client\Scopes\FileScope;
-use Vegfund\Jotta\Client\Scopes\FolderScope;
-use Vegfund\Jotta\Client\Scopes\MountPointScope;
-use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\Jotta;
-use Vegfund\Jotta\JottaClient;
 
 class Test003_DeviceTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DeviceScope::all
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test000_list_all_devices()
@@ -37,6 +31,7 @@ class Test003_DeviceTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DeviceScope::get
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test003_get_device_jotta()
@@ -52,6 +47,7 @@ class Test003_DeviceTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DeviceScope::get
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test005_get_other_device()

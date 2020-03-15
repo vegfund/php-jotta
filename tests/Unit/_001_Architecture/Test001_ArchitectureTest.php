@@ -31,16 +31,16 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     public function test003_scopes()
     {
         $scopes = [
-            'account' => AccountScope::class,
-            'device' => DeviceScope::class,
-            'file' => FileScope::class,
-            'folder' => FolderScope::class,
+            'account'    => AccountScope::class,
+            'device'     => DeviceScope::class,
+            'file'       => FileScope::class,
+            'folder'     => FolderScope::class,
             'mountPoint' => MountPointScope::class,
         ];
 
         $client = new JottaClient(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
 
-        foreach($scopes as $method => $className) {
+        foreach ($scopes as $method => $className) {
             $scope = $client->{$method}();
 
             $this->assertInstanceOf($className, $scope);
@@ -56,6 +56,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\Scope::normalizePathSegment
+     *
      * @throws \ReflectionException
      */
     public function test005_normalize_path()
@@ -71,6 +72,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\Scope::getPath
+     *
      * @throws \ReflectionException
      */
     public function test007_get_path()
@@ -95,7 +97,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
         $mock = \Mockery::mock(Scope::class);
         $mock->makePartial();
 
-        $path = getcwd() . '/some/relative/path/';
+        $path = getcwd().'/some/relative/path/';
         $relativePath = $method->invoke($mock, $path);
         $this->assertSame('some/relative/path', $relativePath);
     }
@@ -127,7 +129,6 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
      */
     public function test015_force_async_requests()
     {
-
     }
 
     /**
@@ -135,11 +136,9 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
      */
     public function test017_force_sync_requests()
     {
-
     }
 
     public function test019_force_auto_requests()
     {
-
     }
 }

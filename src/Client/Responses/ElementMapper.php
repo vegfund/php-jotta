@@ -52,7 +52,7 @@ class ElementMapper
     protected function user()
     {
         return [
-            '{}user' => User::class,
+            '{}user'    => User::class,
             '{}devices' => function (Reader $reader) {
                 return repeatingElements($reader, '{}device');
             },
@@ -66,7 +66,7 @@ class ElementMapper
     protected function device()
     {
         return [
-            '{}device' => Device::class,
+            '{}device'      => Device::class,
             '{}mountPoints' => function (Reader $reader) {
                 return repeatingElements($reader, '{}mountPoint');
             },
@@ -81,14 +81,14 @@ class ElementMapper
     {
         return [
             '{}mountPoint' => MountPoint::class,
-            '{}folders' => function (Reader $reader) {
+            '{}folders'    => function (Reader $reader) {
                 return repeatingElements($reader, '{}folder');
             },
             '{}folder' => Folder::class,
-            '{}files' => function (Reader $reader) {
+            '{}files'  => function (Reader $reader) {
                 return repeatingElements($reader, '{}file');
             },
-            '{}file' => File::class,
+            '{}file'     => File::class,
             '{}metadata' => Metadata::class,
         ];
     }
@@ -103,7 +103,7 @@ class ElementMapper
                 return repeatingElements($reader, '{}folder');
             },
             '{}folder' => Folder::class,
-            '{}files' => function (Reader $reader) {
+            '{}files'  => function (Reader $reader) {
                 return repeatingElements($reader, '{}file');
             },
             '{}file' => File::class,
@@ -116,9 +116,9 @@ class ElementMapper
     protected function file()
     {
         return [
-            '{}file' => File::class,
+            '{}file'            => File::class,
             '{}currentRevision' => CurrentRevision::class,
-            '{}latestRevision' => CurrentRevision::class,
+            '{}latestRevision'  => CurrentRevision::class,
         ];
     }
 

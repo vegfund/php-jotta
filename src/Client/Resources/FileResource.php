@@ -16,12 +16,12 @@ class FileResource extends AbstractResource
     public function arrayDefinition()
     {
         return [
-            'name' => $this->name,
-            'uuid' => $this->uuid,
-            'path' => $this->path,
-            'abspath' => $this->abspath,
+            'name'             => $this->name,
+            'uuid'             => $this->uuid,
+            'path'             => $this->path,
+            'abspath'          => $this->abspath,
             'current_revision' => (new CurrentRevisionResource($this->currentRevision))->toArray(),
-            'latest_revision' => (new CurrentRevisionResource($this->latestRevision))->toArray(),
+            'latest_revision'  => (new CurrentRevisionResource($this->latestRevision))->toArray(),
         ];
     }
 }

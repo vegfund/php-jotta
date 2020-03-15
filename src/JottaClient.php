@@ -212,11 +212,9 @@ class JottaClient
                 $message = $domDocument->getElementsByTagName('message')->item(0)->nodeValue;
 
                 throw new Exception($message, $code);
-
                 break;
             default:
                 throw $exception;
-
                 break;
         }
     }
