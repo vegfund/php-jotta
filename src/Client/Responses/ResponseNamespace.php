@@ -112,10 +112,12 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
             $children = $data->parseInnerTree();
         }
 
-        $this->attachKeyValues($children);
-        $this->attachEnums($children);
-        $this->attachObjectValues($children);
-        $this->setAttributes($attributes);
+        if(is_array($children) && count($children) > 0) {
+            $this->attachKeyValues($children);
+            $this->attachEnums($children);
+            $this->attachObjectValues($children);
+            $this->setAttributes($attributes);
+        }
 
         return $this;
     }
@@ -125,17 +127,11 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function setAttributes(Attributes $attributes = null)
     {
-        if (null !== $attributes) {
-            $this->attributes = $attributes;
-
-            foreach ($attributes as $name => $value) {
-                if (!isset($this->{$name})) {
-                    if (\in_array($name, $this->keyValueMap, true)) {
-                        $this->{$name} = $value;
-                    }
-                }
-            }
+        if(null === $attributes) {
+            return;
         }
+
+        $this->attributes = $attributes;
     }
 
     /**
@@ -157,10 +153,6 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function attachObjectValues($children)
     {
-        if (!\is_array($children) || 0 === \count($children)) {
-            return;
-        }
-
         foreach ($this->objectValueMap as $item) {
             foreach ($children as $child) {
                 if ($child['name'] === '{}'.$item) {
@@ -175,10 +167,6 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function attachKeyValues($children)
     {
-        if (!\is_array($children) || 0 === \count($children)) {
-            return;
-        }
-
         $keyValues = $this->getKeyValueFields($children);
 
         foreach ($this->keyValueMap as $field) {
@@ -201,10 +189,6 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function attachEnums($children)
     {
-        if (!\is_array($children) || 0 === \count($children)) {
-            return;
-        }
-
         foreach ($this->enumMap as $item) {
             foreach ($children as $child) {
                 if ($child['name'] === '{}'.$item) {
