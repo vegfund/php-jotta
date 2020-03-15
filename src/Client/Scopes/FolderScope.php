@@ -205,32 +205,16 @@ class FolderScope extends Scope
                     continue;
                 }
 
-                $withDeleted = false;
-                if (isset($options['with_deleted'])) {
-                    $withDeleted = $options['with_deleted'];
+                if (isset($options['with_deleted']) && true === $options['with_deleted'] && $file->isDeleted()) {
+                    continue;
                 }
 
-                if (!$withDeleted) {
-                    if ($file->isDeleted()) {
-                        continue;
-                    }
+                if (isset($options['with_completed']) && false === $options['with_completed'] && $file->isCompleted()) {
+                    continue;
                 }
 
-                $withCompleted = true;
-                if (isset($options['with_completed'])) {
-                    $withCompleted = $options['with_completed'];
-                }
-
-                if (!$withCompleted) {
-                    if (!$file->isDeleted()) {
-                        continue;
-                    }
-                }
-
-                if (isset($options['regex'])) {
-                    if (0 === preg_match($options['regex'], $file->name)) {
-                        continue;
-                    }
+                if (isset($options['regex']) && 0 === preg_match($options['regex'], $file->name)) {
+                    continue;
                 }
 
                 $recursive[] = (new FileResource($file))->toArray();
