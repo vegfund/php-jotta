@@ -16,6 +16,8 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DependencyInjection\ScopeInterface;
+use Vegfund\Jotta\Client\Contracts\ScopeContract;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
@@ -160,21 +162,24 @@ class JottaClient
         $requestMethod = $async ? 'requestAsync' : 'request';
 
         try {
-            return $this->httpClient->{$requestMethod}($method, $path, $options);
+            $response = $this->httpClient->{$requestMethod}($method, $path, $options);
         } catch (ClientException $exception) {
             $this->handleException($exception);
         }
+
+        return $response;
     }
 
     /**
-     * @param string $name    scope name
-     * @param mixed  $options scope options array
+     * @param string $name scope name
+     * @param mixed $options scope options array
      *
      * @return null|Scope|ScopeInterface
+     * @throws JottaException
      */
-    protected function getScope($name, $options = [])
+    public function getScope($name, $options = [])
     {
-        if (class_exists($name)) {
+        if (class_exists($name) && (is_a($name, Scope::class, true))) {
             /**
              * @var Scope
              */
@@ -193,7 +198,7 @@ class JottaClient
             return $scope;
         }
 
-        return null;
+        throw new JottaException('Scope ' . $name . ' does not exist or not a ScopeContract');
     }
 
     /**

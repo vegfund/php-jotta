@@ -114,9 +114,9 @@ class Jotta
      *
      * @return AccountScope
      */
-    public static function account($username, $password)
+    public static function account($username, $password, $options = [])
     {
-        return self::client($username, $password)->account();
+        return self::client($username, $password)->account($options);
     }
 
     /**
@@ -127,9 +127,9 @@ class Jotta
      *
      * @return DeviceScope
      */
-    public static function device($username, $password)
+    public static function device($username, $password, $options = [])
     {
-        return self::client($username, $password)->device();
+        return self::client($username, $password)->device($options);
     }
 
     /**
@@ -140,9 +140,9 @@ class Jotta
      *
      * @return FileScope
      */
-    public static function file($username, $password)
+    public static function file($username, $password, $options = [])
     {
-        return self::client($username, $password)->file();
+        return self::client($username, $password)->file($options);
     }
 
     /**
@@ -153,9 +153,9 @@ class Jotta
      *
      * @return FolderScope
      */
-    public static function folder($username, $password)
+    public static function folder($username, $password, $options = [])
     {
-        return self::client($username, $password)->folder();
+        return self::client($username, $password)->folder($options);
     }
 
     /**
@@ -166,8 +166,8 @@ class Jotta
      *
      * @return MountPointScope
      */
-    public static function mountPoint($username, $password)
+    public static function mountPoint($username, $password, $options = [])
     {
-        return self::client($username, $password)->mountPoint();
+        return self::client($username, $password)->mountPoint($options);
     }
 }

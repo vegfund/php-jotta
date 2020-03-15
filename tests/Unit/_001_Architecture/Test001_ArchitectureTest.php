@@ -2,6 +2,10 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
+use GuzzleHttp\Client;
+use Illuminate\Support\Str;
+use Vegfund\Jotta\Client\Contracts\ScopeContract;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Scopes\AccountScope;
 use Vegfund\Jotta\Client\Scopes\DeviceScope;
 use Vegfund\Jotta\Client\Scopes\FileScope;
@@ -24,6 +28,15 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
         $client = new JottaClient(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
         $this->assertInstanceOf(JottaClient::class, $client);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\JottaClient::getClient
+     */
+    public function test001a_get_client()
+    {
+        $client = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
+        $this->assertInstanceOf(Client::class, $client->getClient());
     }
 
     /**
@@ -50,14 +63,81 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             $scope = $client->{$method}();
 
             $this->assertInstanceOf($className, $scope);
+            $this->assertInstanceOf(Scope::class, $scope);
+            $this->assertInstanceOf(ScopeContract::class, $scope);
+        }
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Jotta::account
+     * @covers \Vegfund\Jotta\Jotta::device
+     * @covers \Vegfund\Jotta\Jotta::file
+     * @covers \Vegfund\Jotta\Jotta::folder
+     * @covers \Vegfund\Jotta\Jotta::mountPoint
+     */
+    public function test003a_scopes_static()
+    {
+        $scopes = [
+            'account'    => AccountScope::class,
+            'device'     => DeviceScope::class,
+            'file'       => FileScope::class,
+            'folder'     => FolderScope::class,
+            'mountPoint' => MountPointScope::class,
+        ];
+
+        foreach($scopes as $method => $className) {
+            $scope = Jotta::{$method}(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
+
+            $this->assertInstanceOf($className, $scope);
+            $this->assertInstanceOf(Scope::class, $scope);
+            $this->assertInstanceOf(ScopeContract::class, $scope);
         }
     }
 
     /**
      * @covers \Vegfund\Jotta\JottaClient::getScope
      */
-    public function test003a_scopes_with_options()
+    public function test003a_scope_does_not_exist()
     {
+        $scopeName = str_replace('il', 'somethingelse', FileScope::class);
+        try {
+            Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->getScope($scopeName);
+            $this->assertTrue(false);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(JottaException::class, $e);
+        }
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\JottaClient::getScope
+     */
+    public function test003c_scopes_with_options()
+    {
+        $options = [
+            'device' => Str::random(32),
+            'mount_point' => Str::random(32),
+            'base_path' => Str::random(32)
+        ];
+
+        $scopes = [
+            'account'    => AccountScope::class,
+            'device'     => DeviceScope::class,
+            'file'       => FileScope::class,
+            'folder'     => FolderScope::class,
+            'mountPoint' => MountPointScope::class,
+        ];
+
+        foreach($scopes as $method => $className) {
+            $scope = Jotta::{$method}(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'), $options);
+
+            $this->assertInstanceOf($className, $scope);
+            $this->assertInstanceOf(Scope::class, $scope);
+            $this->assertInstanceOf(ScopeContract::class, $scope);
+
+            $this->assertSame(Jotta::DEVICE_JOTTA, $scope->getDevice());
+            $this->assertSame($options['mount_point'], $scope->getMountPoint());
+            $this->assertSame($options['base_path'], $scope->getBasePath());
+        }
     }
 
     /**
@@ -124,10 +204,27 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Scope::withoutExceptions
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::withoutExceptions
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::withExceptions
      */
     public function test013_disable_exceptions()
     {
+        $mock = \Mockery::mock(Scope::class);
+        $mock->makePartial();
+
+        try {
+            $mock->withExceptions()->serialize('not a XML body');
+            $this->assertTrue(false);
+        } catch (\Exception $e) {
+            $this->assertTrue(true);
+        }
+
+        try {
+            $mock->withoutExceptions()->serialize('not a XML body');
+            $this->assertTrue(true);
+        } catch (\Exception $e) {
+            $this->assertTrue(false);
+        }
     }
 
     /**
@@ -146,5 +243,26 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
     public function test019_force_auto_requests()
     {
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\JottaClient::getHeaders
+     * @throws \ReflectionException
+     */
+    public function test021_merge_headers()
+    {
+        $method = new \ReflectionMethod(JottaClient::class, 'getHeaders');
+        $method->setAccessible(true);
+        $mock = \Mockery::mock(JottaClient::class);
+        $mock->makePartial();
+
+        $newHeaders = [
+            'header1' => 'value1',
+            'header2' => 'value2'
+        ];
+        $mergedHeaders = $method->invoke($mock, $newHeaders);
+        foreach($newHeaders as $header => $value) {
+            $this->assertSame($value, $mergedHeaders[$header]);
+        }
     }
 }

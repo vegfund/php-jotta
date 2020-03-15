@@ -88,11 +88,19 @@ abstract class Scope implements ScopeContract
      *
      * @return Scope
      */
-    public function setUsername($username)
+    final public function setUsername($username)
     {
         $this->username = $username;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    final public function getUsername()
+    {
+        return $this->username;
     }
 
     /**
@@ -120,6 +128,14 @@ abstract class Scope implements ScopeContract
     }
 
     /**
+     * @return string
+     */
+    final public function getDevice()
+    {
+        return $this->device;
+    }
+
+    /**
      * @param string $mountPoint
      *
      * @return Scope
@@ -132,6 +148,14 @@ abstract class Scope implements ScopeContract
     }
 
     /**
+     * @return string
+     */
+    final public function getMountPoint()
+    {
+        return $this->mountPoint;
+    }
+
+    /**
      * @param string $basePath
      *
      * @return $this
@@ -141,6 +165,14 @@ abstract class Scope implements ScopeContract
         $this->basePath = $basePath;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    final public function getBasePath()
+    {
+        return $this->basePath;
     }
 
     /**
