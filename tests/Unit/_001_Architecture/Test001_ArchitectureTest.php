@@ -14,6 +14,7 @@ use Vegfund\Jotta\Client\Scopes\MountPointScope;
 use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
+use Vegfund\Jotta\Support\JFileInfo;
 
 class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 {
@@ -264,5 +265,15 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
         foreach($newHeaders as $header => $value) {
             $this->assertSame($value, $mergedHeaders[$header]);
         }
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Support\JFileInfo::getMd5
+     */
+    public function test023_jfile_info()
+    {
+        $file = new JFileInfo(__FILE__);
+        $this->assertInstanceOf(\SplFileInfo::class, $file);
+        $this->assertSame(md5(file_get_contents(__FILE__)), $file->getMd5());
     }
 }
