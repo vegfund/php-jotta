@@ -1,0 +1,55 @@
+{
+    "name": "vegfund/php-jotta",
+    "description": "A flysystem adapter (and PHP API client) for Jottacloud using their unofficial API.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "flysystem",
+        "jotta",
+        "jottacloud",
+        "storage"
+    ],
+    "authors": [
+        {
+            "name": "Marek Kapusta",
+            "email": "fundacja@vegvisir.org.pl",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "php": "^7.0",
+        "ext-dom": "*",
+        "ext-fileinfo": "*",
+        "graham-campbell/guzzle-factory": "^3.0",
+        "guzzlehttp/guzzle": "^6.0",
+        "laravel/helpers": "^1.0",
+        "league/flysystem": "^1.0",
+        "sabre/xml": "^2.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "hollodotme/phpunit-testdox-markdown": "^1.0",
+        "mockery/mockery": "^1.3",
+        "phpunit/php-code-coverage": "^7.0",
+        "phpunit/phpunit": "^8.5",
+        "ramsey/uuid": "^3.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vegfund\\Jotta\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Vegfund\\Jotta\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "phpdoc": "php lib/phpDocumentor.phar -d src -t docs"
+    }
+}
