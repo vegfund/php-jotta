@@ -8,6 +8,7 @@
 
 namespace Vegfund\Jotta\Client\Scopes;
 
+use Vegfund\Jotta\Support\UploadReport;
 use const DIRECTORY_SEPARATOR;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -102,13 +103,11 @@ class FolderScope extends Scope
     /**
      * @param $localPath
      * @param string $remotePath
-     * @param mixed  $overwriteMode
+     * @param mixed $overwriteMode
      *
-     * @throws ParseException
+     * @return UploadReport
      * @throws LibXMLException
-     * @throws Exception
-     *
-     * @return array
+     * @throws ParseException
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -116,42 +115,7 @@ class FolderScope extends Scope
             throw new Exception('This is not a folder or it does not exist');
         }
 
-        $start = microtime(true);
-
-        $report = [
-            'folders' => [
-                'created'     => [],
-                'restored'    => [],
-                'existing'    => [],
-                'troublesome' => [],
-            ],
-            'files' => [
-                'uploaded_fresh'     => [],
-                'uploaded_forcibly'  => [],
-                'ignored'            => [],
-                'uploaded_newer'     => [],
-                'uploaded_different' => [],
-                'no_folder'          => [],
-                'troublesome'        => [],
-            ],
-            'sizes' => [
-                'uploaded_fresh'     => 0,
-                'uploaded_forcibly'  => 0,
-                'ignored'            => 0,
-                'uploaded_newer'     => 0,
-                'uploaded_different' => 0,
-                'no_folder'          => 0,
-                'troublesome'        => 0,
-            ],
-            'metadata' => [],
-        ];
-
-        $reportMapping = [
-            Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT => 'uploaded_newer_or_different',
-            Jotta::FILE_OVERWRITE_IF_NEWER              => 'uploaded_newer',
-            Jotta::FILE_OVERWRITE_IF_DIFFERENT          => 'uploaded_different',
-            Jotta::FILE_OVERWRITE_ALWAYS                => 'uploaded_forcibly',
-        ];
+        $report = new UploadReport();
 
         $contents = [];
         $this->getDirContents($localPath, $contents);
@@ -164,19 +128,13 @@ class FolderScope extends Scope
             $this->withoutExceptions();
 
             if (null !== ($folder = $this->get($relativePath))) {
-                $report['folders']['existing'][] = $relativePath;
+                $report->folderExisting($relativePath);
             } else {
                 $this->create($relativePath);
                 if (null !== ($folder = $this->get($relativePath))) {
-                    $report['folders']['created'][] = $relativePath;
+                    $report->folderCreated($relativePath);
                 } else {
-                    $report['folders']['troublesome'][] = $relativePath;
-
-                    foreach ($files as $file) {
-                        $report['files']['no_folder'][] = $this->getRelativePath($file->getRealPath());
-                        $report['sizes']['no_folder'] += $file->getSize();
-                    }
-                    // No parent folder, continue
+                    $report->folderTroublesome($relativePath, $files);
                     continue;
                 }
             }
@@ -202,28 +160,15 @@ class FolderScope extends Scope
 
                 $remoteFile = $fileScope->upload($file->getRealPath(), $fileRelativePath, $overwriteMode);
 
-                if (!$existed) {
-                    $reportFileType = 'uploaded_fresh';
-                } else {
-                    $reportFileType = $reportMapping[$overwriteMode];
-                }
-
                 if (null !== $remoteFile && $remoteFile->isSameAs($file->getRealPath())) {
-                    $report['files'][$reportFileType][] = $fileRelativePath;
-                    $report['sizes'][$reportFileType][] += $file->getSize();
+                    $report->file($existed, $fileRelativePath, $overwriteMode);
                 } else {
-                    $report['files']['troublesome'][] = $fileRelativePath;
-                    $report['sizes']['troublesome'][] += $file->getSize();
+                    $report->fileTroublesome($fileRelativePath);
                 }
             }
         }
 
-        $end = microtime(true);
-        $time = $end - $start;
-
-        $report['metadata'] = [
-            'time' => $time,
-        ];
+        $report->stop();
 
         return $report;
     }
