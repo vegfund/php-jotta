@@ -2,22 +2,15 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
-use Vegfund\Jotta\Client\Exceptions\CliDevicesNotSupportedException;
-use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
-use Vegfund\Jotta\Client\Scopes\AccountScope;
-use Vegfund\Jotta\Client\Scopes\DeviceScope;
-use Vegfund\Jotta\Client\Scopes\FileScope;
-use Vegfund\Jotta\Client\Scopes\FolderScope;
 use Vegfund\Jotta\Client\Scopes\MountPointScope;
-use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\Jotta;
-use Vegfund\Jotta\JottaClient;
 
 class Test005_MountPointTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\MountPointScope::all
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test000_list_all_mount_points()
@@ -34,10 +27,10 @@ class Test005_MountPointTest extends \PHPUnit\Framework\TestCase
         $builtInMountPoints = [
             Jotta::MOUNT_POINT_SYNC,
             Jotta::MOUNT_POINT_SHARED,
-            Jotta::MOUNT_POINT_ARCHIVE
+            Jotta::MOUNT_POINT_ARCHIVE,
         ];
 
-        foreach($builtInMountPoints as $builtInMountPoint) {
+        foreach ($builtInMountPoints as $builtInMountPoint) {
             $this->assertTrue(isset($builtInMountPoint, $names));
         }
     }
@@ -45,6 +38,7 @@ class Test005_MountPointTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers MountPointScope::create()
      * @covers MountPointScope::delete()
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test003_create_and_delete_vegfund_mount_point()
@@ -55,10 +49,8 @@ class Test005_MountPointTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame('vegfund', $mountPoint->getName());
 
-
         $mountPoints = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->mountPoint()->all();
         $this->assertCount(4, $mountPoints);
-
 
         $mountPoint = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->mountPoint()->setMountPoint('vegfund')->delete();
 
@@ -74,10 +66,10 @@ class Test005_MountPointTest extends \PHPUnit\Framework\TestCase
         $builtInMountPoints = [
             Jotta::MOUNT_POINT_SYNC,
             Jotta::MOUNT_POINT_SHARED,
-            Jotta::MOUNT_POINT_ARCHIVE
+            Jotta::MOUNT_POINT_ARCHIVE,
         ];
 
-        foreach($builtInMountPoints as $builtInMountPoint) {
+        foreach ($builtInMountPoints as $builtInMountPoint) {
             try {
                 Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->mountPoint()->setMountPoint($builtInMountPoint)->delete();
                 $this->assertTrue(false);

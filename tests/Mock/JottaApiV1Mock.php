@@ -50,8 +50,7 @@ class JottaApiV1Mock
         $this->mock->shouldReceive('request')
             ->andReturnUsing(function (...$args) {
                 return $this->mockRequest(...$args);
-            })
-        ;
+            });
     }
 
     /**
@@ -80,8 +79,7 @@ class JottaApiV1Mock
         $mockResponse->shouldAllowMockingProtectedMethods();
 
         $mockResponse->shouldReceive('getBody')
-            ->andReturn($this->prepareResponse($uri, $method, $options)['body'])
-        ;
+            ->andReturn($this->prepareResponse($uri, $method, $options)['body']);
 
         return $mockResponse;
     }
@@ -128,8 +126,7 @@ class JottaApiV1Mock
         $mockStream->shouldAllowMockingProtectedMethods();
 
         $mockStream->shouldReceive('__toString')
-            ->andReturn($body)
-        ;
+            ->andReturn($body);
 
         return $mockStream;
     }

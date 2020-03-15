@@ -158,12 +158,12 @@ class FileScope extends Scope
             'post',
             [
                 'JSize' => filesize($filename),
-                'JMd5' => md5(file_get_contents($filename)),
+                'JMd5'  => md5(file_get_contents($filename)),
             ],
             [
                 'multipart' => [
                     [
-                        'name' => basename($filename),
+                        'name'     => basename($filename),
                         'contents' => fopen($filename, 'r'),
                     ],
                 ],

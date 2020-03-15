@@ -67,7 +67,7 @@ class MountPointScope extends Scope
             $requestPath,
             'post',
             [
-                'JMd5' => md5(''),
+                'JMd5'  => md5(''),
                 'JSize' => 0,
             ]
         );
@@ -101,7 +101,7 @@ class MountPointScope extends Scope
     public function listRecursive($options = [])
     {
         $folderScope = $this->getClient()->folder([
-            'device' => $this->device,
+            'device'      => $this->device,
             'mount_point' => $this->mountPoint,
         ]);
 

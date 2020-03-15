@@ -23,13 +23,13 @@ class DeviceResource extends AbstractResource
     public function arrayDefinition()
     {
         return [
-            'name' => $this->name,
+            'name'         => $this->name,
             'display-name' => $this->displayName,
-            'type' => $this->type,
-            'sid' => $this->sid,
-            'size' => $this->size,
-            'modified' => $this->modified,
-            'user' => $this->user,
+            'type'         => $this->type,
+            'sid'          => $this->sid,
+            'size'         => $this->size,
+            'modified'     => $this->modified,
+            'user'         => $this->user,
         ];
     }
 }

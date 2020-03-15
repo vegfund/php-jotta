@@ -62,7 +62,7 @@ class Device extends ResponseNamespace
         'display_name',
         'type',
         'sid',
-        ['size' => 'int'],
+        ['size'     => 'int'],
         ['modified' => 'datetime'],
         'user',
     ];

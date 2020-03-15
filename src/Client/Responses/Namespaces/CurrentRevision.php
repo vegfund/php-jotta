@@ -26,7 +26,7 @@ class CurrentRevision extends ResponseNamespace
     protected $keyValueMap = [
         ['number' => 'int'],
         'state',
-        ['created' => 'datetime'],
+        ['created'  => 'datetime'],
         ['modified' => 'datetime'],
         'mime',
         ['size' => 'int'],

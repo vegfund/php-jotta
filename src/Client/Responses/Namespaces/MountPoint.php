@@ -33,7 +33,7 @@ class MountPoint extends ResponseNamespace
      */
     protected $keyValueMap = [
         'name',
-        ['size' => 'int'],
+        ['size'     => 'int'],
         ['modified' => 'datetime'],
         'path',
         'abspath',

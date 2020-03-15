@@ -23,20 +23,20 @@ class UserResource extends AbstractResource
     public function arrayDefinition()
     {
         return [
-            'username' => $this->username,
-            'account-type' => $this->accountType,
-            'locked' => $this->locked,
-            'capacity' => $this->capacity,
-            'max-devices' => $this->maxDevices,
+            'username'           => $this->username,
+            'account-type'       => $this->accountType,
+            'locked'             => $this->locked,
+            'capacity'           => $this->capacity,
+            'max-devices'        => $this->maxDevices,
             'max-mobile-devices' => $this->maxMobileDevices,
-            'usage' => $this->usage,
-            'read-locked' => $this->readLocked,
-            'write-locked' => $this->writeLocked,
+            'usage'              => $this->usage,
+            'read-locked'        => $this->readLocked,
+            'write-locked'       => $this->writeLocked,
             'quora-write-locked' => $this->quotaWriteLocked,
-            'enable-sync' => $this->enableSync,
+            'enable-sync'        => $this->enableSync,
             'enable-foldershare' => $this->enableFoldershare,
-            'business-role' => $this->businessRole,
-            'business-name' => $this->businessName,
+            'business-role'      => $this->businessRole,
+            'business-name'      => $this->businessName,
         ];
     }
 }

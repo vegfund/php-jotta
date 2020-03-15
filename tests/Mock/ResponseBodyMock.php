@@ -50,39 +50,39 @@ class ResponseBodyMock
     public function user()
     {
         return $this->write('{}user', [
-            '{}username' => getenv('JOTTA_USERNAME'),
-            '{}account-type' => 'free',
-            '{}locked' => false,
-            '{}capacity' => -1,
-            '{}max-devices' => -1,
+            '{}username'           => getenv('JOTTA_USERNAME'),
+            '{}account-type'       => 'free',
+            '{}locked'             => false,
+            '{}capacity'           => -1,
+            '{}max-devices'        => -1,
             '{}max-mobile-devices' => -1,
-            '{}usage' => rand(1024, 99999999),
-            '{}read-locked' => false,
-            '{}write-locked' => false,
+            '{}usage'              => rand(1024, 99999999),
+            '{}read-locked'        => false,
+            '{}write-locked'       => false,
             '{}quora-write-locked' => false,
-            '{}enable-sync' => false,
+            '{}enable-sync'        => false,
             '{}enable-foldershare' => true,
-            '{}business-role' => 'ADMIN',
-            '{}business-name' => 'Business name',
-            '{}devices' => [
+            '{}business-role'      => 'ADMIN',
+            '{}business-name'      => 'Business name',
+            '{}devices'            => [
                 [
                     '{}device' => [
-                        '{}name' => 'Jotta',
+                        '{}name'         => 'Jotta',
                         '{}display_name' => 'Jotta',
-                        '{}type' => 'JOTTA',
-                        '{}sid' => Uuid::uuid4()->toString(),
-                        '{}size' => rand(1024, 99999999),
-                        '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
+                        '{}type'         => 'JOTTA',
+                        '{}sid'          => Uuid::uuid4()->toString(),
+                        '{}size'         => rand(1024, 99999999),
+                        '{}modified'     => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
                     ],
                 ],
                 [
                     '{}device' => [
-                        '{}name' => 'Flysystem',
+                        '{}name'         => 'Flysystem',
                         '{}display_name' => 'Flysystem',
-                        '{}type' => 'CLI',
-                        '{}sid' => Uuid::uuid4()->toString(),
-                        '{}size' => rand(1024, 99999999),
-                        '{}modified' => '',
+                        '{}type'         => 'CLI',
+                        '{}sid'          => Uuid::uuid4()->toString(),
+                        '{}size'         => rand(1024, 99999999),
+                        '{}modified'     => '',
                     ],
                 ],
             ],
@@ -97,18 +97,18 @@ class ResponseBodyMock
     public function device()
     {
         return $this->write('{}device', [
-            '{}name' => 'whatever',
+            '{}name'         => 'whatever',
             '{}display_name' => 'whatever',
-            '{}sid' => Uuid::uuid4()->toString(),
-            '{}size' => rand(1024, 99999999),
-            '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
-            '{}user' => getenv('JOTTA_USERNAME'),
-            '{}mountPoints' => [
+            '{}sid'          => Uuid::uuid4()->toString(),
+            '{}size'         => rand(1024, 99999999),
+            '{}modified'     => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
+            '{}user'         => getenv('JOTTA_USERNAME'),
+            '{}mountPoints'  => [
                 [
                     '{}mountPoint' => [
                         [
-                            '{}name' => 'Archive',
-                            '{}size' => rand(1024, 99999999),
+                            '{}name'     => 'Archive',
+                            '{}size'     => rand(1024, 99999999),
                             '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
                         ],
                     ],
@@ -116,8 +116,8 @@ class ResponseBodyMock
                 [
                     '{}mountPoint' => [
                         [
-                            '{}name' => 'Shared',
-                            '{}size' => rand(1024, 99999999),
+                            '{}name'     => 'Shared',
+                            '{}size'     => rand(1024, 99999999),
                             '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
                         ],
                     ],
@@ -125,19 +125,19 @@ class ResponseBodyMock
                 [
                     '{}mountPoint' => [
                         [
-                            '{}name' => 'Sync',
-                            '{}size' => rand(1024, 99999999),
+                            '{}name'     => 'Sync',
+                            '{}size'     => rand(1024, 99999999),
                             '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
                         ],
                     ],
                 ],
             ],
             [
-                'name' => 'metadata',
+                'name'       => 'metadata',
                 'attributes' => [
-                    'first' => '',
-                    'max' => '',
-                    'total' => '3',
+                    'first'           => '',
+                    'max'             => '',
+                    'total'           => '3',
                     'num_mountpoints' => '3',
                 ],
             ],
@@ -150,12 +150,12 @@ class ResponseBodyMock
     public function error()
     {
         return $this->write('{}error', [
-            '{}code' => 404,
-            '{}message' => 'Error message',
-            '{}reason' => 'Reason',
-            '{}cause' => 'Cause',
+            '{}code'     => 404,
+            '{}message'  => 'Error message',
+            '{}reason'   => 'Reason',
+            '{}cause'    => 'Cause',
             '{}hostname' => Str::random(24),
-            '{}x-id' => rand(102267900827, 992267900827),
+            '{}x-id'     => rand(102267900827, 992267900827),
         ]);
     }
 
@@ -165,14 +165,14 @@ class ResponseBodyMock
     public function mountPoint()
     {
         return $this->write('{}mountPoint', [
-            '{}name' => 'Archive',
-            '{}path' => 'path',
-            '{}abspath' => 'path',
-            '{}size' => rand(1024, 99999999),
+            '{}name'     => 'Archive',
+            '{}path'     => 'path',
+            '{}abspath'  => 'path',
+            '{}size'     => rand(1024, 99999999),
             '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
-            '{}device' => 'Jotta',
-            '{}user' => getenv('JOTTA_USERNAME'),
-            '{}folders' => [
+            '{}device'   => 'Jotta',
+            '{}user'     => getenv('JOTTA_USERNAME'),
+            '{}folders'  => [
                 [
                     '{}folder' => [
                         'attributes' => [
@@ -190,7 +190,7 @@ class ResponseBodyMock
     public function folder()
     {
         return $this->write('{}folder', [
-            '{}path' => 'path',
+            '{}path'    => 'path',
             '{}abspath' => 'abspath',
             '{}folders' => [
                 [
@@ -204,7 +204,7 @@ class ResponseBodyMock
             '{}files' => [
                 [
                     '{}file' => [
-                        ['name' => 'file',
+                        ['name'          => 'file',
                             'attributes' => ['a' => 'b'],
 
                             'abspath' => 'abspath',
