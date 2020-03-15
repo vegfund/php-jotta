@@ -1,0 +1,18 @@
+sudo: required
+language: php
+
+php:
+  - 7.2
+  - 7.3
+
+install:
+  - composer update --prefer-source --no-interaction
+
+script:
+  - mkdir -p build/logs
+  - php ./vendor/bin/phpunit --coverage-text --verbose
+
+after_script:
+  - mv build/logs/coverage.xml build/logs/coverage.xml.bak
+  - sed 's#/code/##g' build/logs/coverage.xml.bak > build/logs/coverage.xml
+  - php vendor/bin/php-coveralls -v
