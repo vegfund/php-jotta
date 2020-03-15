@@ -8,7 +8,6 @@
 
 namespace Vegfund\Jotta\Client\Scopes;
 
-use const DIRECTORY_SEPARATOR;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
@@ -27,19 +26,13 @@ class FileScope extends Scope
      *
      * @return array|NamespaceContract|object|ResponseInterface|string
      */
-    public function get($remotePath, $remoteName = null)
+    public function get($remotePath)
     {
-        // Prepare relative path.
-        $normalizedPath = $this->normalizePathSegment($remotePath);
-        if (null !== $remoteName) {
-            $normalizedPath .= DIRECTORY_SEPARATOR.$this->normalizePathSegment($remoteName);
-        }
-
         $response = $this->request(
-            $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $normalizedPath)
+            $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath)
         );
 
-        return $this->serialize($response);
+        return $this->serialize($response, 'file');
     }
 
     /**
@@ -87,16 +80,13 @@ class FileScope extends Scope
      *
      * @return mixed
      */
-    public function thumbnail($remotePath, $localPath, $options = [])
+    public function thumbnail($remotePath, $localPath, $size = Jotta::THUMBNAIL_SIZE_MEDIUM)
     {
-        $thumbnailSize = isset($options['size']) ? $options['size'] : Jotta::THUMBNAIL_SIZE_MEDIUM;
-
-        // Prepare API path.
-        $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath, ['mode' => 'thumb', 'ts' => $thumbnailSize]);
-
         $f = fopen($localPath, 'w');
 
-        $response = $this->request($requestPath, 'get', [], ['save_to' => $f]);
+        $this->request($this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath, ['mode' => 'thumb', 'ts' => $size]), 'get', [], ['save_to' => $f]);
+
+        fclose($f);
 
         if (!$this->verify($remotePath, $localPath)) {
             throw new FileNotUploadedException();
@@ -199,6 +189,7 @@ class FileScope extends Scope
      * @param $nameTo
      *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws ParseException
      */
     public function rename($nameFrom, $nameTo)
     {
@@ -209,21 +200,19 @@ class FileScope extends Scope
      * @param $path
      *
      * @throws ParseException
+     * @throws Exception
      *
      * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function delete($path)
     {
-        $file = $this->get($path);
-        if ($file->isDeleted()) {
-            throw new \Exception('Deleting Trash items not supported.');
+        if ($this->get($path)->isDeleted()) {
+            throw new Exception('Deleting Trash items not supported.');
         }
 
-        $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $path, [
+        $response = $this->request($this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $path, [
             'rm' => true,
-        ]);
-
-        $response = $this->request($requestPath, 'post');
+        ]), 'post');
 
         return $this->serialize($response);
     }

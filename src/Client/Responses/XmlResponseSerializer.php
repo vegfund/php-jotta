@@ -8,6 +8,8 @@
 
 namespace Vegfund\Jotta\Client\Responses;
 
+use DOMDocument;
+use Exception;
 use GuzzleHttp\Psr7\Stream;
 use Sabre\Xml\ParseException;
 use Sabre\Xml\Service;
@@ -38,12 +40,11 @@ class XmlResponseSerializer
     protected $xmlRoot;
 
     /**
-     * AbstractResponse constructor.
-     *
+     * XmlResponseSerializer constructor.
      * @param $body
-     * @param mixed $namespace
-     *
+     * @param $namespace
      * @throws ParseException
+     * @throws Exception
      */
     public function __construct($body, $namespace)
     {
@@ -51,10 +52,13 @@ class XmlResponseSerializer
 
         $namespace = 'auto' === $namespace ? $this->getRootNamespace($body) : $namespace;
 
+        if('error' === $namespace) {
+            throw new Exception('XML Error response');
+        }
+
         $this->xmlService = $this->getXmlService();
         $this->xmlService->elementMap = ElementMapper::nms($namespace);
         $this->xml = $this->xmlService->parse($this->body);
-        $this->xmlRoot = $this->xml;
     }
 
     /**
@@ -79,11 +83,11 @@ class XmlResponseSerializer
     }
 
     /**
-     * @return array|object|ResponseNamespace|string
+     * @return string
      */
     public function getRaw()
     {
-        return $this->xml;
+        return (string) $this->body;
     }
 
     /**
@@ -101,12 +105,9 @@ class XmlResponseSerializer
      */
     protected function getRootNamespace($body)
     {
-        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->loadXML($body);
 
         return $dom->documentElement->tagName;
-//        if('error' === $rootNamespace) {
-//            throw new \Exception('XML error');
-//        }
     }
 }
