@@ -345,6 +345,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Support\JFileInfo::__construct
+     * @covers \Vegfund\Jotta\Support\JFileInfo::make
      */
     public function test009_cast_file_to_jfile()
     {
@@ -352,6 +353,9 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(JFileInfo::class, JFileInfo::make($thisFile));
 
         $thisFile = new \SplFileInfo($thisFile);
+        $this->assertInstanceOf(JFileInfo::class, JFileInfo::make($thisFile));
+
+        $thisFile = new JFileInfo($thisFile);
         $this->assertInstanceOf(JFileInfo::class, JFileInfo::make($thisFile));
     }
 }
