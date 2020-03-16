@@ -2,9 +2,12 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_005_Exceptions;
 
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Str;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
+use Vegfund\Jotta\JottaClient;
 
 class Test001_ExceptionsTest extends \PHPUnit\Framework\TestCase
 {
@@ -46,6 +49,42 @@ class Test001_ExceptionsTest extends \PHPUnit\Framework\TestCase
             $this->assertInstanceOf(JottaException::class, $e);
             $this->assertSame($string, $e->getMessage());
             $this->assertSame($code, $e->getCode());
+        }
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\JottaClient::handleException
+     * @throws \ReflectionException
+     */
+    public function test005_jotta_client_handle_exception()
+    {
+        $method = new \ReflectionMethod(JottaClient::class, 'handleException');
+        $method->setAccessible(true);
+        $mock = \Mockery::mock(JottaClient::class);
+        $mock->makePartial();
+
+        $exception = new \Exception('message', 111);
+
+        try {
+            $method->invoke($mock, $exception);
+            $this->assertTrue(false);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(\Exception::class, $e);
+            $this->assertSame('message', $e->getMessage());
+            $this->assertSame(111, $e->getCode());
+        }
+
+        $request = \Mockery::mock(Request::class);
+        $request->makePartial();
+
+        $exception = new ServerException('message', $request);
+
+        try {
+            $method->invoke($mock, $exception);
+            $this->assertTrue(false);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(ServerException::class, $e);
+            $this->assertSame('message', $e->getMessage());
         }
     }
 }
