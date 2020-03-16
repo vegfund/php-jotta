@@ -184,6 +184,13 @@ class ResponseBodyMock
         ]);
     }
 
+    public function file()
+    {
+        return $this->write('{}file', [
+            '{}name' => 'file.txt'
+        ]);
+    }
+
     /**
      * @return string
      */
