@@ -64,9 +64,9 @@ abstract class Scope implements ScopeContract
     protected $shouldThrowExceptions = true;
 
     /**
-     * @var bool
+     * @var string
      */
-    protected $async = false;
+    protected $requestType = 'auto';
 
     /**
      * Scope constructor.
