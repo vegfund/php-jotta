@@ -319,6 +319,15 @@ class DirectoryScope extends Scope
      */
     public function move($pathFrom, $pathTo, $mountPointTo = null)
     {
+        if($this->mode !== self::MODE_FOLDER) {
+            throw new JottaException('Not a folder mode.');
+        }
+
+        $folder = $this->get($pathFrom);
+        if(!($folder instanceof Folder)) {
+            throw new JottaException('This is not a remote folder.');
+        }
+
         $mountPointTo = $mountPointTo ?: $this->mountPoint;
 
         $fullPathTo = $this->getPath(null, $this->device, $mountPointTo, $pathTo);

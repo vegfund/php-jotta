@@ -170,6 +170,11 @@ class FileScope extends Scope
      */
     public function move($pathFrom, $pathTo, $mountPointTo = null)
     {
+        $file = $this->get($pathFrom);
+        if(!($file instanceof File)) {
+            throw new JottaException('This is not a remote file.');
+        }
+
         $mountPointTo = $mountPointTo ?: $this->mountPoint;
 
         $fullPathTo = $this->getPath(null, $this->device, $mountPointTo, $pathTo);
