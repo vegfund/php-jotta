@@ -44,7 +44,7 @@ class File extends ResponseNamespace
     protected $objectValueMap = [
         'currentRevision',
         'latestRevision',
-        'metadata'
+        'metadata',
     ];
 
     /**

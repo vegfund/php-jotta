@@ -98,6 +98,7 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::metadata()
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test011_metadata()
@@ -120,8 +121,8 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(Metadata::class, $folder->getMetadata());
         $metadata = $folder->getMetadata();
 
-        $this->assertSame(1, (int)$metadata->getAttribute('num_folders'));
-        $this->assertSame(7, (int)$metadata->getAttribute('num_files'));
+        $this->assertSame(1, (int) $metadata->getAttribute('num_folders'));
+        $this->assertSame(7, (int) $metadata->getAttribute('num_files'));
     }
 
     /**
