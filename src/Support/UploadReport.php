@@ -71,7 +71,7 @@ class UploadReport
      */
     public function folderExisting($path)
     {
-        $this->report['folders']['existing'][] = $relativePath;
+        $this->report['folders']['existing'][] = $path;
     }
 
     /**
@@ -79,7 +79,7 @@ class UploadReport
      */
     public function folderCreated($path)
     {
-        $this->report['folders']['created'][] = $relativePath;
+        $this->report['folders']['created'][] = $path;
     }
 
     /**

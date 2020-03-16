@@ -2,6 +2,8 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
+use Illuminate\Support\Str;
+use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Support\UploadReport;
 
@@ -70,8 +72,145 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(5000, $report['sizes']['no_folder']);
     }
 
-    public function test005_upload_report_files_by_type()
+    /**
+     * @covers \Vegfund\Jotta\Support\UploadReport::folderCreated
+     * @covers \Vegfund\Jotta\Support\UploadReport::folderExisting
+     */
+    public function test003_upload_report_folders_by_types()
     {
+        $folders = [
+            'path/folder1' => 'existing',
+            'path/folder2' => 'existing',
+            'path/folder3' => 'existing',
+            'path/folder4' => 'created',
+            'path/folder5' => 'created'
+        ];
 
+        $uploadReport = new UploadReport();
+
+        foreach($folders as $path => $type) {
+            $funcName = 'folder'.ucfirst($type);
+            $uploadReport->{$funcName}($path);
+        }
+
+        $uploadReport->stop();
+        $report = $uploadReport->getReport();
+
+        $this->assertCount(3, $report['folders']['existing']);
+        $this->assertCount(2, $report['folders']['created']);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Support\UploadReport::file
+     */
+    public function test005_upload_report_files_overwrite()
+    {
+        $overwriteTypes = [
+            Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT => 'uploaded_newer_or_different',
+            Jotta::FILE_OVERWRITE_IF_NEWER => 'uploaded_newer',
+            Jotta::FILE_OVERWRITE_IF_DIFFERENT => 'uploaded_different',
+            Jotta::FILE_OVERWRITE_NEVER => 'ignored',
+            Jotta::FILE_OVERWRITE_ALWAYS => 'uploaded_forcibly'
+        ];
+
+        $overwriteTypesKeys = array_keys($overwriteTypes);
+
+        $generatedFiles = [];
+
+        $uploadReport = new UploadReport();
+
+        $expectedSizes = [
+            'uploaded_newer_or_different' => 0,
+            'uploaded_newer' => 0,
+            'uploaded_different' => 0,
+            'ignored' => 0,
+            'uploaded_forcibly' => 0
+        ];
+
+        for($i = 0; $i < 80; $i++) {
+            $mock = \Mockery::mock(JFileInfo::class);
+            $size = rand(1, 999999);
+            $path = 'path/to/'.Str::random(12).'txt';
+            $mock->shouldReceive('getSize')->andReturn($size);
+            $mock->shouldReceive('getRealPath')->andReturn($path);
+
+            $overwriteType = $overwriteTypesKeys[array_rand($overwriteTypesKeys)];
+
+            $generatedFiles[] = [
+                'mock' => $mock,
+                'size' => $size,
+                'path' => $path,
+                'overwrite_type' => $overwriteTypes[$overwriteType]
+            ];
+
+            $expectedSizes[$overwriteTypes[$overwriteType]] += $size;
+
+            $uploadReport->file(true, $mock, $overwriteType);
+        }
+
+        $uploadReport->stop();
+        $report = $uploadReport->getReport();
+
+        foreach($expectedSizes as $scope => $size) {
+            $this->assertSame($size, $report['sizes'][$scope]);
+        }
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Support\UploadReport::fileFresh
+     */
+    public function test007_upload_files_fresh()
+    {
+        $expectedSize = 0;
+        $expectedCount = rand(50, 100);
+
+        $uploadReport = new UploadReport();
+
+        for($i = 0; $i < $expectedCount; $i++) {
+            $mock = \Mockery::mock(JFileInfo::class);
+            $size = rand(1, 999999);
+            $path = 'path/to/'.Str::random(12).'txt';
+            $mock->shouldReceive('getSize')->andReturn($size);
+            $mock->shouldReceive('getRealPath')->andReturn($path);
+
+            $expectedSize += $size;
+
+            $uploadReport->fileFresh($mock);
+        }
+
+        $uploadReport->stop();
+        $report = $uploadReport->getReport();
+
+        $this->assertSame($expectedCount, count($report['files']['uploaded_fresh']));
+        $this->assertSame($expectedSize, $report['sizes']['uploaded_fresh']);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Support\UploadReport::fileTroublesome
+     */
+    public function test007_upload_files_troublesome()
+    {
+        $expectedSize = 0;
+        $expectedCount = rand(50, 100);
+
+        $uploadReport = new UploadReport();
+
+        for($i = 0; $i < $expectedCount; $i++) {
+            $mock = \Mockery::mock(JFileInfo::class);
+            $size = rand(1, 999999);
+            $path = 'path/to/'.Str::random(12).'txt';
+            $mock->shouldReceive('getSize')->andReturn($size);
+            $mock->shouldReceive('getRealPath')->andReturn($path);
+
+            $expectedSize += $size;
+
+            $uploadReport->fileTroublesome($mock);
+        }
+
+        $uploadReport->stop();
+        $report = $uploadReport->getReport();
+
+        $this->assertSame($expectedCount, count($report['files']['troublesome']));
+        $this->assertSame($expectedSize, $report['sizes']['troublesome']);
     }
 }
