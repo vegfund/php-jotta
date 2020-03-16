@@ -175,26 +175,6 @@ abstract class Scope implements ScopeContract
         return $this->basePath;
     }
 
-    /**
-     * @return $this
-     */
-    final public function withSerializer()
-    {
-        $this->shouldSerialize = true;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    final public function withoutSerializer()
-    {
-        $this->shouldSerialize = false;
-
-        return $this;
-    }
-
     final public function setAsync()
     {
         $this->async = true;
