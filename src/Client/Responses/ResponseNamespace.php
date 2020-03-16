@@ -149,14 +149,11 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
     {
         $keyValues = $this->getKeyValueFields($children);
 
-        foreach ($this->keyValueMap as $field) {
-            $fieldType = 'string';
-            if (\is_array($field)) {
-                list($field, $fieldType) = [
-                    array_keys($field)[0],
-                    array_values($field)[0],
-                ];
-            }
+        foreach ($this->getKeyValueMap() as $field) {
+            list($field, $fieldType) = [
+                array_keys($field)[0],
+                array_values($field)[0],
+            ];
 
             if (isset($keyValues['{}'.$field])) {
                 $this->{Str::camel($field)} = $this->castPrimitives($keyValues['{}'.$field], $fieldType);
@@ -165,15 +162,28 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
     }
 
     /**
+     * @return array
+     */
+    final protected function getKeyValueMap()
+    {
+        return array_map(function ($item) {
+            if(!is_array($item)) {
+                return [$item => 'string'];
+            }
+
+            return $item;
+        }, $this->keyValueMap);
+    }
+
+    /**
      * @param array $children
      */
     final protected function attachEnums($children)
     {
-        foreach ($this->enumMap as $item) {
-            foreach ($children as $child) {
-                if ($child['name'] === '{}'.$item) {
-                    $this->{$item} = $child['value'];
-                }
+        foreach($children as $child) {
+            $field = substr($child['name'], 2);
+            if(in_array($field, $this->enumMap)) {
+                $this->{$field} = $child['value'];
             }
         }
     }
