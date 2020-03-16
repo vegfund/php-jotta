@@ -57,8 +57,24 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
         $this->assertIsString($serialized->getName());
     }
 
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getAttribute
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__call
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__get
+     * @throws \Sabre\Xml\ParseException
+     */
     public function test007_file()
     {
+        $responseBodyMock = new ResponseBodyMock();
+
+        $body = $responseBodyMock->file();
+        $serialized = XmlResponseSerializer::parse($body, 'auto');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertIsString($serialized->getPath());
+        $this->assertSame($serialized->getPath(), $serialized->path);
+        $this->assertInstanceOf(CurrentRevision::class, $serialized->getCurrentRevision());
+        $this->assertNotNull($serialized->getAttribute('uuid'));
     }
 
     /**
