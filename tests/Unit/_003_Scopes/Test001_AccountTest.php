@@ -9,20 +9,29 @@ use Vegfund\Jotta\Jotta;
 class Test001_AccountTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers \Vegfund\Jotta\Client\Scopes\AccountScope::index
+     * @covers \Vegfund\Jotta\Client\Scopes\AccountScope::data
      */
     public function test001_should_return_account_data()
     {
         $data = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->account()->data();
-        $index = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->account()->index();
 
         $this->assertInstanceOf(User::class, $data);
 
         $this->assertSame(getenv('JOTTA_USERNAME'), $data->getUsername());
         $this->assertSame(getenv('JOTTA_USERNAME'), $data->username);
+    }
 
-        $this->assertEquals($index->getUsername(), $data->getUsername());
-        $this->assertEquals($index->getUsage(), $data->getUsage());
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\AccountScope::index
+     */
+    public function test001a_should_return_account_data2()
+    {
+        $data = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->account()->index();
+
+        $this->assertInstanceOf(User::class, $data);
+
+        $this->assertSame(getenv('JOTTA_USERNAME'), $data->getUsername());
+        $this->assertSame(getenv('JOTTA_USERNAME'), $data->username);
     }
 
     /**
