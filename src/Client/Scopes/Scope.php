@@ -16,12 +16,15 @@ use Vegfund\Jotta\Client\Contracts\ScopeContract;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
+use Vegfund\Jotta\Traits\ScopeConfig;
 
 /**
  * Class Scope.
  */
 abstract class Scope implements ScopeContract
 {
+    use ScopeConfig;
+
     /**
      * @var JottaClient
      */
@@ -81,148 +84,6 @@ abstract class Scope implements ScopeContract
         $this->username = $client->getUsername();
 
         $this->setDevice($device)->setMountPoint($mountPoint)->setBasePath($basePath)->setApiUrl();
-    }
-
-    /**
-     * @param string $username
-     *
-     * @return Scope
-     */
-    final public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    final public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * @param string $apiUrl
-     *
-     * @return Scope
-     */
-    public function setApiUrl($apiUrl = Jotta::API_BASE_URL)
-    {
-        $this->apiUrl = $apiUrl;
-
-        return $this;
-    }
-
-    /**
-     * @param string $device
-     *
-     * @return Scope
-     */
-    final public function setDevice($device = Jotta::DEVICE_JOTTA)
-    {
-        $this->device = Jotta::DEVICE_JOTTA;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    final public function getDevice()
-    {
-        return $this->device;
-    }
-
-    /**
-     * @param string $mountPoint
-     *
-     * @return Scope
-     */
-    final public function setMountPoint($mountPoint = Jotta::MOUNT_POINT_ARCHIVE)
-    {
-        $this->mountPoint = $mountPoint;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    final public function getMountPoint()
-    {
-        return $this->mountPoint;
-    }
-
-    /**
-     * @param string $basePath
-     *
-     * @return $this
-     */
-    final public function setBasePath($basePath = '')
-    {
-        $this->basePath = $basePath;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    final public function getBasePath()
-    {
-        return $this->basePath;
-    }
-
-    /**
-     * @return $this
-     */
-    final public function setAsyncRequest()
-    {
-        $this->requestType = 'async';
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    final public function setSyncRequest()
-    {
-        $this->requestType = 'sync';
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    final public function setAutoRequest()
-    {
-        $this->requestType = 'auto';
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    final public function withExceptions()
-    {
-        $this->shouldThrowExceptions = true;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    final public function withoutExceptions()
-    {
-        $this->shouldThrowExceptions = false;
-
-        return $this;
     }
 
     /**
