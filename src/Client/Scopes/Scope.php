@@ -225,9 +225,6 @@ abstract class Scope implements ScopeContract
         if ($body instanceof ResponseInterface) {
             $body = $body->getBody();
         }
-        if (!$this->shouldSerialize) {
-            return (string) $body;
-        }
 
         try {
             return XmlResponseSerializer::parse((string) $body, $namespace);
