@@ -204,26 +204,28 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
     {
         switch ($type) {
             case 'int':
-                return (int) $value;
+                $value = (int) $value;
 
                 break;
             case 'float':
-                return (float) $value;
+                $value = (float) $value;
 
                 break;
             case 'bool':
-                return true === $value || 'true' === $value || '1' === $value;
+                $value = true === $value || 'true' === $value || '1' === $value;
 
                 break;
             case 'datetime':
-                return DateTime::createFromFormat('Y-m-d-\TH:i:sO', $value);
+                $value = DateTime::createFromFormat('Y-m-d-\TH:i:sO', $value);
 
                 break;
             default:
-                return (string) $value;
+                $value = (string) $value;
 
                 break;
         }
+
+        return $value;
     }
 
     /**
