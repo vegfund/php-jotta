@@ -9,6 +9,10 @@ use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 
 class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\XmlResponseSerializer::getRootNamespace
+     * @throws \ReflectionException
+     */
     public function test001_detect_root()
     {
         $responseBodyMock = new ResponseBodyMock();
@@ -32,8 +36,25 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test003_parse_body()
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\XmlResponseSerializer::getRaw
+     * @throws \Sabre\Xml\ParseException
+     */
+    public function test003_raw_body()
     {
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                    <mountPoint time="2020-03-16-T09:47:15Z" host="**obfuscated**">
+                        <name xml:space="preserve">Archive</name>
+                        <path xml:space="preserve">/**obfuscated**/Jotta</path>
+                        <abspath xml:space="preserve">/**obfuscated**/Jotta</abspath>
+                        <size>383654</size>
+                        <modified>2020-03-12-T22:57:05Z</modified>
+                        <device>Jotta</device>
+                        <user>**obfuscated**</user>
+                    </mountPoint>';
+
+        $serialized = new XmlResponseSerializer($body, 'auto');
+        $this->assertSame($body, $serialized->getRaw());
     }
 
     /**
