@@ -62,7 +62,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
 
     final public function getAttribute($name)
     {
-        if(isset($this->attributes) && $this->attributes instanceof Attributes) {
+        if (isset($this->attributes) && $this->attributes instanceof Attributes) {
             return $this->attributes->get($name);
         }
 

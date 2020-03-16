@@ -187,7 +187,7 @@ class ResponseBodyMock
     public function file()
     {
         return $this->write('{}file', [
-            '{}name' => 'file.txt'
+            '{}name' => 'file.txt',
         ]);
     }
 
