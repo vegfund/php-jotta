@@ -102,15 +102,17 @@ abstract class Scope implements ScopeContract
             $body = $body->getBody();
         }
 
+        $serialized = null;
+
         try {
-            return XmlResponseSerializer::parse((string) $body, $namespace);
+            $serialized = XmlResponseSerializer::parse((string) $body, $namespace);
         } catch (Exception $e) {
             if ($this->shouldThrowExceptions) {
                 throw $e;
             }
-
-            return null;
         }
+
+        return $serialized;
     }
 
     /**
