@@ -146,12 +146,13 @@ class File extends ResponseNamespace
      */
     public function isNewerThan($file)
     {
-        if(is_string($file)) {
+        if (is_string($file)) {
             $file = new JFileInfo($file);
         }
-        if($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
+        if ($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
             $file = new JFileInfo($file->getRealPath());
         }
+
         return $this->currentRevision->modified->getTimestamp() >= $file->getMTime();
     }
 
@@ -162,10 +163,10 @@ class File extends ResponseNamespace
      */
     public function isDifferentThan($file)
     {
-        if(is_string($file)) {
+        if (is_string($file)) {
             $file = new JFileInfo($file);
         }
-        if($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
+        if ($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
             $file = new JFileInfo($file->getRealPath());
         }
 
@@ -175,17 +176,17 @@ class File extends ResponseNamespace
     /**
      * @param $file
      *
-     * @return bool
      *@throws ParseException
-     *
      * @throws LibXMLException
+     *
+     * @return bool
      */
     public function isSameAs($file)
     {
-        if(is_string($file)) {
+        if (is_string($file)) {
             $file = new JFileInfo($file);
         }
-        if($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
+        if ($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
             $file = new JFileInfo($file->getRealPath());
         }
 
