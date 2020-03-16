@@ -3,6 +3,7 @@
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
 use Vegfund\Jotta\Client\Exceptions\CliDevicesNotSupportedException;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Jotta;
 
@@ -55,7 +56,7 @@ class Test003_DeviceTest extends \PHPUnit\Framework\TestCase
         try {
             $device = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->device()->get('other');
         } catch (\Exception $e) {
-            $this->assertInstanceOf(CliDevicesNotSupportedException::class, $e);
+            $this->assertInstanceOf(JottaException::class, $e);
         }
     }
 }
