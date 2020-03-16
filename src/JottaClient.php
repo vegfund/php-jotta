@@ -200,26 +200,23 @@ class JottaClient
      */
     public function getScope($name, $options = [])
     {
-        if (class_exists($name) && (is_a($name, Scope::class, true))) {
-            /**
-             * @var Scope
-             */
-            $scope = (new $name($this));
-
-            if (isset($options['device'])) {
-                $scope = $scope->setDevice($options['device']);
-            }
-            if (isset($options['mount_point'])) {
-                $scope = $scope->setMountPoint($options['mount_point']);
-            }
-            if (isset($options['base_path'])) {
-                $scope = $scope->setBasePath($options['base_path']);
-            }
-
-            return $scope;
+        if(!class_exists($name) || !is_a($name, Scope::class, true)) {
+            throw new JottaException('Scope '.$name.' does not exist or not a ScopeContract');
         }
 
-        throw new JottaException('Scope '.$name.' does not exist or not a ScopeContract');
+        $scope = (new $name($this));
+
+        if (isset($options['device'])) {
+            $scope = $scope->setDevice($options['device']);
+        }
+        if (isset($options['mount_point'])) {
+            $scope = $scope->setMountPoint($options['mount_point']);
+        }
+        if (isset($options['base_path'])) {
+            $scope = $scope->setBasePath($options['base_path']);
+        }
+
+        return $scope;
     }
 
     /**
