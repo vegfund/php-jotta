@@ -11,6 +11,7 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers \Vegfund\Jotta\Client\Responses\XmlResponseSerializer::getRootNamespace
+     *
      * @throws \ReflectionException
      */
     public function test001_detect_root()
@@ -23,14 +24,14 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
         $mock->makePartial();
 
         $newHeaders = [
-            'user' => $responseBodyMock->user(),
-            'device' => $responseBodyMock->device(),
+            'user'       => $responseBodyMock->user(),
+            'device'     => $responseBodyMock->device(),
             'mountPoint' => $responseBodyMock->mountPoint(),
-            'folder' => $responseBodyMock->folder(),
-            'file' => $responseBodyMock->file()
+            'folder'     => $responseBodyMock->folder(),
+            'file'       => $responseBodyMock->file(),
         ];
 
-        foreach($newHeaders as $namespace => $body) {
+        foreach ($newHeaders as $namespace => $body) {
             $rootNms = $method->invoke($mock, $body);
             $this->assertSame($namespace, $rootNms);
         }
@@ -38,6 +39,7 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\XmlResponseSerializer::getRaw
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test003_raw_body()
@@ -62,6 +64,7 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::setAttributes
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Attributes::get
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Attributes::all
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test005_attributes()
