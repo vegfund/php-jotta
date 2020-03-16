@@ -16,7 +16,6 @@ use Sabre\Xml\Reader;
 use Sabre\Xml\XmlDeserializable;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Responses\Namespaces\Attributes;
-use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 
 /**
  * Class AbstractNamespace.
@@ -141,7 +140,6 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
         }
 
         $this->attributes = $attributes;
-
     }
 
     /**

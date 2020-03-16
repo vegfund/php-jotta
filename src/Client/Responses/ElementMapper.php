@@ -105,8 +105,8 @@ class ElementMapper
             '{}files'  => function (Reader $reader) {
                 return repeatingElements($reader, '{}file');
             },
-            '{}file' => File::class,
-            '{}metadata' => Metadata::class
+            '{}file'     => File::class,
+            '{}metadata' => Metadata::class,
         ];
     }
 
@@ -119,14 +119,14 @@ class ElementMapper
             '{}file'            => File::class,
             '{}currentRevision' => CurrentRevision::class,
             '{}latestRevision'  => CurrentRevision::class,
-            '{}metadata' => Metadata::class
+            '{}metadata'        => Metadata::class,
         ];
     }
 
     protected function metadata()
     {
         return [
-            '{}metadata' => Metadata::class
+            '{}metadata' => Metadata::class,
         ];
     }
 
