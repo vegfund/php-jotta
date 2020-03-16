@@ -15,6 +15,7 @@ use Sabre\Xml\ParseException;
 use Sabre\Xml\Reader;
 use Sabre\Xml\XmlDeserializable;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Attributes;
 
 /**
@@ -46,18 +47,19 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      * @param $name
      *
      * @return null|mixed
+     * @throws JottaException
      */
     public function __get($name)
     {
-        if (isset($this->{$name}) && null !== $this->{$name}) {
+        if (isset($this->{$name})) {
             return $name;
         }
 
-        if (isset($this->attributes) && ($this->attributes instanceof Attributes) && isset($this->attributes->{$name}) && null !== $this->attributes->{$name}) {
-            return $this->attributes->{$name};
+        if (isset($this->attributes)) {
+            return $this->attributes->get($name);
         }
 
-        return null;
+        throw new JottaException('The attribute ' . $name . ' does not exist.');
     }
 
     /**
@@ -75,6 +77,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      * @param $arguments
      *
      * @return null|mixed
+     * @throws JottaException
      */
     public function __call($name, $arguments)
     {
@@ -83,6 +86,8 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
 
             return $this->{$name};
         }
+
+        throw new JottaException('The method ' . $name . ' does not exist.');
     }
 
     /**

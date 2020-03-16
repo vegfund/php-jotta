@@ -2,6 +2,7 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
@@ -9,6 +10,7 @@ use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
+use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
 use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 
@@ -159,5 +161,21 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
         $this->assertIsInt($serialized->getUsage());
         $this->assertIsInt($serialized->getMaxDevices());
         $this->assertIsBool($serialized->getEnableFoldershare());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::__call
+     */
+    public function test017_method_not_exists()
+    {
+        $mock = \Mockery::mock(ResponseNamespace::class);
+        $mock->makePartial();
+
+        try {
+            $mock->nonexisting();
+            $this->assertTrue(false);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(JottaException::class, $e);
+        }
     }
 }

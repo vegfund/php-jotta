@@ -2,6 +2,7 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Attributes;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
@@ -125,5 +126,6 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
         $serialized = XmlResponseSerializer::parse($body, 'auto');
 
         $this->assertNull($serialized->getAttribute('nonexisting'));
+        $this->assertObjectNotHasAttribute('nonexisting', $serialized);
     }
 }
