@@ -8,6 +8,7 @@ use Vegfund\Jotta\Client\Contracts\ScopeContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Scopes\AccountScope;
 use Vegfund\Jotta\Client\Scopes\DeviceScope;
+use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 use Vegfund\Jotta\Client\Scopes\FileScope;
 use Vegfund\Jotta\Client\Scopes\FolderScope;
 use Vegfund\Jotta\Client\Scopes\MountPointScope;
@@ -45,8 +46,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\JottaClient::account
      * @covers \Vegfund\Jotta\JottaClient::device
      * @covers \Vegfund\Jotta\JottaClient::file
-     * @covers \Vegfund\Jotta\JottaClient::folder
-     * @covers \Vegfund\Jotta\JottaClient::mountPoint
+     * @covers \Vegfund\Jotta\JottaClient::directory
      */
     public function test003_scopes()
     {
@@ -54,8 +54,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             'account'    => AccountScope::class,
             'device'     => DeviceScope::class,
             'file'       => FileScope::class,
-            'folder'     => FolderScope::class,
-            'mountPoint' => MountPointScope::class,
+            'directory' => DirectoryScope::class
         ];
 
         $client = new JottaClient(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
@@ -67,6 +66,26 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             $this->assertInstanceOf(Scope::class, $scope);
             $this->assertInstanceOf(ScopeContract::class, $scope);
         }
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\JottaClient::folder
+     * @covers \Vegfund\Jotta\JottaClient::mountPoint
+     * @throws JottaException
+     */
+    public function test003a_mount_point_folder_scopes()
+    {
+        $client = new JottaClient(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
+
+        $folder = $client->folder();
+
+        $this->assertInstanceOf(DirectoryScope::class, $folder);
+        $this->assertSame(DirectoryScope::MODE_FOLDER, $folder->getMode());
+
+        $folder = $client->mountPoint();
+
+        $this->assertInstanceOf(DirectoryScope::class, $folder);
+        $this->assertSame(DirectoryScope::MODE_MOUNT_POINT, $folder->getMode());
     }
 
     /**
@@ -82,8 +101,9 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             'account'    => AccountScope::class,
             'device'     => DeviceScope::class,
             'file'       => FileScope::class,
-            'folder'     => FolderScope::class,
-            'mountPoint' => MountPointScope::class,
+            'directory' => DirectoryScope::class,
+            'folder'     => DirectoryScope::class,
+            'mountPoint' => DirectoryScope::class,
         ];
 
         foreach ($scopes as $method => $className) {
@@ -92,6 +112,13 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             $this->assertInstanceOf($className, $scope);
             $this->assertInstanceOf(Scope::class, $scope);
             $this->assertInstanceOf(ScopeContract::class, $scope);
+
+            if($method === 'folder') {
+                $this->assertSame(DirectoryScope::MODE_FOLDER, $scope->getMode());
+            }
+            if($method === 'mountPoint') {
+                $this->assertSame(DirectoryScope::MODE_MOUNT_POINT, $scope->getMode());
+            }
         }
     }
 
@@ -125,8 +152,8 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             'account'    => AccountScope::class,
             'device'     => DeviceScope::class,
             'file'       => FileScope::class,
-            'folder'     => FolderScope::class,
-            'mountPoint' => MountPointScope::class,
+            'folder'     => DirectoryScope::class,
+            'mountPoint' => DirectoryScope::class,
         ];
 
         foreach ($scopes as $method => $className) {

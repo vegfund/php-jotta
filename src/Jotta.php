@@ -159,11 +159,10 @@ class Jotta
      *
      * @param string $username jottacloud username
      * @param string $password jottacloud password
-     * @param array  $options
+     * @param array $options
      *
+     * @return Client\Scopes\DirectoryScope|Client\Scopes\Scope
      * @throws Client\Exceptions\JottaException
-     *
-     * @return FolderScope
      */
     public static function folder($username, $password, $options = [])
     {
@@ -175,14 +174,25 @@ class Jotta
      *
      * @param string $username jottacloud username
      * @param string $password jottacloud password
-     * @param array  $options
+     * @param array $options
      *
+     * @return Client\Scopes\DirectoryScope|Client\Scopes\Scope
      * @throws Client\Exceptions\JottaException
-     *
-     * @return MountPointScope
      */
     public static function mountPoint($username, $password, $options = [])
     {
         return self::client($username, $password)->mountPoint($options);
+    }
+
+    /**
+     * @param $username
+     * @param $password
+     * @param array $options
+     * @return Client\Scopes\Scope|null
+     * @throws Client\Exceptions\JottaException
+     */
+    public static function directory($username, $password, $options = [])
+    {
+        return self::client($username, $password)->directory($options);
     }
 }

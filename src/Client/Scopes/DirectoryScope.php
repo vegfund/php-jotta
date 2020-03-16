@@ -8,9 +8,7 @@
 
 namespace Vegfund\Jotta\Client\Scopes;
 
-use function count;
-use const DIRECTORY_SEPARATOR;
-use function is_array;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
@@ -21,23 +19,70 @@ use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Support\UploadReport;
+use function in_array;
 
 /**
- * Class FolderScope.
+ * Class DirectoryScope
+ * @package Vegfund\Jotta\Client\Scopes
  */
-class FolderScope extends Scope
+class DirectoryScope extends Scope
 {
+    const MODE_MOUNT_POINT = 1;
+
+    const MODE_FOLDER = 2;
+
+    /**
+     * @var int
+     */
+    protected $mode;
+
+    /**
+     * @param $mode
+     * @return $this
+     */
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMode()
+    {
+        return $this->mode;
+    }
+
+    /**
+     * @return mixed
+     * @throws JottaException
+     * @throws ParseException
+     */
+    public function all()
+    {
+        if($this->mode !== self::MODE_MOUNT_POINT) {
+            throw new JottaException('This is valid only for mount points.');
+        }
+        /**
+         * @var Device
+         */
+        $device = $this->jottaClient->device()->get();
+
+        return $device->getMountPoints();
+    }
+
     /**
      * Get folder metadata.
      *
-     * @param string      $remotePath remote path
+     * @param string $remotePath remote path
      * @param null|string $remoteName remote name (if name is not specified, then only remote path will be used)
      *
-     * @throws ParseException
-     *
      * @return array|Folder|NamespaceContract|object|ResponseInterface|string
+     * @throws Exception
      */
-    public function get($remotePath, $remoteName = null)
+    public function get($remotePath = '', $remoteName = null)
     {
         // Prepare relative path.
         $normalizedPath = $this->normalizePathSegment($remotePath);
@@ -55,15 +100,17 @@ class FolderScope extends Scope
     /**
      * Create a remote folder.
      *
-     * @param string      $remotePath remote path
+     * @param string $remotePath remote path
      * @param null|string $remoteName remote name (if name is not specified, then only remote path will be used)
      *
-     * @throws ParseException
-     *
      * @return array|Folder|NamespaceContract|object|ResponseInterface|string
+     * @throws Exception
      */
     public function create($remotePath, $remoteName = null)
     {
+        if($this->mode === self::MODE_MOUNT_POINT) {
+            return $this->createMountPoint($remotePath);
+        }
         // Prepare relative path.
         $normalizedPath = $this->normalizePathSegment($remotePath);
         if (null !== $remoteName) {
@@ -86,13 +133,34 @@ class FolderScope extends Scope
     }
 
     /**
+     * @param $name
+     * @return array|object|ResponseInterface|string|NamespaceContract
+     * @throws Exception
+     */
+    protected function createMountPoint($name)
+    {
+        // Prepare API path.
+        $requestPath = $this->getPath(Jotta::API_UPLOAD_URL, $this->device, $name);
+
+        $response = $this->getClient()->request(
+            $requestPath,
+            'post',
+            [
+                'JMd5'  => md5(''),
+                'JSize' => 0,
+            ]
+        );
+
+        return $this->serialize($response);
+    }
+
+    /**
      * @param $remotePath
-     * @param null  $remoteName
+     * @param null $remoteName
      * @param array $options
      *
-     * @throws ParseException
-     *
      * @return array
+     * @throws Exception
      */
     public function list($remotePath, $remoteName = null, $options = [])
     {
@@ -239,9 +307,8 @@ class FolderScope extends Scope
      * @param $pathTo
      * @param null $mountPointTo
      *
-     * @throws ParseException
-     *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws Exception
      */
     public function move($pathFrom, $pathTo, $mountPointTo = null)
     {
@@ -261,9 +328,8 @@ class FolderScope extends Scope
      * @param $nameFrom
      * @param $nameTo
      *
-     * @throws ParseException
-     *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws Exception
      */
     public function rename($nameFrom, $nameTo)
     {
@@ -273,13 +339,15 @@ class FolderScope extends Scope
     /**
      * @param $path
      *
-     * @throws JottaException
-     * @throws ParseException
-     *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws JottaException
      */
-    public function delete($path)
+    public function delete($path = null)
     {
+        if($this->mode === self::MODE_MOUNT_POINT) {
+            return $this->deleteMountPoint();
+        }
+
         $folder = $this->get($path);
         if ($folder->isDeleted()) {
             throw new JottaException('Deleting Trash items not supported.');
@@ -290,6 +358,30 @@ class FolderScope extends Scope
         ]);
 
         $response = $this->request($requestPath, 'post');
+
+        return $this->serialize($response);
+    }
+
+    /**
+     * @return array|object|ResponseInterface|string|NamespaceContract
+     * @throws Exception
+     */
+    public function deleteMountPoint()
+    {
+        $forbidden = [
+            Jotta::MOUNT_POINT_ARCHIVE,
+            Jotta::MOUNT_POINT_SHARED,
+            Jotta::MOUNT_POINT_SYNC,
+        ];
+
+        if (in_array($this->mountPoint, $forbidden, true)) {
+            throw new Exception('The mount point '.$this->mountPoint.' cannot be deleted.');
+        }
+
+        $response = $this->request(
+            $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, null, ['rm' => 'true']),
+            'post'
+        );
 
         return $this->serialize($response);
     }

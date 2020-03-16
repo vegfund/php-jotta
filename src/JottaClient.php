@@ -16,12 +16,14 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DependencyInjection\ScopeInterface;
+use Vegfund\Jotta\Client\Contracts\ScopeContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Scopes\AccountScope;
 use Vegfund\Jotta\Client\Scopes\DeviceScope;
+use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 use Vegfund\Jotta\Client\Scopes\FileScope;
 use Vegfund\Jotta\Client\Scopes\FolderScope;
 use Vegfund\Jotta\Client\Scopes\MountPointScope;
@@ -92,9 +94,9 @@ class JottaClient
      *
      * @param array $options options array
      *
-     * @throws JottaException
+     * @return AccountScope|Scope
+     *@throws JottaException
      *
-     * @return AccountScope|ScopeInterface
      */
     public function account($options = [])
     {
@@ -130,11 +132,11 @@ class JottaClient
      *
      * @throws JottaException
      *
-     * @return FolderScope|Scope
+     * @return DirectoryScope|Scope
      */
     public function folder($options = [])
     {
-        return $this->getScope(FolderScope::class, $options);
+        return $this->directory($options)->setMode(DirectoryScope::MODE_FOLDER);
     }
 
     /**
@@ -142,11 +144,21 @@ class JottaClient
      *
      * @throws JottaException
      *
-     * @return MountPointScope|Scope
+     * @return DirectoryScope|Scope
      */
     public function mountPoint($options = [])
     {
-        return $this->getScope(MountPointScope::class, $options);
+        return $this->directory($options)->setMode(DirectoryScope::MODE_MOUNT_POINT);
+    }
+
+    /**
+     * @param array $options
+     * @return DirectoryScope|Scope
+     * @throws JottaException
+     */
+    public function directory($options = [])
+    {
+        return $this->getScope(DirectoryScope::class, $options);
     }
 
     /**
@@ -185,7 +197,7 @@ class JottaClient
      *
      * @throws JottaException
      *
-     * @return null|Scope|ScopeInterface
+     * @return null|Scope|ScopeContract
      */
     public function getScope($name, $options = [])
     {
