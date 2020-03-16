@@ -12,7 +12,6 @@ use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
-use Vegfund\Jotta\Client\Exceptions\CliDevicesNotSupportedException;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Jotta;
 

@@ -102,7 +102,7 @@ class User extends ResponseNamespace
         'username',
         'account-type',
         ['capacity'           => 'int'],
-        ['locked' => 'bool'],
+        ['locked'             => 'bool'],
         ['max-devices'        => 'int'],
         ['max-mobile-devices' => 'int'],
         ['capacity'           => 'int'],

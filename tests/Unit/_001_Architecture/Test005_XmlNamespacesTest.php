@@ -16,6 +16,7 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::file
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::currentRevision
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test001_current_revision()
@@ -39,6 +40,7 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::device
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test003_device()
@@ -61,6 +63,7 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::folder
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test009_folder()
@@ -81,6 +84,7 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::mountPoint
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test013_mount_point()
@@ -98,6 +102,7 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::user
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test015_user()

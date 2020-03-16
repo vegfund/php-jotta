@@ -187,19 +187,19 @@ class ResponseBodyMock
     public function file()
     {
         return $this->write('{}file', [
-            '{}name' => 'file.txt',
-                '{}currentRevision' => [
-                    [
-                        '{}number' => 1,
-                        '{}state' => 'COMPLETED',
-                        '{}created' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
-                        '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 2)),
-                        '{}mime' => 'mime',
-                        '{}size' => rand(1024, 99999999),
-                        '{}md5' => md5(Str::random(128)),
-                        '{}updated' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 2)),
-                    ]
-                ]
+            '{}name'            => 'file.txt',
+            '{}currentRevision' => [
+                [
+                    '{}number'   => 1,
+                    '{}state'    => 'COMPLETED',
+                    '{}created'  => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
+                    '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 2)),
+                    '{}mime'     => 'mime',
+                    '{}size'     => rand(1024, 99999999),
+                    '{}md5'      => md5(Str::random(128)),
+                    '{}updated'  => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 2)),
+                ],
+            ],
         ]);
     }
 
