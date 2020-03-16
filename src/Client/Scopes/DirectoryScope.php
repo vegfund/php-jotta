@@ -9,6 +9,7 @@
 namespace Vegfund\Jotta\Client\Scopes;
 
 use Exception;
+use function in_array;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
@@ -19,11 +20,9 @@ use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Support\UploadReport;
-use function in_array;
 
 /**
- * Class DirectoryScope
- * @package Vegfund\Jotta\Client\Scopes
+ * Class DirectoryScope.
  */
 class DirectoryScope extends Scope
 {
@@ -38,6 +37,7 @@ class DirectoryScope extends Scope
 
     /**
      * @param $mode
+     *
      * @return $this
      */
     public function setMode($mode)
@@ -56,13 +56,14 @@ class DirectoryScope extends Scope
     }
 
     /**
-     * @return mixed
      * @throws JottaException
      * @throws ParseException
+     *
+     * @return mixed
      */
     public function all()
     {
-        if($this->mode !== self::MODE_MOUNT_POINT) {
+        if ($this->mode !== self::MODE_MOUNT_POINT) {
             throw new JottaException('This is valid only for mount points.');
         }
         /**
@@ -76,11 +77,12 @@ class DirectoryScope extends Scope
     /**
      * Get folder metadata.
      *
-     * @param string $remotePath remote path
+     * @param string      $remotePath remote path
      * @param null|string $remoteName remote name (if name is not specified, then only remote path will be used)
      *
-     * @return array|Folder|NamespaceContract|object|ResponseInterface|string
      * @throws Exception
+     *
+     * @return array|Folder|NamespaceContract|object|ResponseInterface|string
      */
     public function get($remotePath = '', $remoteName = null)
     {
@@ -100,15 +102,16 @@ class DirectoryScope extends Scope
     /**
      * Create a remote folder.
      *
-     * @param string $remotePath remote path
+     * @param string      $remotePath remote path
      * @param null|string $remoteName remote name (if name is not specified, then only remote path will be used)
      *
-     * @return array|Folder|NamespaceContract|object|ResponseInterface|string
      * @throws Exception
+     *
+     * @return array|Folder|NamespaceContract|object|ResponseInterface|string
      */
     public function create($remotePath, $remoteName = null)
     {
-        if($this->mode === self::MODE_MOUNT_POINT) {
+        if ($this->mode === self::MODE_MOUNT_POINT) {
             return $this->createMountPoint($remotePath);
         }
         // Prepare relative path.
@@ -134,8 +137,10 @@ class DirectoryScope extends Scope
 
     /**
      * @param $name
-     * @return array|object|ResponseInterface|string|NamespaceContract
+     *
      * @throws Exception
+     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      */
     protected function createMountPoint($name)
     {
@@ -156,11 +161,12 @@ class DirectoryScope extends Scope
 
     /**
      * @param $remotePath
-     * @param null $remoteName
+     * @param null  $remoteName
      * @param array $options
      *
-     * @return array
      * @throws Exception
+     *
+     * @return array
      */
     public function list($remotePath, $remoteName = null, $options = [])
     {
@@ -307,8 +313,9 @@ class DirectoryScope extends Scope
      * @param $pathTo
      * @param null $mountPointTo
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws Exception
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function move($pathFrom, $pathTo, $mountPointTo = null)
     {
@@ -328,8 +335,9 @@ class DirectoryScope extends Scope
      * @param $nameFrom
      * @param $nameTo
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws Exception
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function rename($nameFrom, $nameTo)
     {
@@ -339,12 +347,13 @@ class DirectoryScope extends Scope
     /**
      * @param $path
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws JottaException
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function delete($path = null)
     {
-        if($this->mode === self::MODE_MOUNT_POINT) {
+        if ($this->mode === self::MODE_MOUNT_POINT) {
             return $this->deleteMountPoint();
         }
 
@@ -363,8 +372,9 @@ class DirectoryScope extends Scope
     }
 
     /**
-     * @return array|object|ResponseInterface|string|NamespaceContract
      * @throws Exception
+     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      */
     public function deleteMountPoint()
     {
