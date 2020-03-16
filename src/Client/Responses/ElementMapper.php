@@ -12,7 +12,6 @@ use function Sabre\Xml\Deserializer\repeatingElements;
 use Sabre\Xml\Reader;
 use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
-use Vegfund\Jotta\Client\Responses\Namespaces\Error;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;

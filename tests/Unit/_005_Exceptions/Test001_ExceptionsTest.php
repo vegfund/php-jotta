@@ -3,7 +3,6 @@
 namespace Vegfund\Jotta\Tests\Unit\_005_Exceptions;
 
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
-use Vegfund\Jotta\Exceptions\ClientXmlException;
 
 class Test001_ExceptionsTest extends \PHPUnit\Framework\TestCase
 {

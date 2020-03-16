@@ -188,8 +188,9 @@ class FileScope extends Scope
      * @param $nameFrom
      * @param $nameTo
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws ParseException
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function rename($nameFrom, $nameTo)
     {

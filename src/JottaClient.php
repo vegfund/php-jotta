@@ -16,7 +16,6 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DependencyInjection\ScopeInterface;
-use Vegfund\Jotta\Client\Contracts\ScopeContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
@@ -171,11 +170,12 @@ class JottaClient
     }
 
     /**
-     * @param string $name scope name
-     * @param mixed $options scope options array
+     * @param string $name    scope name
+     * @param mixed  $options scope options array
+     *
+     * @throws JottaException
      *
      * @return null|Scope|ScopeInterface
-     * @throws JottaException
      */
     public function getScope($name, $options = [])
     {
@@ -198,7 +198,7 @@ class JottaClient
             return $scope;
         }
 
-        throw new JottaException('Scope ' . $name . ' does not exist or not a ScopeContract');
+        throw new JottaException('Scope '.$name.' does not exist or not a ScopeContract');
     }
 
     /**

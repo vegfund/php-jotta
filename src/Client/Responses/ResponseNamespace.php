@@ -112,7 +112,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
             $children = $data->parseInnerTree();
         }
 
-        if(is_array($children)) {
+        if (is_array($children)) {
             $this->attachKeyValues($children);
             $this->attachEnums($children);
             $this->attachObjectValues($children);
@@ -127,7 +127,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function setAttributes(Attributes $attributes = null)
     {
-        if(null === $attributes) {
+        if (null === $attributes) {
             return;
         }
 
