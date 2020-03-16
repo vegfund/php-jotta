@@ -175,14 +175,25 @@ abstract class Scope implements ScopeContract
         return $this->basePath;
     }
 
-    final public function setAsync()
+    final public function setAsyncRequest()
     {
-        $this->async = true;
+        $this->requestType = 'async';
+
+        return $this;
     }
 
-    final public function setSync()
+    final public function setSyncRequest()
     {
-        $this->sync = true;
+        $this->requestType = 'sync';
+
+        return $this;
+    }
+
+    final public function setAutoRequest()
+    {
+        $this->requestType = 'auto';
+
+        return $this;
     }
 
     /**

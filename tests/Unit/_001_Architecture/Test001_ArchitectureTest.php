@@ -230,21 +230,25 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Scope::setAsync
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::setAutoRequest
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::setSyncRequest
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::setAsyncRequest
      */
-    public function test015_force_async_requests()
+    public function test015_set_request_type()
     {
-    }
+        foreach(['async', 'sync', 'auto'] as $requestType) {
+            $mock = \Mockery::mock(Scope::class);
+            $mock->makePartial();
 
-    /**
-     * @covers Scope::setSync
-     */
-    public function test017_force_sync_requests()
-    {
-    }
+            $reflection = new \ReflectionClass($mock);
+            $property = $reflection->getProperty('requestType');
+            $property->setAccessible(true);
 
-    public function test019_force_auto_requests()
-    {
+            $funcName = 'set' . ucfirst($requestType).'Request';
+            $asyncScope = $mock->{$funcName}();
+
+            $this->assertSame($requestType, $property->getValue($asyncScope));
+        }
     }
 
     /**

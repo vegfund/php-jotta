@@ -184,6 +184,9 @@ class ResponseBodyMock
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function file()
     {
         return '<?xml version="1.0" encoding="UTF-8"?>
