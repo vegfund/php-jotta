@@ -39,6 +39,7 @@ class Test001_ExceptionsTest extends \PHPUnit\Framework\TestCase
     {
         $string = Str::random(32);
         $code = rand(400, 599);
+
         try {
             throw new JottaException($string, $code);
         } catch (\Exception $e) {
