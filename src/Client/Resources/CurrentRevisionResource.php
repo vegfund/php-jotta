@@ -10,8 +10,6 @@ namespace Vegfund\Jotta\Client\Resources;
 
 use Sabre\Xml\LibXMLException;
 use Sabre\Xml\ParseException;
-use Vegfund\Jotta\Client\Contracts\NamespaceContract;
-use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
 
 /**
  * Class CurrentRevisionResource.

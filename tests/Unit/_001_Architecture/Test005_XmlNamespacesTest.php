@@ -181,6 +181,7 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::castPrimitives()
+     *
      * @throws \ReflectionException
      */
     public function test019_cast_primitives()
@@ -198,35 +199,35 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
         $primitives = [
             [
-                'value' => 1,
-                'cast' => 'string',
-                'expected' => '1'
+                'value'    => 1,
+                'cast'     => 'string',
+                'expected' => '1',
             ],
             [
-                'value' => 1,
-                'cast' => 'float',
-                'expected' => (float) 1
+                'value'    => 1,
+                'cast'     => 'float',
+                'expected' => (float) 1,
             ],
             [
-                'value' => 'true',
-                'cast' => 'bool',
-                'expected' => true
+                'value'    => 'true',
+                'cast'     => 'bool',
+                'expected' => true,
             ],
             [
-                'value' => 1,
-                'cast' => 'bool',
-                'expected' => true
+                'value'    => 1,
+                'cast'     => 'bool',
+                'expected' => true,
             ],
             [
-                'value' => 'false',
-                'cast' => 'bool',
-                'expected' => false
+                'value'    => 'false',
+                'cast'     => 'bool',
+                'expected' => false,
             ],
             [
-                'value' => 0,
-                'cast' => 'bool',
-                'expected' => false
-            ]
+                'value'    => 0,
+                'cast'     => 'bool',
+                'expected' => false,
+            ],
         ];
 
         foreach ($primitives as $primitive) {

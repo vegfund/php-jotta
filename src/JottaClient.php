@@ -200,7 +200,7 @@ class JottaClient
      */
     public function getScope($name, $options = [])
     {
-        if(!class_exists($name) || !is_a($name, Scope::class, true)) {
+        if (!class_exists($name) || !is_a($name, Scope::class, true)) {
             throw new JottaException('Scope '.$name.' does not exist or not a ScopeContract');
         }
 

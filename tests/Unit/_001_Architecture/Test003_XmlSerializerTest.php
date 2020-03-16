@@ -2,7 +2,6 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
-use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Attributes;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;

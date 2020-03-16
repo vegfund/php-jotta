@@ -9,15 +9,15 @@
 namespace Vegfund\Jotta\Client\Scopes;
 
 use Exception;
-use Sabre\Xml\LibXMLException;
-use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use function in_array;
 use Psr\Http\Message\ResponseInterface;
+use Sabre\Xml\LibXMLException;
 use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Resources\FileResource;
 use Vegfund\Jotta\Client\Resources\FolderListingResource;
+use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
@@ -276,7 +276,7 @@ class DirectoryScope extends Scope
         }
 
         foreach ($folder->getFiles() as $file) {
-            if(false === $this->checkFileRecursive($file, $options)) {
+            if (false === $this->checkFileRecursive($file, $options)) {
                 continue;
             }
             $recursive[] = (new FileResource($file))->toArray();
@@ -286,11 +286,13 @@ class DirectoryScope extends Scope
     }
 
     /**
-     * @param File $file
+     * @param File  $file
      * @param array $options
-     * @return bool
+     *
      * @throws ParseException
      * @throws LibXMLException
+     *
+     * @return bool
      */
     protected function checkFileRecursive(File $file, $options = [])
     {
@@ -319,12 +321,12 @@ class DirectoryScope extends Scope
      */
     public function move($pathFrom, $pathTo, $mountPointTo = null)
     {
-        if($this->mode !== self::MODE_FOLDER) {
+        if ($this->mode !== self::MODE_FOLDER) {
             throw new JottaException('Not a folder mode.');
         }
 
         $folder = $this->get($pathFrom);
-        if(!($folder instanceof Folder)) {
+        if (!($folder instanceof Folder)) {
             throw new JottaException('This is not a remote folder.');
         }
 

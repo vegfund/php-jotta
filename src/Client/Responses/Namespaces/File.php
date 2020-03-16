@@ -11,7 +11,6 @@ namespace Vegfund\Jotta\Client\Responses\Namespaces;
 use Sabre\Xml\LibXMLException;
 use Sabre\Xml\ParseException;
 use Sabre\Xml\Reader;
-use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Support\JFileInfo;
 
@@ -102,7 +101,6 @@ class File extends ResponseNamespace
      */
     public function isCompleted()
     {
-
         return 'COMPLETED' === $this->getRevision()->state || 'COMPLETED' === $this->getRevision()->state;
     }
 
@@ -158,7 +156,7 @@ class File extends ResponseNamespace
     protected function getRevision()
     {
         $revision = $this->currentRevision;
-        if(null !== $this->latestRevision) {
+        if (null !== $this->latestRevision) {
             $revision = $this->latestRevision;
         }
 
