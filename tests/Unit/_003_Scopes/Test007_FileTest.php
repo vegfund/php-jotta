@@ -5,6 +5,7 @@ namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
+use Vegfund\Jotta\Support\JFileInfo;
 
 class Test007_FileTest extends \PHPUnit\Framework\TestCase
 {
@@ -129,8 +130,36 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($file->isValid());
     }
 
+    /**
+     * @throws \Sabre\Xml\ParseException
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isNewerThan
+     */
     public function test009_is_newer()
     {
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                <file name="InSudFKKxbn4_test.txt" uuid="**obfuscated**" time="2020-01-16-T12:23:58Z" host="**obfuscated**">
+                    <path xml:space="preserve">/**obfuscated**/Jotta/Archive</path>
+                    <abspath xml:space="preserve">/**obfuscated**/Jotta/Archive</abspath>
+                    <currentRevision>
+                        <number>1</number>
+                        <state>COMPLETED</state>
+                        <created>2020-03-10-T17:02:49Z</created>
+                        <modified>2020-03-10-T17:02:49Z</modified>
+                        <mime>text/plain</mime>
+                        <md5>e3bc508cc0f25ed6b86089f0b6e09972</md5>
+                        <updated>2020-03-10-T17:02:49Z</updated>
+                    </currentRevision>
+                </file>';
+
+        $remoteFile = XmlResponseSerializer::parse($body, 'auto');
+
+        $localFileMock = \Mockery::mock(JFileInfo::class);
+        $localFileMock->shouldReceive('getMTime')->andReturn(time() / 2);
+        $this->assertTrue($remoteFile->isNewerThan($localFileMock));
+
+        $localFileMock = \Mockery::mock(JFileInfo::class);
+        $localFileMock->shouldReceive('getMTime')->andReturn(time());
+        $this->assertFalse($remoteFile->isNewerThan($localFileMock));
     }
 
     public function test011_is_different()

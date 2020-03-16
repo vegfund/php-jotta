@@ -140,35 +140,41 @@ class File extends ResponseNamespace
     }
 
     /**
-     * @param $filename
+     * @param $file
      *
      * @return bool
      */
-    public function isNewerThan($filename)
+    public function isNewerThan($file)
     {
-        return $this->currentRevision->modified->getTimestamp() >= filemtime($filename);
+        if(is_string($file)) {
+            $file = new JFileInfo($file);
+        }
+        if($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
+            $file = new JFileInfo($file->getRealPath());
+        }
+        return $this->currentRevision->modified->getTimestamp() >= $file->getMTime();
     }
 
     /**
-     * @param $filename
+     * @param $file
      *
      * @return bool
      */
-    public function isDifferentThan($filename)
+    public function isDifferentThan($file)
     {
-        return $this->currentRevision->md5 !== (new JFileInfo($filename))->getMd5();
+        return $this->currentRevision->md5 !== (new JFileInfo($file))->getMd5();
     }
 
     /**
-     * @param $filename
+     * @param $file
+     *
+     * @return bool
+     *@throws ParseException
      *
      * @throws LibXMLException
-     * @throws ParseException
-     *
-     * @return bool
      */
-    public function isSameAs($filename)
+    public function isSameAs($file)
     {
-        return $this->isValid() && !$this->isNewerThan($filename) && !$this->isDifferentThan($filename);
+        return $this->isValid() && !$this->isNewerThan($file) && !$this->isDifferentThan($file);
     }
 }
