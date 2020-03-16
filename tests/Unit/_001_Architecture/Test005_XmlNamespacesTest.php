@@ -61,6 +61,7 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getAttribute
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__call
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__get
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test007_file()
