@@ -13,16 +13,18 @@ namespace Vegfund\Jotta\Support;
  */
 class JFileInfo extends \SplFileInfo
 {
-    /**
-     * JFileInfo constructor.
-     * @param $file_name
-     */
-    public function __construct($file_name)
+    public static function make($file)
     {
-        if($file_name instanceof \SplFileInfo) {
-            $file_name = $file_name->getRealPath();
+        if($file instanceof JFileInfo) {
+            return $file;
         }
-        parent::__construct($file_name);
+
+        if($file instanceof \SplFileInfo)
+        {
+            return new static($file->getRealPath());
+        }
+
+        return new static($file);
     }
 
     /**

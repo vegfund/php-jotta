@@ -349,9 +349,9 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     public function test009_cast_file_to_jfile()
     {
         $thisFile = __FILE__;
-        $this->assertInstanceOf(JFileInfo::class, new JFileInfo($thisFile));
+        $this->assertInstanceOf(JFileInfo::class, JFileInfo::make($thisFile));
 
         $thisFile = new \SplFileInfo($thisFile);
-        $this->assertInstanceOf(JFileInfo::class, new JFileInfo($thisFile));
+        $this->assertInstanceOf(JFileInfo::class, JFileInfo::make($thisFile));
     }
 }

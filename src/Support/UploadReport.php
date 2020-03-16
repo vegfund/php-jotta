@@ -99,7 +99,7 @@ class UploadReport
     {
         $files = is_array($files) ? $files : [$files];
         $files = array_map(function ($file) {
-            return new JFileInfo($file);
+            return JFileInfo::make($file);
         }, $files);
         $this->report['files']['no_folder'] = array_merge($this->report['files']['no_folder'], $files);
     }
@@ -109,7 +109,7 @@ class UploadReport
      */
     public function fileFresh($file)
     {
-        $this->report['files']['uploaded_fresh'][] = new JFileInfo($file);
+        $this->report['files']['uploaded_fresh'][] = JFileInfo::make($file);
     }
 
     /**
@@ -128,9 +128,9 @@ class UploadReport
         ];
 
         if (!$existed) {
-            $this->report['files']['uploaded_fresh'][] = new JFileInfo($file);
+            $this->report['files']['uploaded_fresh'][] = JFileInfo::make($file);
         } else {
-            $this->report['files'][$mapping[$overwriteMode]][] = new JFileInfo($file);
+            $this->report['files'][$mapping[$overwriteMode]][] = JFileInfo::make($file);
         }
     }
 
@@ -139,7 +139,7 @@ class UploadReport
      */
     public function fileTroublesome($file)
     {
-        $this->report['files']['troublesome'][] = new JFileInfo($file);
+        $this->report['files']['troublesome'][] = JFileInfo::make($file);
     }
 
     public function stop()

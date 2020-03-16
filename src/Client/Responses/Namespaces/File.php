@@ -134,14 +134,7 @@ class File extends ResponseNamespace
      */
     public function isDifferentThan($file)
     {
-        if (is_string($file)) {
-            $file = new JFileInfo($file);
-        }
-        if ($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
-            $file = new JFileInfo($file->getRealPath());
-        }
-
-        return $this->getRevision()->md5 !== $file->getMd5();
+        return $this->getRevision()->md5 !== JFileInfo::make($file)->getMd5();
     }
 
     /**
