@@ -16,7 +16,7 @@ class Test011_FolderAndMountPointTest extends \PHPUnit\Framework\TestCase
     {
     }
 
-    public function test003a_mount_point()
+    public function test003a_is_mount_point()
     {
     }
 

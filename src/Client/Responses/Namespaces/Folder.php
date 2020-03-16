@@ -72,4 +72,12 @@ class Folder extends ResponseNamespace
     {
         return (new self())->attachFields($reader);
     }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return null !== $this->getAttribute('deleted');
+    }
 }
