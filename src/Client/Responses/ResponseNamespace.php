@@ -125,11 +125,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function setAttributes(Attributes $attributes = null)
     {
-        if (null === $attributes) {
-            return;
-        }
-
-        $this->attributes = $attributes;
+        $this->attributes = $attributes ?: new Attributes([]);
     }
 
     /**

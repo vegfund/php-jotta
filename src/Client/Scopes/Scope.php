@@ -98,10 +98,6 @@ abstract class Scope implements ScopeContract
      */
     final public function serialize($body, $namespace = 'auto')
     {
-        if (null === $body || false === $body) {
-            return $body;
-        }
-
         if ($body instanceof ResponseInterface) {
             $body = $body->getBody();
         }
