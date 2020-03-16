@@ -7,6 +7,7 @@ use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Str;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
+use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\JottaClient;
 
 class Test001_ExceptionsTest extends \PHPUnit\Framework\TestCase
@@ -86,6 +87,25 @@ class Test001_ExceptionsTest extends \PHPUnit\Framework\TestCase
         } catch (\Exception $e) {
             $this->assertInstanceOf(ServerException::class, $e);
             $this->assertSame('message', $e->getMessage());
+        }
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::serialize
+     * @throws \ReflectionException
+     */
+    public function test007_scope_handle_other_exception()
+    {
+        $method = new \ReflectionMethod(Scope::class, 'serialize');
+        $method->setAccessible(true);
+        $mock = \Mockery::mock(Scope::class);
+        $mock->makePartial();
+
+        try {
+            $method->invoke($mock, ['a' => 'b', 'c' => 'd']);
+            $this->assertTrue(false);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(\Exception::class, $e);
         }
     }
 }
