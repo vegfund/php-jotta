@@ -165,6 +165,7 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDifferentThan
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test011_is_different()

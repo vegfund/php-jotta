@@ -6,7 +6,6 @@ class Test011_FolderAndMountPointTest extends \PHPUnit\Framework\TestCase
 {
     public function test001_get_when_folder()
     {
-
     }
 
     public function test001a_get_when_mount_point()
