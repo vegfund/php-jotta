@@ -91,6 +91,7 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::getAttribute
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test007_no_attributes()
@@ -109,7 +110,6 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
         $serialized = XmlResponseSerializer::parse($body, 'auto');
 
         $this->assertNull($serialized->getAttribute('nonexisting'));
-
 
         $body = '<?xml version="1.0" encoding="UTF-8"?>
                     <mountPoint>

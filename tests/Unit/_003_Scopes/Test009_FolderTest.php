@@ -12,6 +12,7 @@ class Test009_FolderTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Folder::isDeleted
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test003_is_deleted()
