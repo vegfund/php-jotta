@@ -86,7 +86,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             'mountPoint' => MountPointScope::class,
         ];
 
-        foreach($scopes as $method => $className) {
+        foreach ($scopes as $method => $className) {
             $scope = Jotta::{$method}(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
 
             $this->assertInstanceOf($className, $scope);
@@ -101,6 +101,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     public function test003a_scope_does_not_exist()
     {
         $scopeName = str_replace('il', 'somethingelse', FileScope::class);
+
         try {
             Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->getScope($scopeName);
             $this->assertTrue(false);
@@ -115,9 +116,9 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     public function test003c_scopes_with_options()
     {
         $options = [
-            'device' => Str::random(32),
+            'device'      => Str::random(32),
             'mount_point' => Str::random(32),
-            'base_path' => Str::random(32)
+            'base_path'   => Str::random(32),
         ];
 
         $scopes = [
@@ -128,7 +129,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             'mountPoint' => MountPointScope::class,
         ];
 
-        foreach($scopes as $method => $className) {
+        foreach ($scopes as $method => $className) {
             $scope = Jotta::{$method}(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'), $options);
 
             $this->assertInstanceOf($className, $scope);
@@ -248,6 +249,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\JottaClient::getHeaders
+     *
      * @throws \ReflectionException
      */
     public function test021_merge_headers()
@@ -259,10 +261,10 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
         $newHeaders = [
             'header1' => 'value1',
-            'header2' => 'value2'
+            'header2' => 'value2',
         ];
         $mergedHeaders = $method->invoke($mock, $newHeaders);
-        foreach($newHeaders as $header => $value) {
+        foreach ($newHeaders as $header => $value) {
             $this->assertSame($value, $mergedHeaders[$header]);
         }
     }

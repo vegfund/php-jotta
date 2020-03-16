@@ -10,11 +10,9 @@ namespace Vegfund\Jotta\Client\Responses;
 
 use DOMDocument;
 use Exception;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Stream;
 use Sabre\Xml\ParseException;
 use Sabre\Xml\Service;
-use Vegfund\Jotta\Exceptions\ClientXmlException;
 
 /**
  * Class AbstractResponse.
@@ -43,8 +41,10 @@ class XmlResponseSerializer
 
     /**
      * XmlResponseSerializer constructor.
+     *
      * @param $body
      * @param $namespace
+     *
      * @throws ParseException
      * @throws Exception
      */
@@ -107,8 +107,7 @@ class XmlResponseSerializer
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->loadXML($body);
 
-        if('error' === ($nms = $dom->documentElement->tagName)) {
-
+        if ('error' === ($nms = $dom->documentElement->tagName)) {
             $domDocument = (new \DOMDocument('1.0', 'UTF-8'));
             $domDocument->loadXML($body);
             $code = $domDocument->getElementsByTagName('code')->item(0)->nodeValue;

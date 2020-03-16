@@ -8,7 +8,6 @@
 
 namespace Vegfund\Jotta\Client\Scopes;
 
-use Vegfund\Jotta\Support\UploadReport;
 use const DIRECTORY_SEPARATOR;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -20,6 +19,7 @@ use Vegfund\Jotta\Client\Resources\FolderListingResource;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
+use Vegfund\Jotta\Support\UploadReport;
 
 /**
  * Class FolderScope.
@@ -103,11 +103,12 @@ class FolderScope extends Scope
     /**
      * @param $localPath
      * @param string $remotePath
-     * @param mixed $overwriteMode
+     * @param mixed  $overwriteMode
      *
-     * @return UploadReport
      * @throws LibXMLException
      * @throws ParseException
+     *
+     * @return UploadReport
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {

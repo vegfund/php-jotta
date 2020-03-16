@@ -13,6 +13,7 @@ class UploadReport
     protected $report;
     protected $start;
     protected $end;
+
     public function __construct()
     {
         $this->start = microtime(true);
@@ -75,12 +76,10 @@ class UploadReport
 
     public function file($existed, $file, $overwriteMode)
     {
-
     }
 
     public function fileTroublesome($file)
     {
-
     }
 
     public function stop()
