@@ -6,6 +6,7 @@ use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
+use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
@@ -95,8 +96,32 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
         $this->assertIsString($serialized->getPath());
     }
 
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::metadata()
+     * @throws \Sabre\Xml\ParseException
+     */
     public function test011_metadata()
     {
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                <folder name="Somefolder" time="2020-03-16-T13:59:17Z" host="**obfuscated**">
+                    <path xml:space="preserve">/**obfuscated**/Jotta/Sync</path>
+                    <abspath xml:space="preserve">/**obfuscated**/Jotta/Sync</abspath>
+                    <folders>
+                        <folder name="Ideas">
+                            <abspath xml:space="preserve">/**obfuscated**/Jotta/Sync/Somefolder</abspath>
+                        </folder>
+                    </folders>
+                    <files>
+                    </files>
+                    <metadata first="" max="" total="8" num_folders="1" num_files="7"/>
+                </folder>';
+
+        $folder = XmlResponseSerializer::parse($body, 'auto');
+        $this->assertInstanceOf(Metadata::class, $folder->getMetadata());
+        $metadata = $folder->getMetadata();
+
+        $this->assertSame(1, (int)$metadata->getAttribute('num_folders'));
+        $this->assertSame(7, (int)$metadata->getAttribute('num_files'));
     }
 
     /**

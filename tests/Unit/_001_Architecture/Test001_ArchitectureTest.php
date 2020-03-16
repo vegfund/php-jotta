@@ -91,6 +91,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\Jotta::account
      * @covers \Vegfund\Jotta\Jotta::device
      * @covers \Vegfund\Jotta\Jotta::file
+     * @covers \Vegfund\Jotta\Jotta::directory
      * @covers \Vegfund\Jotta\Jotta::folder
      * @covers \Vegfund\Jotta\Jotta::mountPoint
      */

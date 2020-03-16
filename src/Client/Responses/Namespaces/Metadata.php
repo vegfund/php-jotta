@@ -19,6 +19,11 @@ use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 class Metadata extends ResponseNamespace
 {
     /**
+     * @var array
+     */
+    protected $keyValueMap = [];
+
+    /**
      * The deserialize method is called during xml parsing.
      *
      * This method is called statically, this is because in theory this method

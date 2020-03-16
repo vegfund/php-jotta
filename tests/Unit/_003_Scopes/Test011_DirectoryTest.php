@@ -2,7 +2,7 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
-class Test011_FolderAndMountPointTest extends \PHPUnit\Framework\TestCase
+class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
 {
     public function test001_get_when_folder()
     {

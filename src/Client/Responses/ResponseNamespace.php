@@ -16,6 +16,7 @@ use Sabre\Xml\Reader;
 use Sabre\Xml\XmlDeserializable;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Responses\Namespaces\Attributes;
+use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 
 /**
  * Class AbstractNamespace.
@@ -112,11 +113,10 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function attachFields($data)
     {
-        $attributes = null;
         $children = $data;
 
         if ($data instanceof  Reader) {
-            $attributes = new Attributes($data->parseAttributes());
+            $this->setAttributes(new Attributes($data->parseAttributes()));
             $children = $data->parseInnerTree();
         }
 
@@ -124,7 +124,6 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
             $this->attachKeyValues($children);
             $this->attachEnums($children);
             $this->attachObjectValues($children);
-            $this->setAttributes($attributes);
         }
 
         return $this;
@@ -142,6 +141,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
         }
 
         $this->attributes = $attributes;
+
     }
 
     /**
