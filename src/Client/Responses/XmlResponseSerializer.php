@@ -10,9 +10,11 @@ namespace Vegfund\Jotta\Client\Responses;
 
 use DOMDocument;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Stream;
 use Sabre\Xml\ParseException;
 use Sabre\Xml\Service;
+use Vegfund\Jotta\Exceptions\ClientXmlException;
 
 /**
  * Class AbstractResponse.
@@ -51,10 +53,6 @@ class XmlResponseSerializer
         $this->body = (string) $body;
 
         $namespace = 'auto' === $namespace ? $this->getRootNamespace($body) : $namespace;
-
-        if('error' === $namespace) {
-            throw new Exception('XML Error response');
-        }
 
         $this->xmlService = $this->getXmlService();
         $this->xmlService->elementMap = ElementMapper::nms($namespace);
@@ -109,6 +107,16 @@ class XmlResponseSerializer
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->loadXML($body);
 
-        return $dom->documentElement->tagName;
+        if('error' === ($nms = $dom->documentElement->tagName)) {
+
+            $domDocument = (new \DOMDocument('1.0', 'UTF-8'));
+            $domDocument->loadXML($body);
+            $code = $domDocument->getElementsByTagName('code')->item(0)->nodeValue;
+            $message = $domDocument->getElementsByTagName('message')->item(0)->nodeValue;
+
+            throw new Exception($message, $code);
+        }
+
+        return $nms;
     }
 }
