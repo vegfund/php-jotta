@@ -41,6 +41,11 @@ class User extends ResponseNamespace
     public $maxMobileDevices;
 
     /**
+     * @var bool
+     */
+    public $locked;
+
+    /**
      * @var int
      */
     public $usage;
@@ -86,11 +91,6 @@ class User extends ResponseNamespace
     public $businessName;
 
     /**
-     * @var bool
-     */
-    public $locked;
-
-    /**
      * @var array
      */
     public $devices = [];
@@ -102,6 +102,7 @@ class User extends ResponseNamespace
         'username',
         'account-type',
         ['capacity'           => 'int'],
+        ['locked' => 'bool'],
         ['max-devices'        => 'int'],
         ['max-mobile-devices' => 'int'],
         ['capacity'           => 'int'],
@@ -113,7 +114,6 @@ class User extends ResponseNamespace
         ['enable-foldershare' => 'bool'],
         'business-role',
         'business-name',
-        ['locked' => 'bool'],
     ];
 
     /**
