@@ -109,5 +109,21 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
         $serialized = XmlResponseSerializer::parse($body, 'auto');
 
         $this->assertNull($serialized->getAttribute('nonexisting'));
+
+
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                    <mountPoint>
+                        <name xml:space="preserve">Archive</name>
+                        <path xml:space="preserve">/**obfuscated**/Jotta</path>
+                        <abspath xml:space="preserve">/**obfuscated**/Jotta</abspath>
+                        <size>383654</size>
+                        <modified>2020-03-12-T22:57:05Z</modified>
+                        <device>Jotta</device>
+                        <user>**obfuscated**</user>
+                    </mountPoint>';
+
+        $serialized = XmlResponseSerializer::parse($body, 'auto');
+
+        $this->assertNull($serialized->getAttribute('nonexisting'));
     }
 }
