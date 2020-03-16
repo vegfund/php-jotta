@@ -88,4 +88,26 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('**obfuscated**', $serialized->getAttribute('host'));
         $this->assertSame('**obfuscated**', $serialized->attributes->all()['host']);
     }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::getAttribute
+     * @throws \Sabre\Xml\ParseException
+     */
+    public function test007_no_attributes()
+    {
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                    <mountPoint time="2020-03-16-T09:47:15Z" host="**obfuscated**">
+                        <name xml:space="preserve">Archive</name>
+                        <path xml:space="preserve">/**obfuscated**/Jotta</path>
+                        <abspath xml:space="preserve">/**obfuscated**/Jotta</abspath>
+                        <size>383654</size>
+                        <modified>2020-03-12-T22:57:05Z</modified>
+                        <device>Jotta</device>
+                        <user>**obfuscated**</user>
+                    </mountPoint>';
+
+        $serialized = XmlResponseSerializer::parse($body, 'auto');
+
+        $this->assertNull($serialized->getAttribute('nonexisting'));
+    }
 }
