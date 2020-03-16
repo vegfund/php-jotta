@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Exceptions\CliDevicesNotSupportedException;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Jotta;
 
 /**
@@ -46,7 +47,7 @@ class DeviceScope extends Scope
     public function get($device = Jotta::DEVICE_JOTTA)
     {
         if (Jotta::DEVICE_JOTTA !== $device) {
-            throw new CliDevicesNotSupportedException();
+            throw new JottaException('CLI devices are not supported.');
         }
 
         return $this->serialize($this->request(
