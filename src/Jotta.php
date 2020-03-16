@@ -111,10 +111,11 @@ class Jotta
      *
      * @param string $username jottacloud username
      * @param string $password jottacloud password
-     * @param array $options
+     * @param array  $options
+     *
+     * @throws Client\Exceptions\JottaException
      *
      * @return AccountScope
-     * @throws Client\Exceptions\JottaException
      */
     public static function account($username, $password, $options = [])
     {
@@ -126,10 +127,11 @@ class Jotta
      *
      * @param string $username jottacloud username
      * @param string $password jottacloud password
-     * @param array $options
+     * @param array  $options
+     *
+     * @throws Client\Exceptions\JottaException
      *
      * @return DeviceScope
-     * @throws Client\Exceptions\JottaException
      */
     public static function device($username, $password, $options = [])
     {
@@ -141,10 +143,11 @@ class Jotta
      *
      * @param string $username jottacloud username
      * @param string $password jottacloud password
-     * @param array $options
+     * @param array  $options
+     *
+     * @throws Client\Exceptions\JottaException
      *
      * @return FileScope
-     * @throws Client\Exceptions\JottaException
      */
     public static function file($username, $password, $options = [])
     {
@@ -156,10 +159,11 @@ class Jotta
      *
      * @param string $username jottacloud username
      * @param string $password jottacloud password
-     * @param array $options
+     * @param array  $options
+     *
+     * @throws Client\Exceptions\JottaException
      *
      * @return FolderScope
-     * @throws Client\Exceptions\JottaException
      */
     public static function folder($username, $password, $options = [])
     {
@@ -171,10 +175,11 @@ class Jotta
      *
      * @param string $username jottacloud username
      * @param string $password jottacloud password
-     * @param array $options
+     * @param array  $options
+     *
+     * @throws Client\Exceptions\JottaException
      *
      * @return MountPointScope
-     * @throws Client\Exceptions\JottaException
      */
     public static function mountPoint($username, $password, $options = [])
     {
