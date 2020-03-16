@@ -12,6 +12,7 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDeleted
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCompleted
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isValid
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test001_is_deleted()
@@ -43,6 +44,7 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCorrupt
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCompleted
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isValid
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test003_is_corrupt()
@@ -69,11 +71,11 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($file->isValid());
     }
 
-
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCorrupt
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCompleted
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDeleted
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test005_is_completed()
@@ -102,6 +104,7 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isValid
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test007_is_valid()
@@ -141,6 +144,7 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getAttribute
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__call
+     *
      * @throws \Sabre\Xml\ParseException
      */
     public function test015_get()

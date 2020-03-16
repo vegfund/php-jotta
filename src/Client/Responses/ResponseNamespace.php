@@ -62,11 +62,12 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
 
     /**
      * @param $name
+     *
      * @return mixed|null
      */
     final public function getAttribute($name)
     {
-            return (isset($this->attributes) && $this->attributes instanceof Attributes) ? $this->attributes->get($name) : null;
+        return (isset($this->attributes) && $this->attributes instanceof Attributes) ? $this->attributes->get($name) : null;
     }
 
     /**

@@ -249,8 +249,8 @@ abstract class Scope implements ScopeContract
      */
     final protected function request($path, $method = 'get', $headers = [], $clientOptions = [], $async = null)
     {
-        if($async === null || !is_bool($async)) {
-            if($this->requestType === 'auto') {
+        if ($async === null || !is_bool($async)) {
+            if ($this->requestType === 'auto') {
                 $async = false;
             } else {
                 $async = $this->requestType === 'async';

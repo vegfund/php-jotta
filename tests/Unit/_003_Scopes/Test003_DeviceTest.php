@@ -2,7 +2,6 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
-use Vegfund\Jotta\Client\Exceptions\CliDevicesNotSupportedException;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Jotta;
