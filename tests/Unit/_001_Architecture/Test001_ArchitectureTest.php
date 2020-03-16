@@ -14,6 +14,7 @@ use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
 use Vegfund\Jotta\Support\JFileInfo;
+use Vegfund\Jotta\Support\UploadReport;
 
 class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 {
@@ -340,5 +341,17 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
         $basePath = Str::random(32);
         $mock->setBasePath($basePath);
         $this->assertSame($basePath, $mock->getBasePath());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Support\JFileInfo::__construct
+     */
+    public function test009_cast_file_to_jfile()
+    {
+        $thisFile = __FILE__;
+        $this->assertInstanceOf(JFileInfo::class, new JFileInfo($thisFile));
+
+        $thisFile = new \SplFileInfo($thisFile);
+        $this->assertInstanceOf(JFileInfo::class, new JFileInfo($thisFile));
     }
 }

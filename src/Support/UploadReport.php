@@ -98,6 +98,9 @@ class UploadReport
     public function fileNoFolder($files)
     {
         $files = is_array($files) ? $files : [$files];
+        $files = array_map(function ($file) {
+            return new JFileInfo($file);
+        }, $files);
         $this->report['files']['no_folder'] = array_merge($this->report['files']['no_folder'], $files);
     }
 
@@ -106,7 +109,7 @@ class UploadReport
      */
     public function fileFresh($file)
     {
-        $this->report['files']['uploaded_fresh'][] = $file;
+        $this->report['files']['uploaded_fresh'][] = new JFileInfo($file);
     }
 
     /**
@@ -125,9 +128,9 @@ class UploadReport
         ];
 
         if (!$existed) {
-            $this->report['files']['uploaded_fresh'][] = $file;
+            $this->report['files']['uploaded_fresh'][] = new JFileInfo($file);
         } else {
-            $this->report['files'][$mapping[$overwriteMode]][] = $file;
+            $this->report['files'][$mapping[$overwriteMode]][] = new JFileInfo($file);
         }
     }
 
@@ -136,7 +139,7 @@ class UploadReport
      */
     public function fileTroublesome($file)
     {
-        $this->report['files']['troublesome'][] = $file;
+        $this->report['files']['troublesome'][] = new JFileInfo($file);
     }
 
     public function stop()
@@ -150,24 +153,12 @@ class UploadReport
      */
     public function getReport()
     {
-        $report = array_map(function ($item) {
-            if (is_string($item)) {
-                return new JFileInfo($item);
-            }
-
-            if ($item instanceof \SplFileInfo) {
-                return new JFileInfo($item->getRealPath());
-            }
-
-            return $item;
-        }, $this->report);
-
-        foreach ($report['files'] as $scope => $scopeFiles) {
+        foreach ($this->report['files'] as $scope => $scopeFiles) {
             foreach ($scopeFiles as $scopeFile) {
-                $report['sizes'][$scope] += $scopeFile->getSize();
+                $this->report['sizes'][$scope] += $scopeFile->getSize();
             }
         }
 
-        return $report;
+        return $this->report;
     }
 }

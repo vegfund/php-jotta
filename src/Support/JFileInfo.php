@@ -14,6 +14,18 @@ namespace Vegfund\Jotta\Support;
 class JFileInfo extends \SplFileInfo
 {
     /**
+     * JFileInfo constructor.
+     * @param $file_name
+     */
+    public function __construct($file_name)
+    {
+        if($file_name instanceof \SplFileInfo) {
+            $file_name = $file_name->getRealPath();
+        }
+        parent::__construct($file_name);
+    }
+
+    /**
      * @return string
      */
     public function getMd5()

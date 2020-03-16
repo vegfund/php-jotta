@@ -186,6 +186,35 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Support\UploadReport::file
+     */
+    public function test007a_upload_files_fresh_variant()
+    {
+        $expectedSize = 0;
+        $expectedCount = rand(50, 100);
+
+        $uploadReport = new UploadReport();
+
+        for ($i = 0; $i < $expectedCount; $i++) {
+            $mock = \Mockery::mock(JFileInfo::class);
+            $size = rand(1, 999999);
+            $path = 'path/to/'.Str::random(12).'txt';
+            $mock->shouldReceive('getSize')->andReturn($size);
+            $mock->shouldReceive('getRealPath')->andReturn($path);
+
+            $expectedSize += $size;
+
+            $uploadReport->file(false, $mock, Jotta::FILE_OVERWRITE_ALWAYS);
+        }
+
+        $uploadReport->stop();
+        $report = $uploadReport->getReport();
+
+        $this->assertSame($expectedCount, count($report['files']['uploaded_fresh']));
+        $this->assertSame($expectedSize, $report['sizes']['uploaded_fresh']);
+    }
+
+    /**
      * @covers \Vegfund\Jotta\Support\UploadReport::fileTroublesome
      */
     public function test007_upload_files_troublesome()
