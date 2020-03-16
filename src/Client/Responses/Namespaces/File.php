@@ -162,7 +162,14 @@ class File extends ResponseNamespace
      */
     public function isDifferentThan($file)
     {
-        return $this->currentRevision->md5 !== (new JFileInfo($file))->getMd5();
+        if(is_string($file)) {
+            $file = new JFileInfo($file);
+        }
+        if($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
+            $file = new JFileInfo($file->getRealPath());
+        }
+
+        return $this->currentRevision->md5 !== $file->getMd5();
     }
 
     /**

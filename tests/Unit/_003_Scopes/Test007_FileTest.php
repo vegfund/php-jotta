@@ -2,6 +2,7 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
+use Illuminate\Support\Str;
 use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
@@ -162,8 +163,53 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($remoteFile->isNewerThan($localFileMock));
     }
 
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDifferentThan
+     * @throws \Sabre\Xml\ParseException
+     */
     public function test011_is_different()
     {
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                <file name="InSudFKKxbn4_test.txt" uuid="**obfuscated**" time="2020-01-16-T12:23:58Z" host="**obfuscated**">
+                    <path xml:space="preserve">/**obfuscated**/Jotta/Archive</path>
+                    <abspath xml:space="preserve">/**obfuscated**/Jotta/Archive</abspath>
+                    <currentRevision>
+                        <number>1</number>
+                        <state>COMPLETED</state>
+                        <created>2020-03-10-T17:02:49Z</created>
+                        <modified>2020-03-10-T17:02:49Z</modified>
+                        <mime>text/plain</mime>
+                        <md5>e3bc508cc0f25ed6b86089f0b6e09972</md5>
+                        <updated>2020-03-10-T17:02:49Z</updated>
+                    </currentRevision>
+                </file>';
+
+        $remoteFile = XmlResponseSerializer::parse($body, 'auto');
+
+        $localFileMock = \Mockery::mock(JFileInfo::class);
+        $localFileMock->shouldReceive('getMd5')->andReturn(md5(Str::random(128)));
+        $this->assertTrue($remoteFile->isDifferentThan($localFileMock));
+
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                <file name="InSudFKKxbn4_test.txt" uuid="**obfuscated**" time="2020-01-16-T12:23:58Z" host="**obfuscated**">
+                    <path xml:space="preserve">/**obfuscated**/Jotta/Archive</path>
+                    <abspath xml:space="preserve">/**obfuscated**/Jotta/Archive</abspath>
+                    <currentRevision>
+                        <number>1</number>
+                        <state>COMPLETED</state>
+                        <created>2020-03-10-T17:02:49Z</created>
+                        <modified>2020-03-10-T17:02:49Z</modified>
+                        <mime>text/plain</mime>
+                        <md5>e3bc508cc0f25ed6b86089f0b6e09972</md5>
+                        <updated>2020-03-10-T17:02:49Z</updated>
+                    </currentRevision>
+                </file>';
+
+        $remoteFile = XmlResponseSerializer::parse($body, 'auto');
+
+        $localFileMock = \Mockery::mock(JFileInfo::class);
+        $localFileMock->shouldReceive('getMd5')->andReturn('e3bc508cc0f25ed6b86089f0b6e09972');
+        $this->assertFalse($remoteFile->isDifferentThan($localFileMock));
     }
 
     public function test013_is_same_as()
