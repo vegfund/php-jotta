@@ -122,21 +122,4 @@ class ElementMapper
             '{}metadata'        => Metadata::class,
         ];
     }
-
-    protected function metadata()
-    {
-        return [
-            '{}metadata' => Metadata::class,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function currentRevision()
-    {
-        return [
-            '{}currentRevision' => CurrentRevision::class,
-        ];
-    }
 }
