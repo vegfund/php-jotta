@@ -182,6 +182,13 @@ class File extends ResponseNamespace
      */
     public function isSameAs($file)
     {
+        if(is_string($file)) {
+            $file = new JFileInfo($file);
+        }
+        if($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
+            $file = new JFileInfo($file->getRealPath());
+        }
+
         return $this->isValid() && !$this->isNewerThan($file) && !$this->isDifferentThan($file);
     }
 }

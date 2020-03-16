@@ -188,7 +188,9 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
 
         $localFileMock = \Mockery::mock(JFileInfo::class);
         $localFileMock->shouldReceive('getMd5')->andReturn(md5(Str::random(128)));
+        $localFileMock->shouldReceive('getMTime')->andReturn(\DateTime::createFromFormat('Y-m-d-\TH:i:sO', '2020-03-10-T17:02:49Z')->getTimestamp());
         $this->assertTrue($remoteFile->isDifferentThan($localFileMock));
+        $this->assertFalse($remoteFile->isSameAs($localFileMock));
 
         $body = '<?xml version="1.0" encoding="UTF-8"?>
                 <file name="InSudFKKxbn4_test.txt" uuid="**obfuscated**" time="2020-01-16-T12:23:58Z" host="**obfuscated**">
@@ -209,11 +211,9 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
 
         $localFileMock = \Mockery::mock(JFileInfo::class);
         $localFileMock->shouldReceive('getMd5')->andReturn('e3bc508cc0f25ed6b86089f0b6e09972');
+        $localFileMock->shouldReceive('getMTime')->andReturn(\DateTime::createFromFormat('Y-m-d-\TH:i:sO', '2020-03-10-T17:02:49Z')->getTimestamp());
         $this->assertFalse($remoteFile->isDifferentThan($localFileMock));
-    }
-
-    public function test013_is_same_as()
-    {
+        $this->assertTrue($remoteFile->isSameAs($localFileMock));
     }
 
     /**
