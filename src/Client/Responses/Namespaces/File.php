@@ -80,7 +80,7 @@ class File extends ResponseNamespace
      */
     public function isDeleted()
     {
-        return isset($this->getAttributes()->deleted) && $this->getAttributes()->deleted;
+        return null !== $this->getAttribute('deleted');
     }
 
     /**
@@ -91,19 +91,7 @@ class File extends ResponseNamespace
      */
     public function isCorrupt()
     {
-        if (!($this->currentRevision instanceof NamespaceContract)) {
-            $currentRevision = (new CurrentRevision())->fill($this->currentRevision);
-        } else {
-            $currentRevision = $this->currentRevision;
-        }
-
-        if (!($this->latestRevision instanceof NamespaceContract)) {
-            $latestRevision = (new CurrentRevision())->fill($this->latestRevision);
-        } else {
-            $latestRevision = $this->latestRevision;
-        }
-
-        return 'CORRUPT' === $latestRevision->state || 'CORRUPT' === $currentRevision->state;
+        return 'CORRUPT' === $this->getRevision()->state || 'CORRUPT' === $this->getRevision()->state;
     }
 
     /**
@@ -114,19 +102,8 @@ class File extends ResponseNamespace
      */
     public function isCompleted()
     {
-        if (!($this->currentRevision instanceof NamespaceContract)) {
-            $currentRevision = (new CurrentRevision())->fill($this->currentRevision);
-        } else {
-            $currentRevision = $this->currentRevision;
-        }
 
-        if (!($this->latestRevision instanceof NamespaceContract)) {
-            $latestRevision = (new CurrentRevision())->fill($this->latestRevision);
-        } else {
-            $latestRevision = $this->latestRevision;
-        }
-
-        return 'COMPLETED' === $latestRevision->state || 'COMPLETED' === $currentRevision->state;
+        return 'COMPLETED' === $this->getRevision()->state || 'COMPLETED' === $this->getRevision()->state;
     }
 
     /**
@@ -147,14 +124,7 @@ class File extends ResponseNamespace
      */
     public function isNewerThan($file)
     {
-        if (is_string($file)) {
-            $file = new JFileInfo($file);
-        }
-        if ($file instanceof \SplFileInfo && !($file instanceof JFileInfo)) {
-            $file = new JFileInfo($file->getRealPath());
-        }
-
-        return $this->currentRevision->modified->getTimestamp() >= $file->getMTime();
+        return $this->getRevision()->modified->getTimestamp() >= $file->getMTime();
     }
 
     /**
@@ -171,7 +141,7 @@ class File extends ResponseNamespace
             $file = new JFileInfo($file->getRealPath());
         }
 
-        return $this->currentRevision->md5 !== $file->getMd5();
+        return $this->getRevision()->md5 !== $file->getMd5();
     }
 
     /**
@@ -192,5 +162,18 @@ class File extends ResponseNamespace
         }
 
         return $this->isValid() && !$this->isNewerThan($file) && !$this->isDifferentThan($file);
+    }
+
+    /**
+     * @return CurrentRevision
+     */
+    protected function getRevision()
+    {
+        $revision = $this->currentRevision;
+        if(null !== $this->latestRevision) {
+            $revision = $this->latestRevision;
+        }
+
+        return $revision;
     }
 }

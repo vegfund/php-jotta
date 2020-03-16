@@ -96,21 +96,6 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      * @throws LibXMLException
      * @throws ParseException
      *
-     * @return $this
-     */
-    public function fill($data)
-    {
-        $this->attachFields($data);
-
-        return $this;
-    }
-
-    /**
-     * @param $data
-     *
-     * @throws LibXMLException
-     * @throws ParseException
-     *
      * @return NamespaceContract
      *
      * @todo Attributes for each object type

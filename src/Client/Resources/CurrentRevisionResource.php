@@ -28,9 +28,6 @@ class CurrentRevisionResource extends AbstractResource
      */
     public function __construct($resource)
     {
-        if (!($resource instanceof NamespaceContract)) {
-            $resource = (new CurrentRevision())->fill($resource);
-        }
         parent::__construct($resource);
     }
 
