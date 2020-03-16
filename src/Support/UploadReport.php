@@ -88,7 +88,7 @@ class UploadReport
      */
     public function folderTroublesome($path, $files = [])
     {
-        $this->report['folders']['troublesome'][] = $relativePath;
+        $this->report['folders']['troublesome'][] = $path;
         $this->fileNoFolder($files);
     }
 
@@ -163,8 +163,8 @@ class UploadReport
         }, $this->report);
 
         foreach ($report['files'] as $scope => $scopeFiles) {
-            foreach ($scopeFiles as $key => $scopeFile) {
-                $report['sizes'][$scope][$key] += $scopeFiles->getSize();
+            foreach ($scopeFiles as $scopeFile) {
+                $report['sizes'][$scope] += $scopeFile->getSize();
             }
         }
 
