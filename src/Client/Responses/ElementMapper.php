@@ -122,15 +122,13 @@ class ElementMapper
         ];
     }
 
+    /**
+     * @return array
+     */
     protected function currentRevision()
     {
-        return [];
-    }
-
-    protected function error()
-    {
         return [
-            '{}error' => Error::class,
+            '{}currentRevision' => CurrentRevision::class,
         ];
     }
 }
