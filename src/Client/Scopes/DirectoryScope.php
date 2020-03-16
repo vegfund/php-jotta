@@ -9,6 +9,8 @@
 namespace Vegfund\Jotta\Client\Scopes;
 
 use Exception;
+use Sabre\Xml\LibXMLException;
+use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use function in_array;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
@@ -262,42 +264,40 @@ class DirectoryScope extends Scope
     {
         $folder = $this->get($remotePath);
 
-        if (is_array($folder->getFolders()) && count($folder->getFolders()) > 0) {
-            foreach ($folder->getFolders() as $childFolder) {
-                if (is_array($childFolder)) {
-                    $childFolder = $childFolder['value'];
-                }
-                if (!isset($childFolder->getAttributes()->deleted)) {
-                    if ([] !== ($subtree = $this->listRecursive($this->normalizePathSegment($remotePath).'/'.$this->normalizePathSegment($childFolder->name), $options, $recursive))) {
-                        $recursive[$childFolder->name] = $subtree;
-                    }
+        foreach ($folder->getFolders() as $childFolder) {
+            if (is_array($childFolder)) {
+                $childFolder = $childFolder['value'];
+            }
+            if (!$folder->isDeleted()) {
+                if ([] !== ($subtree = $this->listRecursive($this->normalizePathSegment($remotePath).'/'.$this->normalizePathSegment($childFolder->name), $options, $recursive))) {
+                    $recursive[$childFolder->name] = $subtree;
                 }
             }
         }
 
-        if (is_array($folder->getFiles()) && count($folder->getFiles()) > 0) {
-            foreach ($folder->getFiles() as $file) {
-                if (isset($options['uuid']) && $file->uuid !== $options['uuid']) {
-                    continue;
-                }
-
-                if (isset($options['with_deleted']) && true === $options['with_deleted'] && $file->isDeleted()) {
-                    continue;
-                }
-
-                if (isset($options['with_completed']) && false === $options['with_completed'] && $file->isCompleted()) {
-                    continue;
-                }
-
-                if (isset($options['regex']) && 0 === preg_match($options['regex'], $file->name)) {
-                    continue;
-                }
-
-                $recursive[] = (new FileResource($file))->toArray();
+        foreach ($folder->getFiles() as $file) {
+            if(false === $this->checkFileRecursive($file, $options)) {
+                continue;
             }
+            $recursive[] = (new FileResource($file))->toArray();
         }
 
         return $recursive;
+    }
+
+    /**
+     * @param File $file
+     * @param array $options
+     * @return bool
+     * @throws ParseException
+     * @throws LibXMLException
+     */
+    protected function checkFileRecursive(File $file, $options = [])
+    {
+        return !((isset($options['uuid']) && $file->uuid !== $options['uuid'])
+            || (isset($options['with_deleted']) && true === $options['with_deleted'] && $file->isDeleted())
+            || (isset($options['with_completed']) && false === $options['with_completed'] && $file->isCompleted())
+            || (isset($options['regex']) && 0 === preg_match($options['regex'], $file->name)));
     }
 
     /**
