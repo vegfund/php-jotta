@@ -9,8 +9,7 @@
 namespace Vegfund\Jotta\Client\Resources;
 
 /**
- * Class FolderListingResource
- * @package Vegfund\Jotta\Client\Resources
+ * Class FolderListingResource.
  */
 class FolderListingResource extends AbstractResource
 {

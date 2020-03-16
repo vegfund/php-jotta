@@ -76,8 +76,9 @@ class MountPointScope extends Scope
     }
 
     /**
-     * @return array
      * @throws ParseException
+     *
+     * @return array
      */
     public function list()
     {

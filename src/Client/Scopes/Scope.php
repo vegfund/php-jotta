@@ -11,7 +11,6 @@ namespace Vegfund\Jotta\Client\Scopes;
 use Exception;
 use GuzzleHttp\Psr7\Stream;
 use Psr\Http\Message\ResponseInterface;
-use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Contracts\ScopeContract;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
@@ -72,9 +71,9 @@ abstract class Scope implements ScopeContract
      * Scope constructor.
      *
      * @param JottaClient $client
-     * @param string $mountPoint
-     * @param string $basePath
-     * @param string $device
+     * @param string      $mountPoint
+     * @param string      $basePath
+     * @param string      $device
      */
     public function __construct(JottaClient $client, $mountPoint = Jotta::MOUNT_POINT_ARCHIVE, $basePath = '', $device = Jotta::DEVICE_JOTTA)
     {
@@ -230,10 +229,11 @@ abstract class Scope implements ScopeContract
      * Parse (or return ResponseInterface) provided data.
      *
      * @param ResponseInterface|Stream|string $body
-     * @param mixed $namespace
+     * @param mixed                           $namespace
+     *
+     * @throws Exception
      *
      * @return array|NamespaceContract|object|ResponseInterface|string
-     * @throws Exception
      */
     final public function serialize($body, $namespace = 'auto')
     {
@@ -259,12 +259,13 @@ abstract class Scope implements ScopeContract
     /**
      * @param $path
      * @param string $method
-     * @param array $headers
-     * @param array $clientOptions
+     * @param array  $headers
+     * @param array  $clientOptions
+     * @param null   $async
      *
-     * @param null $async
-     * @return null|ResponseInterface
      * @throws Exception
+     *
+     * @return null|ResponseInterface
      */
     final protected function request($path, $method = 'get', $headers = [], $clientOptions = [], $async = null)
     {

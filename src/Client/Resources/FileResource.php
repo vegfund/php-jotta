@@ -12,15 +12,15 @@ use Sabre\Xml\LibXMLException;
 use Sabre\Xml\ParseException;
 
 /**
- * Class FileResource
- * @package Vegfund\Jotta\Client\Resources
+ * Class FileResource.
  */
 class FileResource extends AbstractResource
 {
     /**
-     * @return array
      * @throws LibXMLException
      * @throws ParseException
+     *
+     * @return array
      */
     public function arrayDefinition()
     {
