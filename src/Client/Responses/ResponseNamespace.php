@@ -133,11 +133,10 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function attachObjectValues($children)
     {
-        foreach ($this->objectValueMap as $item) {
-            foreach ($children as $child) {
-                if ($child['name'] === '{}'.$item) {
-                    $this->{$item} = $child['value'];
-                }
+        foreach($children as $child) {
+            $field = substr($child['name'], 2);
+            if(in_array($field, $this->objectValueMap)) {
+                $this->{$field} = $child['value'];
             }
         }
     }
