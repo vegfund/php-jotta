@@ -178,4 +178,60 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
             $this->assertInstanceOf(JottaException::class, $e);
         }
     }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::castPrimitives()
+     * @throws \ReflectionException
+     */
+    public function test019_cast_primitives()
+    {
+        $method = new \ReflectionMethod(ResponseNamespace::class, 'castPrimitives');
+        $method->setAccessible(true);
+        $mock = \Mockery::mock(ResponseNamespace::class);
+        $mock->makePartial();
+
+        $datetime = new \DateTime();
+
+        $casted = $method->invoke($mock, $datetime->format('Y-m-d-\TH:i:sO'), 'datetime');
+        $this->assertInstanceOf(\DateTime::class, $casted);
+        $this->assertSame($datetime->getTimestamp(), $casted->getTimestamp());
+
+        $primitives = [
+            [
+                'value' => 1,
+                'cast' => 'string',
+                'expected' => '1'
+            ],
+            [
+                'value' => 1,
+                'cast' => 'float',
+                'expected' => (float) 1
+            ],
+            [
+                'value' => 'true',
+                'cast' => 'bool',
+                'expected' => true
+            ],
+            [
+                'value' => 1,
+                'cast' => 'bool',
+                'expected' => true
+            ],
+            [
+                'value' => 'false',
+                'cast' => 'bool',
+                'expected' => false
+            ],
+            [
+                'value' => 0,
+                'cast' => 'bool',
+                'expected' => false
+            ]
+        ];
+
+        foreach ($primitives as $primitive) {
+            $casted = $method->invoke($mock, $primitive['value'], $primitive['cast']);
+            $this->assertSame($primitive['expected'], $casted);
+        }
+    }
 }

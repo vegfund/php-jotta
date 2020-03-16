@@ -206,7 +206,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
 
                 break;
             case 'bool':
-                $value = true === $value || 'true' === $value || '1' === $value;
+                $value = (true === $value || 'true' === $value || '1' === $value || 1 === $value) && (false !== $value || 'false' !== $value || '0' !== $value || 0 !== $value);
 
                 break;
             case 'datetime':
