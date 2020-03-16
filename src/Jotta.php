@@ -11,8 +11,6 @@ namespace Vegfund\Jotta;
 use Vegfund\Jotta\Client\Scopes\AccountScope;
 use Vegfund\Jotta\Client\Scopes\DeviceScope;
 use Vegfund\Jotta\Client\Scopes\FileScope;
-use Vegfund\Jotta\Client\Scopes\FolderScope;
-use Vegfund\Jotta\Client\Scopes\MountPointScope;
 
 /**
  * Class Jotta. A Gateway for most API calls.
@@ -159,10 +157,11 @@ class Jotta
      *
      * @param string $username jottacloud username
      * @param string $password jottacloud password
-     * @param array $options
+     * @param array  $options
+     *
+     * @throws Client\Exceptions\JottaException
      *
      * @return Client\Scopes\DirectoryScope|Client\Scopes\Scope
-     * @throws Client\Exceptions\JottaException
      */
     public static function folder($username, $password, $options = [])
     {
@@ -174,10 +173,11 @@ class Jotta
      *
      * @param string $username jottacloud username
      * @param string $password jottacloud password
-     * @param array $options
+     * @param array  $options
+     *
+     * @throws Client\Exceptions\JottaException
      *
      * @return Client\Scopes\DirectoryScope|Client\Scopes\Scope
-     * @throws Client\Exceptions\JottaException
      */
     public static function mountPoint($username, $password, $options = [])
     {
@@ -188,8 +188,10 @@ class Jotta
      * @param $username
      * @param $password
      * @param array $options
-     * @return Client\Scopes\Scope|null
+     *
      * @throws Client\Exceptions\JottaException
+     *
+     * @return Client\Scopes\Scope|null
      */
     public static function directory($username, $password, $options = [])
     {

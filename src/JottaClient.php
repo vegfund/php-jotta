@@ -15,7 +15,6 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\DependencyInjection\ScopeInterface;
 use Vegfund\Jotta\Client\Contracts\ScopeContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
@@ -25,8 +24,6 @@ use Vegfund\Jotta\Client\Scopes\AccountScope;
 use Vegfund\Jotta\Client\Scopes\DeviceScope;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 use Vegfund\Jotta\Client\Scopes\FileScope;
-use Vegfund\Jotta\Client\Scopes\FolderScope;
-use Vegfund\Jotta\Client\Scopes\MountPointScope;
 use Vegfund\Jotta\Client\Scopes\Scope;
 
 /**
@@ -94,9 +91,9 @@ class JottaClient
      *
      * @param array $options options array
      *
-     * @return AccountScope|Scope
      *@throws JottaException
      *
+     * @return AccountScope|Scope
      */
     public function account($options = [])
     {
@@ -153,8 +150,10 @@ class JottaClient
 
     /**
      * @param array $options
-     * @return DirectoryScope|Scope
+     *
      * @throws JottaException
+     *
+     * @return DirectoryScope|Scope
      */
     public function directory($options = [])
     {

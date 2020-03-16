@@ -10,8 +10,6 @@ use Vegfund\Jotta\Client\Scopes\AccountScope;
 use Vegfund\Jotta\Client\Scopes\DeviceScope;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 use Vegfund\Jotta\Client\Scopes\FileScope;
-use Vegfund\Jotta\Client\Scopes\FolderScope;
-use Vegfund\Jotta\Client\Scopes\MountPointScope;
 use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
@@ -54,7 +52,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             'account'    => AccountScope::class,
             'device'     => DeviceScope::class,
             'file'       => FileScope::class,
-            'directory' => DirectoryScope::class
+            'directory'  => DirectoryScope::class,
         ];
 
         $client = new JottaClient(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
@@ -71,6 +69,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers \Vegfund\Jotta\JottaClient::folder
      * @covers \Vegfund\Jotta\JottaClient::mountPoint
+     *
      * @throws JottaException
      */
     public function test003a_mount_point_folder_scopes()
@@ -101,7 +100,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             'account'    => AccountScope::class,
             'device'     => DeviceScope::class,
             'file'       => FileScope::class,
-            'directory' => DirectoryScope::class,
+            'directory'  => DirectoryScope::class,
             'folder'     => DirectoryScope::class,
             'mountPoint' => DirectoryScope::class,
         ];
@@ -113,10 +112,10 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             $this->assertInstanceOf(Scope::class, $scope);
             $this->assertInstanceOf(ScopeContract::class, $scope);
 
-            if($method === 'folder') {
+            if ($method === 'folder') {
                 $this->assertSame(DirectoryScope::MODE_FOLDER, $scope->getMode());
             }
-            if($method === 'mountPoint') {
+            if ($method === 'mountPoint') {
                 $this->assertSame(DirectoryScope::MODE_MOUNT_POINT, $scope->getMode());
             }
         }
