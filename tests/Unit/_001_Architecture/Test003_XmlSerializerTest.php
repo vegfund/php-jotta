@@ -2,6 +2,8 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
+use Vegfund\Jotta\Client\Responses\Namespaces\Attributes;
+use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
 use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 
@@ -34,7 +36,32 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
     {
     }
 
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::getAttribute
+     * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::setAttributes
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Attributes::get
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Attributes::all
+     * @throws \Sabre\Xml\ParseException
+     */
     public function test005_attributes()
     {
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                    <mountPoint time="2020-03-16-T09:47:15Z" host="**obfuscated**">
+                        <name xml:space="preserve">Archive</name>
+                        <path xml:space="preserve">/**obfuscated**/Jotta</path>
+                        <abspath xml:space="preserve">/**obfuscated**/Jotta</abspath>
+                        <size>383654</size>
+                        <modified>2020-03-12-T22:57:05Z</modified>
+                        <device>Jotta</device>
+                        <user>**obfuscated**</user>
+                    </mountPoint>';
+
+        $serialized = XmlResponseSerializer::parse($body, 'auto');
+
+        $this->assertInstanceOf(MountPoint::class, $serialized);
+        $this->assertInstanceOf(Attributes::class, $serialized->attributes);
+        $this->assertTrue(is_array($serialized->attributes->all()));
+        $this->assertSame('**obfuscated**', $serialized->getAttribute('host'));
+        $this->assertSame('**obfuscated**', $serialized->attributes->all()['host']);
     }
 }

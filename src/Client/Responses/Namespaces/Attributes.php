@@ -38,4 +38,13 @@ class Attributes
 
         return null;
     }
+
+    public function all()
+    {
+        $attributes = [];
+        foreach(get_object_vars($this) as $var => $value) {
+            $attributes[$var] = $this->{$var};
+        }
+        return $attributes;
+    }
 }
