@@ -112,6 +112,7 @@ class Jotta
      * @param string $username jottacloud username
      * @param string $password jottacloud password
      *
+     * @param array $options
      * @return AccountScope
      */
     public static function account($username, $password, $options = [])
@@ -125,6 +126,7 @@ class Jotta
      * @param string $username jottacloud username
      * @param string $password jottacloud password
      *
+     * @param array $options
      * @return DeviceScope
      */
     public static function device($username, $password, $options = [])
@@ -138,6 +140,7 @@ class Jotta
      * @param string $username jottacloud username
      * @param string $password jottacloud password
      *
+     * @param array $options
      * @return FileScope
      */
     public static function file($username, $password, $options = [])
@@ -151,6 +154,7 @@ class Jotta
      * @param string $username jottacloud username
      * @param string $password jottacloud password
      *
+     * @param array $options
      * @return FolderScope
      */
     public static function folder($username, $password, $options = [])
@@ -164,6 +168,7 @@ class Jotta
      * @param string $username jottacloud username
      * @param string $password jottacloud password
      *
+     * @param array $options
      * @return MountPointScope
      */
     public static function mountPoint($username, $password, $options = [])

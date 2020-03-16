@@ -8,8 +8,15 @@
 
 namespace Vegfund\Jotta\Client\Resources;
 
+/**
+ * Class FolderListingResource
+ * @package Vegfund\Jotta\Client\Resources
+ */
 class FolderListingResource extends AbstractResource
 {
+    /**
+     * @return array
+     */
     public function arrayDefinition()
     {
         if (isset($this->resource->folders)) {
@@ -27,6 +34,9 @@ class FolderListingResource extends AbstractResource
         return array_merge($folders, $files);
     }
 
+    /**
+     * @return array
+     */
     protected function foldersDefinitions()
     {
         $folders = array_filter($this->folders, function ($item) {
@@ -43,6 +53,9 @@ class FolderListingResource extends AbstractResource
         );
     }
 
+    /**
+     * @return array
+     */
     protected function filesDefinitions()
     {
         $files = array_filter($this->files, function ($item) {

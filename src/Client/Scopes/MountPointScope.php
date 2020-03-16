@@ -76,13 +76,8 @@ class MountPointScope extends Scope
     }
 
     /**
-     * @param $remotePath
-     * @param null  $remoteName
-     * @param array $options
-     *
-     * @throws ParseException
-     *
      * @return array
+     * @throws ParseException
      */
     public function list()
     {

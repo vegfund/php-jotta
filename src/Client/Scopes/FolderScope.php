@@ -8,10 +8,12 @@
 
 namespace Vegfund\Jotta\Client\Scopes;
 
+use Vegfund\Jotta\Client\Exceptions\JottaException;
+use function count;
+use function is_array;
 use const DIRECTORY_SEPARATOR;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
-use Sabre\Xml\LibXMLException;
 use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Resources\FileResource;
@@ -103,17 +105,16 @@ class FolderScope extends Scope
     /**
      * @param $localPath
      * @param string $remotePath
-     * @param mixed  $overwriteMode
-     *
-     * @throws LibXMLException
-     * @throws ParseException
+     * @param mixed $overwriteMode
      *
      * @return UploadReport
+     * @throws ParseException
+     * @throws JottaException
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
         if (!file_exists($localPath) || !is_dir($localPath)) {
-            throw new Exception('This is not a folder or it does not exist');
+            throw new JottaException('This is not a folder or it does not exist');
         }
 
         $report = new UploadReport();
@@ -187,9 +188,9 @@ class FolderScope extends Scope
     {
         $folder = $this->get($remotePath);
 
-        if (\is_array($folder->getFolders()) && \count($folder->getFolders()) > 0) {
+        if (is_array($folder->getFolders()) && count($folder->getFolders()) > 0) {
             foreach ($folder->getFolders() as $childFolder) {
-                if (\is_array($childFolder)) {
+                if (is_array($childFolder)) {
                     $childFolder = $childFolder['value'];
                 }
                 if (!isset($childFolder->getAttributes()->deleted)) {
@@ -200,7 +201,7 @@ class FolderScope extends Scope
             }
         }
 
-        if (\is_array($folder->getFiles()) && \count($folder->getFiles()) > 0) {
+        if (is_array($folder->getFiles()) && count($folder->getFiles()) > 0) {
             foreach ($folder->getFiles() as $file) {
                 if (isset($options['uuid']) && $file->uuid !== $options['uuid']) {
                     continue;
@@ -261,6 +262,7 @@ class FolderScope extends Scope
      * @param $nameTo
      *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws ParseException
      */
     public function rename($nameFrom, $nameTo)
     {
@@ -270,15 +272,16 @@ class FolderScope extends Scope
     /**
      * @param $path
      *
-     * @throws ParseException
-     *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws JottaException
+     *
+     * @throws ParseException
      */
     public function delete($path)
     {
         $folder = $this->get($path);
         if ($folder->isDeleted()) {
-            throw new Exception('Deleting Trash items not supported.');
+            throw new JottaException('Deleting Trash items not supported.');
         }
 
         $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $path, [

@@ -22,6 +22,7 @@ abstract class AbstractResource
 
     /**
      * AbstractResource constructor.
+     * @param NamespaceContract $resource
      */
     public function __construct(NamespaceContract $resource)
     {

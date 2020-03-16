@@ -41,6 +41,9 @@ class Folder extends ResponseNamespace
         'files',
     ];
 
+    /**
+     * @var array
+     */
     protected $objectValueMap = [
         'currentRevision',
     ];

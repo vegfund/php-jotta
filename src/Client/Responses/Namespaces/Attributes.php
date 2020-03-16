@@ -39,6 +39,9 @@ class Attributes
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function all()
     {
         $attributes = [];

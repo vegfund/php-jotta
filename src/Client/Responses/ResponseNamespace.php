@@ -131,6 +131,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
     }
 
     /**
+     * @param Attributes|null $attributes
      * @todo Attributes casting
      */
     final protected function setAttributes(Attributes $attributes = null)

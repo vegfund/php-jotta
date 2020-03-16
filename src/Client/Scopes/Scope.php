@@ -71,6 +71,7 @@ abstract class Scope implements ScopeContract
     /**
      * Scope constructor.
      *
+     * @param JottaClient $client
      * @param string $mountPoint
      * @param string $basePath
      * @param string $device
@@ -175,6 +176,9 @@ abstract class Scope implements ScopeContract
         return $this->basePath;
     }
 
+    /**
+     * @return $this
+     */
     final public function setAsyncRequest()
     {
         $this->requestType = 'async';
@@ -182,6 +186,9 @@ abstract class Scope implements ScopeContract
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     final public function setSyncRequest()
     {
         $this->requestType = 'sync';
@@ -189,6 +196,9 @@ abstract class Scope implements ScopeContract
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     final public function setAutoRequest()
     {
         $this->requestType = 'auto';
@@ -220,12 +230,10 @@ abstract class Scope implements ScopeContract
      * Parse (or return ResponseInterface) provided data.
      *
      * @param ResponseInterface|Stream|string $body
-     * @param mixed                           $namespace
-     *
-     * @throws Exception
-     * @throws ParseException
+     * @param mixed $namespace
      *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws Exception
      */
     final public function serialize($body, $namespace = 'auto')
     {
@@ -251,12 +259,12 @@ abstract class Scope implements ScopeContract
     /**
      * @param $path
      * @param string $method
-     * @param array  $headers
-     * @param array  $clientOptions
+     * @param array $headers
+     * @param array $clientOptions
      *
-     * @throws Exception
-     *
+     * @param null $async
      * @return null|ResponseInterface
+     * @throws Exception
      */
     final protected function request($path, $method = 'get', $headers = [], $clientOptions = [], $async = null)
     {
