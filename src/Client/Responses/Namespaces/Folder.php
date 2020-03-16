@@ -30,7 +30,7 @@ class Folder extends ResponseNamespace
         ['modified' => 'datetime'],
         'user',
         'path',
-        'abspath'
+        'abspath',
     ];
 
     /**
