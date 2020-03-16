@@ -2,6 +2,8 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
+use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
+use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
 
 class Test007_FileTest extends \PHPUnit\Framework\TestCase
@@ -67,12 +69,61 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($file->isValid());
     }
 
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCorrupt
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCompleted
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDeleted
+     * @throws \Sabre\Xml\ParseException
+     */
     public function test005_is_completed()
     {
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                <file name="InSudFKKxbn4_test.txt" uuid="**obfuscated**" time="2020-03-16-T12:23:58Z" host="**obfuscated**">
+                    <path xml:space="preserve">/**obfuscated**/Jotta/Archive</path>
+                    <abspath xml:space="preserve">/**obfuscated**/Jotta/Archive</abspath>
+                    <latestRevision>
+                        <number>1</number>
+                        <state>COMPLETED</state>
+                        <created>2020-03-10-T17:02:49Z</created>
+                        <modified>2020-03-10-T17:02:49Z</modified>
+                        <mime>text/plain</mime>
+                        <md5>e3bc508cc0f25ed6b86089f0b6e09972</md5>
+                        <updated>2020-03-10-T17:02:49Z</updated>
+                    </latestRevision>
+                </file>';
+
+        $file = XmlResponseSerializer::parse($body, 'file');
+
+        $this->assertFalse($file->isCorrupt());
+        $this->assertTrue($file->isCompleted());
+        $this->assertFalse($file->isDeleted());
     }
 
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isValid
+     * @throws \Sabre\Xml\ParseException
+     */
     public function test007_is_valid()
     {
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                <file name="InSudFKKxbn4_test.txt" uuid="**obfuscated**" time="2020-03-16-T12:23:58Z" host="**obfuscated**">
+                    <path xml:space="preserve">/**obfuscated**/Jotta/Archive</path>
+                    <abspath xml:space="preserve">/**obfuscated**/Jotta/Archive</abspath>
+                    <latestRevision>
+                        <number>1</number>
+                        <state>COMPLETED</state>
+                        <created>2020-03-10-T17:02:49Z</created>
+                        <modified>2020-03-10-T17:02:49Z</modified>
+                        <mime>text/plain</mime>
+                        <md5>e3bc508cc0f25ed6b86089f0b6e09972</md5>
+                        <updated>2020-03-10-T17:02:49Z</updated>
+                    </latestRevision>
+                </file>';
+
+        $file = XmlResponseSerializer::parse($body, 'file');
+
+        $this->assertTrue($file->isValid());
     }
 
     public function test009_is_newer()
@@ -87,8 +138,37 @@ class Test007_FileTest extends \PHPUnit\Framework\TestCase
     {
     }
 
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getAttribute
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__call
+     * @throws \Sabre\Xml\ParseException
+     */
     public function test015_get()
     {
+        $body = '<?xml version="1.0" encoding="UTF-8"?>
+                <file name="InSudFKKxbn4_test.txt" uuid="**obfuscated**" time="2020-03-16-T12:23:58Z" host="**obfuscated**">
+                    <path xml:space="preserve">/**obfuscated**/Jotta/Archive</path>
+                    <abspath xml:space="preserve">/**obfuscated**/Jotta/Archive</abspath>
+                    <currentRevision>
+                        <number>1</number>
+                        <state>COMPLETED</state>
+                        <created>2020-03-10-T17:02:49Z</created>
+                        <modified>2020-03-10-T17:02:49Z</modified>
+                        <mime>text/plain</mime>
+                        <md5>e3bc508cc0f25ed6b86089f0b6e09972</md5>
+                        <updated>2020-03-10-T17:02:49Z</updated>
+                    </currentRevision>
+                </file>';
+
+        $file = XmlResponseSerializer::parse($body, 'file');
+
+        $this->assertInstanceOf(File::class, $file);
+        $this->assertSame('**obfuscated**', $file->getAttribute('host'));
+        $this->assertSame('**obfuscated**', $file->getAttribute('uuid'));
+        $this->assertInstanceOf(CurrentRevision::class, $file->getCurrentRevision());
+        $this->assertIsInt($file->getCurrentRevision()->number);
+        $this->assertInstanceOf(\DateTime::class, $file->getCurrentRevision()->getUpdated());
+        $this->assertSame(\DateTime::createFromFormat('Y-m-d-\TH:i:sO', '2020-03-10-T17:02:49Z')->getTimestamp(), $file->getCurrentRevision()->getUpdated()->getTimestamp());
     }
 
     public function test017_download()
