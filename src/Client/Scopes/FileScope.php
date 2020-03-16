@@ -15,6 +15,7 @@ use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Jotta;
+use Vegfund\Jotta\Support\JFileInfo;
 
 class FileScope extends Scope
 {
@@ -98,10 +99,11 @@ class FileScope extends Scope
      * @param $remotePath
      * @param int $overwriteMode
      *
-     * @throws JottaException
-     * @throws ParseException
-     *
      * @return array|bool|object|ResponseInterface|string|NamespaceContract
+     * @throws ParseException
+     * @throws Exception
+     *
+     * @throws JottaException
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -112,47 +114,46 @@ class FileScope extends Scope
         $file = $this->get($remotePath);
 
         if (null !== $file) {
-            switch ($overwriteMode) {
-                case Jotta::FILE_OVERWRITE_NEVER:
-                    return false;
-
-                    break;
-                case Jotta::FILE_OVERWRITE_IF_DIFFERENT:
-                    if (!$file->isDifferentThan($localPath)) {
-                        return false;
-                    }
-
-                    break;
-                case Jotta::FILE_OVERWRITE_IF_NEWER:
-                    if (!$file->isNewerThan($localPath)) {
-                        return false;
-                    }
-
-                    break;
-                case Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT:
-                    if (!$file->isDifferentThan($localPath) && !$file->isNewerThan($localPath)) {
-                        return false;
-                    }
-
-                    break;
+            if($overwriteMode === Jotta::FILE_OVERWRITE_NEVER) {
+                return false;
+            }
+            if($overwriteMode === Jotta::FILE_OVERWRITE_IF_DIFFERENT && !$file->isDifferentThan($localPath)) {
+                return false;
+            }
+            if($overwriteMode === Jotta::FILE_OVERWRITE_IF_NEWER && !$file->isNewerThan($localPath)) {
+                return false;
+            }
+            if($overwriteMode === Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT && (!$file->isDifferentThan($localPath) && !$file->isNewerThan($localPath))) {
+                return false;
             }
         }
 
+        return $this->makeUpload($localPath, $remotePath);
+    }
+
+    /**
+     * @param $localPath
+     * @param $remotePath
+     * @return array|object|ResponseInterface|string|NamespaceContract
+     * @throws Exception
+     */
+    protected function makeUpload($localPath, $remotePath)
+    {
         $requestPath = $this->getPath(Jotta::API_UPLOAD_URL, $this->device, $this->mountPoint, $remotePath);
-        $filename = basename($localPath);
+        $file = JFileInfo::make($localPath);
 
         return $this->serialize($this->request(
             $requestPath,
             'post',
             [
-                'JSize' => filesize($filename),
-                'JMd5'  => md5(file_get_contents($filename)),
+                'JSize' => $file->getSize(),
+                'JMd5'  => $file->getMd5(),
             ],
             [
                 'multipart' => [
                     [
-                        'name'     => basename($filename),
-                        'contents' => fopen($filename, 'r'),
+                        'name'     => $file->getFilename(),
+                        'contents' => fopen($file->getRealPath(), 'r'),
                     ],
                 ],
             ]
@@ -164,9 +165,9 @@ class FileScope extends Scope
      * @param $pathTo
      * @param null $mountPointTo
      *
-     * @throws ParseException
-     *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws JottaException
+     * @throws ParseException
      */
     public function move($pathFrom, $pathTo, $mountPointTo = null)
     {
@@ -191,9 +192,9 @@ class FileScope extends Scope
      * @param $nameFrom
      * @param $nameTo
      *
-     * @throws ParseException
-     *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws JottaException
+     * @throws ParseException
      */
     public function rename($nameFrom, $nameTo)
     {
