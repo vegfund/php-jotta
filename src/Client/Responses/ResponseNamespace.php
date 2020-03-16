@@ -65,6 +65,8 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
         if(isset($this->attributes) && $this->attributes instanceof Attributes) {
             return $this->attributes->get($name);
         }
+
+        return null;
     }
 
     /**
@@ -80,8 +82,6 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
 
             return $this->{$name};
         }
-
-        return null;
     }
 
     /**
