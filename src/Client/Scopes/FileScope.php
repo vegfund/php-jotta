@@ -113,22 +113,20 @@ class FileScope extends Scope
 
         $file = $this->get($remotePath);
 
-        if (null !== $file) {
-            if($overwriteMode === Jotta::FILE_OVERWRITE_NEVER) {
-                return false;
-            }
-            if($overwriteMode === Jotta::FILE_OVERWRITE_IF_DIFFERENT && !$file->isDifferentThan($localPath)) {
-                return false;
-            }
-            if($overwriteMode === Jotta::FILE_OVERWRITE_IF_NEWER && !$file->isNewerThan($localPath)) {
-                return false;
-            }
-            if($overwriteMode === Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT && (!$file->isDifferentThan($localPath) && !$file->isNewerThan($localPath))) {
-                return false;
-            }
-        }
+        return $this->blockOverwrite($file, $overwriteMode) ? false : $this->makeUpload($localPath, $remotePath);
+    }
 
-        return $this->makeUpload($localPath, $remotePath);
+    /**
+     * @param File $file
+     * @param $overwriteMode
+     * @return bool
+     */
+    protected function blockOverwrite(File $file, $overwriteMode)
+    {
+        return null !== $file && (($overwriteMode === Jotta::FILE_OVERWRITE_NEVER) ||
+            ($overwriteMode === Jotta::FILE_OVERWRITE_IF_DIFFERENT && !$file->isDifferentThan($localPath)) ||
+            ($overwriteMode === Jotta::FILE_OVERWRITE_IF_NEWER && !$file->isNewerThan($localPath)) ||
+            ($overwriteMode === Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT && (!$file->isDifferentThan($localPath) && !$file->isNewerThan($localPath))));
     }
 
     /**
