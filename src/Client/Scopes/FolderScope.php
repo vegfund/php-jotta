@@ -8,14 +8,13 @@
 
 namespace Vegfund\Jotta\Client\Scopes;
 
-use Vegfund\Jotta\Client\Exceptions\JottaException;
 use function count;
-use function is_array;
 use const DIRECTORY_SEPARATOR;
-use Exception;
+use function is_array;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Resources\FileResource;
 use Vegfund\Jotta\Client\Resources\FolderListingResource;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
@@ -105,11 +104,12 @@ class FolderScope extends Scope
     /**
      * @param $localPath
      * @param string $remotePath
-     * @param mixed $overwriteMode
+     * @param mixed  $overwriteMode
      *
-     * @return UploadReport
      * @throws ParseException
      * @throws JottaException
+     *
+     * @return UploadReport
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -261,8 +261,9 @@ class FolderScope extends Scope
      * @param $nameFrom
      * @param $nameTo
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws ParseException
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function rename($nameFrom, $nameTo)
     {
@@ -272,10 +273,10 @@ class FolderScope extends Scope
     /**
      * @param $path
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws JottaException
-     *
      * @throws ParseException
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function delete($path)
     {

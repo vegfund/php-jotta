@@ -54,6 +54,7 @@ class Test001_ExceptionsTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\JottaClient::handleException
+     *
      * @throws \ReflectionException
      */
     public function test005_jotta_client_handle_exception()

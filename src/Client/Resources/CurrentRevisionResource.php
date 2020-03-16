@@ -14,14 +14,15 @@ use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
 
 /**
- * Class CurrentRevisionResource
- * @package Vegfund\Jotta\Client\Resources
+ * Class CurrentRevisionResource.
  */
 class CurrentRevisionResource extends AbstractResource
 {
     /**
      * CurrentRevisionResource constructor.
+     *
      * @param $resource
+     *
      * @throws LibXMLException
      * @throws ParseException
      */

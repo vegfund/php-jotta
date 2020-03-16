@@ -100,8 +100,9 @@ class XmlResponseSerializer
     /**
      * @param $body
      *
-     * @return string
      * @throws Exception
+     *
+     * @return string
      */
     protected function getRootNamespace($body)
     {

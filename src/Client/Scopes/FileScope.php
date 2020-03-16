@@ -20,8 +20,10 @@ class FileScope extends Scope
 {
     /**
      * @param $remotePath
-     * @return array|NamespaceContract|object|ResponseInterface|string
+     *
      * @throws ParseException
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function get($remotePath)
     {
@@ -70,9 +72,11 @@ class FileScope extends Scope
      * @param $remotePath
      * @param $localPath
      * @param string $size
-     * @return bool
+     *
      * @throws JottaException
      * @throws ParseException
+     *
+     * @return bool
      */
     public function thumbnail($remotePath, $localPath, $size = Jotta::THUMBNAIL_SIZE_MEDIUM)
     {
@@ -93,9 +97,11 @@ class FileScope extends Scope
      * @param $localPath
      * @param $remotePath
      * @param int $overwriteMode
-     * @return array|bool|object|ResponseInterface|string|NamespaceContract
+     *
      * @throws JottaException
      * @throws ParseException
+     *
+     * @return array|bool|object|ResponseInterface|string|NamespaceContract
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -191,9 +197,11 @@ class FileScope extends Scope
 
     /**
      * @param $path
-     * @return array|object|ResponseInterface|string|NamespaceContract
+     *
      * @throws JottaException
      * @throws ParseException
+     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      */
     public function delete($path)
     {

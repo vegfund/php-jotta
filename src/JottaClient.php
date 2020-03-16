@@ -92,8 +92,9 @@ class JottaClient
      *
      * @param array $options options array
      *
-     * @return AccountScope|ScopeInterface
      * @throws JottaException
+     *
+     * @return AccountScope|ScopeInterface
      */
     public function account($options = [])
     {
@@ -103,8 +104,9 @@ class JottaClient
     /**
      * @param array $options options array
      *
-     * @return DeviceScope|Scope
      * @throws JottaException
+     *
+     * @return DeviceScope|Scope
      */
     public function device($options = [])
     {
@@ -114,8 +116,9 @@ class JottaClient
     /**
      * @param array $options options array
      *
-     * @return FileScope|Scope
      * @throws JottaException
+     *
+     * @return FileScope|Scope
      */
     public function file($options = [])
     {
@@ -125,8 +128,9 @@ class JottaClient
     /**
      * @param array $options options array
      *
-     * @return FolderScope|Scope
      * @throws JottaException
+     *
+     * @return FolderScope|Scope
      */
     public function folder($options = [])
     {
@@ -136,8 +140,9 @@ class JottaClient
     /**
      * @param array $options options array
      *
-     * @return MountPointScope|Scope
      * @throws JottaException
+     *
+     * @return MountPointScope|Scope
      */
     public function mountPoint($options = [])
     {
