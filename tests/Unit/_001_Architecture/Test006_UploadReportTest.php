@@ -37,18 +37,18 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
             'folder1' => [
                 'file1' => [
                     'path' => 'path/folder1/file1',
-                    'size' => 2000
+                    'size' => 2000,
                 ],
                 'file2' => [
                     'path' => 'path/folder1/file2',
-                    'size' => 3000
-                ]
-            ]
+                    'size' => 3000,
+                ],
+            ],
         ];
 
         $uploadReport = new UploadReport();
 
-        foreach($folders as $path => $folder) {
+        foreach ($folders as $path => $folder) {
             $files = array_map(function ($item) {
                 $mock = \Mockery::mock(JFileInfo::class);
                 $mock->shouldReceive('getSize')->andReturn($item['size']);
@@ -83,12 +83,12 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
             'path/folder2' => 'existing',
             'path/folder3' => 'existing',
             'path/folder4' => 'created',
-            'path/folder5' => 'created'
+            'path/folder5' => 'created',
         ];
 
         $uploadReport = new UploadReport();
 
-        foreach($folders as $path => $type) {
+        foreach ($folders as $path => $type) {
             $funcName = 'folder'.ucfirst($type);
             $uploadReport->{$funcName}($path);
         }
@@ -107,10 +107,10 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
     {
         $overwriteTypes = [
             Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT => 'uploaded_newer_or_different',
-            Jotta::FILE_OVERWRITE_IF_NEWER => 'uploaded_newer',
-            Jotta::FILE_OVERWRITE_IF_DIFFERENT => 'uploaded_different',
-            Jotta::FILE_OVERWRITE_NEVER => 'ignored',
-            Jotta::FILE_OVERWRITE_ALWAYS => 'uploaded_forcibly'
+            Jotta::FILE_OVERWRITE_IF_NEWER              => 'uploaded_newer',
+            Jotta::FILE_OVERWRITE_IF_DIFFERENT          => 'uploaded_different',
+            Jotta::FILE_OVERWRITE_NEVER                 => 'ignored',
+            Jotta::FILE_OVERWRITE_ALWAYS                => 'uploaded_forcibly',
         ];
 
         $overwriteTypesKeys = array_keys($overwriteTypes);
@@ -121,13 +121,13 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
 
         $expectedSizes = [
             'uploaded_newer_or_different' => 0,
-            'uploaded_newer' => 0,
-            'uploaded_different' => 0,
-            'ignored' => 0,
-            'uploaded_forcibly' => 0
+            'uploaded_newer'              => 0,
+            'uploaded_different'          => 0,
+            'ignored'                     => 0,
+            'uploaded_forcibly'           => 0,
         ];
 
-        for($i = 0; $i < 80; $i++) {
+        for ($i = 0; $i < 80; $i++) {
             $mock = \Mockery::mock(JFileInfo::class);
             $size = rand(1, 999999);
             $path = 'path/to/'.Str::random(12).'txt';
@@ -137,10 +137,10 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
             $overwriteType = $overwriteTypesKeys[array_rand($overwriteTypesKeys)];
 
             $generatedFiles[] = [
-                'mock' => $mock,
-                'size' => $size,
-                'path' => $path,
-                'overwrite_type' => $overwriteTypes[$overwriteType]
+                'mock'           => $mock,
+                'size'           => $size,
+                'path'           => $path,
+                'overwrite_type' => $overwriteTypes[$overwriteType],
             ];
 
             $expectedSizes[$overwriteTypes[$overwriteType]] += $size;
@@ -151,7 +151,7 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
         $uploadReport->stop();
         $report = $uploadReport->getReport();
 
-        foreach($expectedSizes as $scope => $size) {
+        foreach ($expectedSizes as $scope => $size) {
             $this->assertSame($size, $report['sizes'][$scope]);
         }
     }
@@ -166,7 +166,7 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
 
         $uploadReport = new UploadReport();
 
-        for($i = 0; $i < $expectedCount; $i++) {
+        for ($i = 0; $i < $expectedCount; $i++) {
             $mock = \Mockery::mock(JFileInfo::class);
             $size = rand(1, 999999);
             $path = 'path/to/'.Str::random(12).'txt';
@@ -195,7 +195,7 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
 
         $uploadReport = new UploadReport();
 
-        for($i = 0; $i < $expectedCount; $i++) {
+        for ($i = 0; $i < $expectedCount; $i++) {
             $mock = \Mockery::mock(JFileInfo::class);
             $size = rand(1, 999999);
             $path = 'path/to/'.Str::random(12).'txt';
