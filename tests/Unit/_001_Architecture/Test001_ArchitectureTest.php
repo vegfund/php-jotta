@@ -14,7 +14,6 @@ use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
 use Vegfund\Jotta\Support\JFileInfo;
-use Vegfund\Jotta\Support\UploadReport;
 
 class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 {

@@ -6,8 +6,8 @@ use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\Jotta;
 
 /**
- * Trait ScopeConfig
- * @package Vegfund\Jotta\Traits
+ * Trait ScopeConfig.
+ *
  * @mixin Scope
  */
 trait ScopeConfig

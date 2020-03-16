@@ -92,6 +92,7 @@ class Test001_ExceptionsTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\Scope::serialize
+     *
      * @throws \ReflectionException
      */
     public function test007_scope_handle_other_exception()

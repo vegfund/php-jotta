@@ -46,8 +46,9 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
     /**
      * @param $name
      *
-     * @return null|mixed
      * @throws JottaException
+     *
+     * @return null|mixed
      */
     public function __get($name)
     {
@@ -59,7 +60,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
             return $this->attributes->get($name);
         }
 
-        throw new JottaException('The attribute ' . $name . ' does not exist.');
+        throw new JottaException('The attribute '.$name.' does not exist.');
     }
 
     /**
@@ -76,8 +77,9 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      * @param $name
      * @param $arguments
      *
-     * @return null|mixed
      * @throws JottaException
+     *
+     * @return null|mixed
      */
     public function __call($name, $arguments)
     {
@@ -87,7 +89,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
             return $this->{$name};
         }
 
-        throw new JottaException('The method ' . $name . ' does not exist.');
+        throw new JottaException('The method '.$name.' does not exist.');
     }
 
     /**
@@ -133,9 +135,9 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function attachObjectValues($children)
     {
-        foreach($children as $child) {
+        foreach ($children as $child) {
             $field = substr($child['name'], 2);
-            if(in_array($field, $this->objectValueMap)) {
+            if (in_array($field, $this->objectValueMap)) {
                 $this->{$field} = $child['value'];
             }
         }
@@ -166,7 +168,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
     final protected function getKeyValueMap()
     {
         return array_map(function ($item) {
-            if(!is_array($item)) {
+            if (!is_array($item)) {
                 return [$item => 'string'];
             }
 
@@ -179,9 +181,9 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     final protected function attachEnums($children)
     {
-        foreach($children as $child) {
+        foreach ($children as $child) {
             $field = substr($child['name'], 2);
-            if(in_array($field, $this->enumMap)) {
+            if (in_array($field, $this->enumMap)) {
                 $this->{$field} = $child['value'];
             }
         }

@@ -15,12 +15,11 @@ class JFileInfo extends \SplFileInfo
 {
     public static function make($file)
     {
-        if($file instanceof JFileInfo) {
+        if ($file instanceof self) {
             return $file;
         }
 
-        if($file instanceof \SplFileInfo)
-        {
+        if ($file instanceof \SplFileInfo) {
             return new static($file->getRealPath());
         }
 

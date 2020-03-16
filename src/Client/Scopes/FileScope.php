@@ -99,11 +99,11 @@ class FileScope extends Scope
      * @param $remotePath
      * @param int $overwriteMode
      *
-     * @return array|bool|object|ResponseInterface|string|NamespaceContract
      * @throws ParseException
      * @throws Exception
-     *
      * @throws JottaException
+     *
+     * @return array|bool|object|ResponseInterface|string|NamespaceContract
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -119,6 +119,7 @@ class FileScope extends Scope
     /**
      * @param File $file
      * @param $overwriteMode
+     *
      * @return bool
      */
     protected function blockOverwrite(File $file, $overwriteMode)
@@ -132,8 +133,10 @@ class FileScope extends Scope
     /**
      * @param $localPath
      * @param $remotePath
-     * @return array|object|ResponseInterface|string|NamespaceContract
+     *
      * @throws Exception
+     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      */
     protected function makeUpload($localPath, $remotePath)
     {
@@ -163,14 +166,15 @@ class FileScope extends Scope
      * @param $pathTo
      * @param null $mountPointTo
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws JottaException
      * @throws ParseException
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function move($pathFrom, $pathTo, $mountPointTo = null)
     {
         $file = $this->get($pathFrom);
-        if(!($file instanceof File)) {
+        if (!($file instanceof File)) {
             throw new JottaException('This is not a remote file.');
         }
 
@@ -190,9 +194,10 @@ class FileScope extends Scope
      * @param $nameFrom
      * @param $nameTo
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws JottaException
      * @throws ParseException
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function rename($nameFrom, $nameTo)
     {
