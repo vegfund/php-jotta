@@ -236,7 +236,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
      */
     public function test015_set_request_type()
     {
-        foreach(['async', 'sync', 'auto'] as $requestType) {
+        foreach (['async', 'sync', 'auto'] as $requestType) {
             $mock = \Mockery::mock(Scope::class);
             $mock->makePartial();
 
@@ -244,7 +244,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
             $property = $reflection->getProperty('requestType');
             $property->setAccessible(true);
 
-            $funcName = 'set' . ucfirst($requestType).'Request';
+            $funcName = 'set'.ucfirst($requestType).'Request';
             $asyncScope = $mock->{$funcName}();
 
             $this->assertSame($requestType, $property->getValue($asyncScope));
