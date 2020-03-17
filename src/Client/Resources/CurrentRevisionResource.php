@@ -8,9 +8,6 @@
 
 namespace Vegfund\Jotta\Client\Resources;
 
-use Sabre\Xml\LibXMLException;
-use Sabre\Xml\ParseException;
-
 /**
  * Class CurrentRevisionResource.
  */
@@ -20,7 +17,6 @@ class CurrentRevisionResource extends AbstractResource
      * CurrentRevisionResource constructor.
      *
      * @param $resource
-     *
      */
     public function __construct($resource)
     {

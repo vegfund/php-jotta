@@ -17,6 +17,7 @@ class JFileInfo extends SplFileInfo
 {
     /**
      * @param $file
+     *
      * @return static
      */
     public static function make($file)

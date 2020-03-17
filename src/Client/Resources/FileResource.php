@@ -8,9 +8,6 @@
 
 namespace Vegfund\Jotta\Client\Resources;
 
-use Sabre\Xml\LibXMLException;
-use Sabre\Xml\ParseException;
-
 /**
  * Class FileResource.
  */

@@ -57,8 +57,9 @@ class DirectoryScope extends Scope
     }
 
     /**
-     * @return mixed
      * @throws JottaException
+     *
+     * @return mixed
      */
     public function all()
     {
@@ -175,11 +176,12 @@ class DirectoryScope extends Scope
     /**
      * @param $localPath
      * @param string $remotePath
-     * @param mixed $overwriteMode
+     * @param mixed  $overwriteMode
      *
-     * @return UploadReport
      * @throws JottaException
      * @throws Exception
+     *
+     * @return UploadReport
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -250,10 +252,10 @@ class DirectoryScope extends Scope
      * @param array $options
      * @param array $recursive
      *
-     * @return array
      * @throws Exception
-     *
      * @throws ParseException
+     *
+     * @return array
      */
     public function listRecursive($remotePath, $options = [], $recursive = [])
     {
@@ -281,8 +283,9 @@ class DirectoryScope extends Scope
     }
 
     /**
-     * @param File $file
+     * @param File  $file
      * @param array $options
+     *
      * @return bool
      */
     protected function checkFileRecursive(File $file, $options = [])
@@ -349,10 +352,10 @@ class DirectoryScope extends Scope
     /**
      * @param $path
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws Exception
-     *
      * @throws JottaException
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function delete($path = null)
     {
