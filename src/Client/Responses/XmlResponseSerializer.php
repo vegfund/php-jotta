@@ -90,7 +90,7 @@ class XmlResponseSerializer
     }
 
     /**
-     * Get XML service (parser).
+     * @return Service
      */
     protected function getXmlService()
     {

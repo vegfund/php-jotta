@@ -11,7 +11,6 @@ namespace Vegfund\Jotta\Client\Scopes;
 use Exception;
 use function in_array;
 use Psr\Http\Message\ResponseInterface;
-use Sabre\Xml\LibXMLException;
 use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
@@ -58,19 +57,15 @@ class DirectoryScope extends Scope
     }
 
     /**
-     * @throws JottaException
-     * @throws ParseException
-     *
      * @return mixed
+     * @throws JottaException
      */
     public function all()
     {
         if ($this->mode !== self::MODE_MOUNT_POINT) {
             throw new JottaException('This is valid only for mount points.');
         }
-        /**
-         * @var Device
-         */
+
         $device = $this->jottaClient->device()->get();
 
         return $device->getMountPoints();
@@ -180,12 +175,11 @@ class DirectoryScope extends Scope
     /**
      * @param $localPath
      * @param string $remotePath
-     * @param mixed  $overwriteMode
-     *
-     * @throws ParseException
-     * @throws JottaException
+     * @param mixed $overwriteMode
      *
      * @return UploadReport
+     * @throws JottaException
+     * @throws Exception
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -256,9 +250,10 @@ class DirectoryScope extends Scope
      * @param array $options
      * @param array $recursive
      *
-     * @throws ParseException
-     *
      * @return array
+     * @throws Exception
+     *
+     * @throws ParseException
      */
     public function listRecursive($remotePath, $options = [], $recursive = [])
     {
@@ -286,12 +281,8 @@ class DirectoryScope extends Scope
     }
 
     /**
-     * @param File  $file
+     * @param File $file
      * @param array $options
-     *
-     * @throws ParseException
-     * @throws LibXMLException
-     *
      * @return bool
      */
     protected function checkFileRecursive(File $file, $options = [])
@@ -358,9 +349,10 @@ class DirectoryScope extends Scope
     /**
      * @param $path
      *
-     * @throws JottaException
-     *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws Exception
+     *
+     * @throws JottaException
      */
     public function delete($path = null)
     {

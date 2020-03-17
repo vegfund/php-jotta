@@ -21,8 +21,6 @@ class CurrentRevisionResource extends AbstractResource
      *
      * @param $resource
      *
-     * @throws LibXMLException
-     * @throws ParseException
      */
     public function __construct($resource)
     {

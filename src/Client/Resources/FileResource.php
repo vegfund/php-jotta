@@ -17,9 +17,6 @@ use Sabre\Xml\ParseException;
 class FileResource extends AbstractResource
 {
     /**
-     * @throws LibXMLException
-     * @throws ParseException
-     *
      * @return array
      */
     public function arrayDefinition()

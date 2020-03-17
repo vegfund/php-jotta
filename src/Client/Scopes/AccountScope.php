@@ -8,7 +8,7 @@
 
 namespace Vegfund\Jotta\Client\Scopes;
 
-use Sabre\Xml\ParseException;
+use Exception;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
 use Vegfund\Jotta\Jotta;
@@ -16,9 +16,8 @@ use Vegfund\Jotta\Jotta;
 class AccountScope extends Scope
 {
     /**
-     * @throws ParseException
-     *
      * @return NamespaceContract|string|User
+     * @throws Exception
      */
     public function index()
     {
@@ -29,9 +28,8 @@ class AccountScope extends Scope
     }
 
     /**
-     * @throws ParseException
-     *
-     * @return NamespaceContract|string|User
+     * @return string|NamespaceContract|User
+     * @throws Exception
      */
     public function data()
     {

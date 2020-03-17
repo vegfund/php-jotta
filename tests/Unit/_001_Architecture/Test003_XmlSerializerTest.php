@@ -127,4 +127,15 @@ class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($serialized->getAttribute('nonexisting'));
         $this->assertObjectNotHasAttribute('nonexisting', $serialized);
     }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Attributes::get
+     */
+    public function test007a_no_attributes()
+    {
+        $mock = \Mockery::mock(Attributes::class);
+        $mock->makePartial();
+
+        $this->assertNull($mock->get('nonexistant'));
+    }
 }

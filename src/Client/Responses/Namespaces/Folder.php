@@ -19,6 +19,16 @@ class Folder extends ResponseNamespace
     /**
      * @var array
      */
+    public $folders = [];
+
+    /**
+     * @var array
+     */
+    public $files = [];
+
+    /**
+     * @var array
+     */
     protected $keyValueMap = [
         'name',
         ['time' => 'datetime'],

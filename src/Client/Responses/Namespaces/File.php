@@ -20,15 +20,32 @@ use Vegfund\Jotta\Support\JFileInfo;
  */
 class File extends ResponseNamespace
 {
+    /**
+     * @var string
+     */
     public $name;
+
+    /**
+     * @var string
+     */
     public $abspath;
+
+    /**
+     * @var string
+     */
     public $path;
+
+    /**
+     * @var string
+     */
     public $host;
     /**
      * @var CurrentRevision
      */
     public $currentRevision;
+
     public $latestRevision;
+
     /**
      * @var array
      */
@@ -40,6 +57,9 @@ class File extends ResponseNamespace
         'host',
     ];
 
+    /**
+     * @var array
+     */
     protected $objectValueMap = [
         'currentRevision',
         'latestRevision',
@@ -83,9 +103,6 @@ class File extends ResponseNamespace
     }
 
     /**
-     * @throws LibXMLException
-     * @throws ParseException
-     *
      * @return bool
      */
     public function isCorrupt()
@@ -94,9 +111,6 @@ class File extends ResponseNamespace
     }
 
     /**
-     * @throws LibXMLException
-     * @throws ParseException
-     *
      * @return bool
      */
     public function isCompleted()
@@ -105,9 +119,6 @@ class File extends ResponseNamespace
     }
 
     /**
-     * @throws LibXMLException
-     * @throws ParseException
-     *
      * @return bool
      */
     public function isValid()
@@ -137,9 +148,6 @@ class File extends ResponseNamespace
 
     /**
      * @param $file
-     *
-     *@throws ParseException
-     * @throws LibXMLException
      *
      * @return bool
      */

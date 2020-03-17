@@ -21,10 +21,8 @@ use Vegfund\Jotta\Jotta;
 class DeviceScope extends Scope
 {
     /**
-     * @throws Exception
-     * @throws ParseException
-     *
      * @return array|NamespaceContract[]
+     * @throws Exception
      */
     public function all()
     {
@@ -38,10 +36,9 @@ class DeviceScope extends Scope
     /**
      * @param string $device
      *
-     * @throws ParseException
-     * @throws Exception
-     *
      * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws JottaException
+     * @throws Exception
      */
     public function get($device = Jotta::DEVICE_JOTTA)
     {

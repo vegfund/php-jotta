@@ -10,7 +10,6 @@ namespace Vegfund\Jotta\Client\Scopes;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface;
-use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
@@ -21,10 +20,8 @@ class FileScope extends Scope
 {
     /**
      * @param $remotePath
-     *
-     * @throws ParseException
-     *
-     * @return array|NamespaceContract|object|ResponseInterface|string
+     * @return array|object|ResponseInterface|string|NamespaceContract
+     * @throws Exception
      */
     public function get($remotePath)
     {
@@ -39,9 +36,8 @@ class FileScope extends Scope
      * @param $remotePath
      * @param null $localPath
      *
-     * @throws ParseException
-     *
      * @return bool
+     * @throws Exception
      */
     public function verify($remotePath, $localPath = null)
     {
@@ -73,11 +69,9 @@ class FileScope extends Scope
      * @param $remotePath
      * @param $localPath
      * @param string $size
-     *
-     * @throws JottaException
-     * @throws ParseException
-     *
      * @return bool
+     * @throws JottaException
+     * @throws Exception
      */
     public function thumbnail($remotePath, $localPath, $size = Jotta::THUMBNAIL_SIZE_MEDIUM)
     {
@@ -98,12 +92,9 @@ class FileScope extends Scope
      * @param $localPath
      * @param $remotePath
      * @param int $overwriteMode
-     *
-     * @throws ParseException
-     * @throws Exception
-     * @throws JottaException
-     *
      * @return array|bool|object|ResponseInterface|string|NamespaceContract
+     * @throws JottaException
+     * @throws Exception
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -165,11 +156,9 @@ class FileScope extends Scope
      * @param $pathFrom
      * @param $pathTo
      * @param null $mountPointTo
-     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      * @throws JottaException
-     * @throws ParseException
-     *
-     * @return array|NamespaceContract|object|ResponseInterface|string
+     * @throws Exception
      */
     public function move($pathFrom, $pathTo, $mountPointTo = null)
     {
@@ -193,11 +182,8 @@ class FileScope extends Scope
     /**
      * @param $nameFrom
      * @param $nameTo
-     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      * @throws JottaException
-     * @throws ParseException
-     *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function rename($nameFrom, $nameTo)
     {
@@ -206,11 +192,9 @@ class FileScope extends Scope
 
     /**
      * @param $path
-     *
-     * @throws JottaException
-     * @throws ParseException
-     *
      * @return array|object|ResponseInterface|string|NamespaceContract
+     * @throws JottaException
+     * @throws Exception
      */
     public function delete($path)
     {

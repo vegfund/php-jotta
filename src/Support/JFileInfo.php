@@ -8,18 +8,24 @@
 
 namespace Vegfund\Jotta\Support;
 
+use SplFileInfo;
+
 /**
  * Class JFileInfo.
  */
-class JFileInfo extends \SplFileInfo
+class JFileInfo extends SplFileInfo
 {
+    /**
+     * @param $file
+     * @return static
+     */
     public static function make($file)
     {
         if ($file instanceof self) {
             return $file;
         }
 
-        if ($file instanceof \SplFileInfo) {
+        if ($file instanceof SplFileInfo) {
             return new static($file->getRealPath());
         }
 

@@ -18,6 +18,9 @@ use Vegfund\Jotta\Client\Responses\ResponseNamespace;
  */
 class CurrentRevision extends ResponseNamespace
 {
+    /**
+     * @var string
+     */
     public $state;
 
     /**

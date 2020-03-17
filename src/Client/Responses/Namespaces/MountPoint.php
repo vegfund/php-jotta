@@ -18,16 +18,16 @@ use Vegfund\Jotta\Client\Responses\ResponseNamespace;
  */
 class MountPoint extends ResponseNamespace
 {
-    public $name;
-    public $size;
-    public $modified;
-    public $path;
-    public $abspath;
-    public $device;
-    public $user;
-    public $metadata;
+    /**
+     * @var array
+     */
     public $folders = [];
+
+    /**
+     * @var array
+     */
     public $files = [];
+
     /**
      * @var array
      */
@@ -49,6 +49,9 @@ class MountPoint extends ResponseNamespace
         'files',
     ];
 
+    /**
+     * @var array
+     */
     protected $objectValueMap = [
         'metadata',
     ];
