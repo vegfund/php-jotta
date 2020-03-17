@@ -16,8 +16,9 @@ use Vegfund\Jotta\Jotta;
 class AccountScope extends Scope
 {
     /**
-     * @return NamespaceContract|string|User
      * @throws Exception
+     *
+     * @return NamespaceContract|string|User
      */
     public function index()
     {
@@ -28,8 +29,9 @@ class AccountScope extends Scope
     }
 
     /**
-     * @return string|NamespaceContract|User
      * @throws Exception
+     *
+     * @return string|NamespaceContract|User
      */
     public function data()
     {

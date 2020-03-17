@@ -10,7 +10,6 @@ namespace Vegfund\Jotta\Client\Scopes;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface;
-use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Jotta;
@@ -21,8 +20,9 @@ use Vegfund\Jotta\Jotta;
 class DeviceScope extends Scope
 {
     /**
-     * @return array|NamespaceContract[]
      * @throws Exception
+     *
+     * @return array|NamespaceContract[]
      */
     public function all()
     {
@@ -36,9 +36,10 @@ class DeviceScope extends Scope
     /**
      * @param string $device
      *
-     * @return array|NamespaceContract|object|ResponseInterface|string
      * @throws JottaException
      * @throws Exception
+     *
+     * @return array|NamespaceContract|object|ResponseInterface|string
      */
     public function get($device = Jotta::DEVICE_JOTTA)
     {

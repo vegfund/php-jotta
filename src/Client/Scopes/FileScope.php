@@ -20,8 +20,10 @@ class FileScope extends Scope
 {
     /**
      * @param $remotePath
-     * @return array|object|ResponseInterface|string|NamespaceContract
+     *
      * @throws Exception
+     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      */
     public function get($remotePath)
     {
@@ -36,8 +38,9 @@ class FileScope extends Scope
      * @param $remotePath
      * @param null $localPath
      *
-     * @return bool
      * @throws Exception
+     *
+     * @return bool
      */
     public function verify($remotePath, $localPath = null)
     {
@@ -69,9 +72,11 @@ class FileScope extends Scope
      * @param $remotePath
      * @param $localPath
      * @param string $size
-     * @return bool
+     *
      * @throws JottaException
      * @throws Exception
+     *
+     * @return bool
      */
     public function thumbnail($remotePath, $localPath, $size = Jotta::THUMBNAIL_SIZE_MEDIUM)
     {
@@ -92,9 +97,11 @@ class FileScope extends Scope
      * @param $localPath
      * @param $remotePath
      * @param int $overwriteMode
-     * @return array|bool|object|ResponseInterface|string|NamespaceContract
+     *
      * @throws JottaException
      * @throws Exception
+     *
+     * @return array|bool|object|ResponseInterface|string|NamespaceContract
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -156,9 +163,11 @@ class FileScope extends Scope
      * @param $pathFrom
      * @param $pathTo
      * @param null $mountPointTo
-     * @return array|object|ResponseInterface|string|NamespaceContract
+     *
      * @throws JottaException
      * @throws Exception
+     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      */
     public function move($pathFrom, $pathTo, $mountPointTo = null)
     {
@@ -182,8 +191,10 @@ class FileScope extends Scope
     /**
      * @param $nameFrom
      * @param $nameTo
-     * @return array|object|ResponseInterface|string|NamespaceContract
+     *
      * @throws JottaException
+     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      */
     public function rename($nameFrom, $nameTo)
     {
@@ -192,9 +203,11 @@ class FileScope extends Scope
 
     /**
      * @param $path
-     * @return array|object|ResponseInterface|string|NamespaceContract
+     *
      * @throws JottaException
      * @throws Exception
+     *
+     * @return array|object|ResponseInterface|string|NamespaceContract
      */
     public function delete($path)
     {
