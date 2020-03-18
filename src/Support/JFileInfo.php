@@ -38,6 +38,14 @@ class JFileInfo extends SplFileInfo
      */
     public function getMd5()
     {
-        return md5(file_get_contents($this->getRealPath()));
+        return md5($this->getContents());
+    }
+
+    /**\
+     * @return false|string
+     */
+    public function getContents()
+    {
+        return file_get_contents($this->getRealPath());
     }
 }
