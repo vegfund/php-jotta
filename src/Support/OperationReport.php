@@ -13,7 +13,7 @@ use Vegfund\Jotta\Jotta;
 /**
  * Class UploadReport.
  */
-class UploadReport
+class OperationReport
 {
     /**
      * @var array

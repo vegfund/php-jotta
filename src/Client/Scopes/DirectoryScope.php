@@ -20,7 +20,7 @@ use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
-use Vegfund\Jotta\Support\UploadReport;
+use Vegfund\Jotta\Support\OperationReport;
 
 /**
  * Class DirectoryScope.
@@ -178,10 +178,10 @@ class DirectoryScope extends Scope
      * @param string $remotePath
      * @param mixed  $overwriteMode
      *
-     * @throws JottaException
-     * @throws Exception
+     * @return OperationReport
+     *@throws Exception
      *
-     * @return UploadReport
+     * @throws JottaException
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
@@ -189,7 +189,7 @@ class DirectoryScope extends Scope
             throw new JottaException('This is not a folder or it does not exist');
         }
 
-        $report = new UploadReport();
+        $report = new OperationReport();
 
         $contents = [];
         $this->getDirContents($localPath, $contents);

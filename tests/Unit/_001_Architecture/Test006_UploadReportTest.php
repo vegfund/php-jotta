@@ -5,17 +5,17 @@ namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 use Illuminate\Support\Str;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
-use Vegfund\Jotta\Support\UploadReport;
+use Vegfund\Jotta\Support\OperationReport;
 
 class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers \Vegfund\Jotta\Support\UploadReport::stop
-     * @covers \Vegfund\Jotta\Support\UploadReport::getReport
+     * @covers \Vegfund\Jotta\Support\OperationReport::stop
+     * @covers \Vegfund\Jotta\Support\OperationReport::getReport
      */
     public function test001_upload_report_time()
     {
-        $report = new UploadReport();
+        $report = new OperationReport();
         sleep(2);
         $report->stop();
 
@@ -27,9 +27,9 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers \Vegfund\Jotta\Support\UploadReport::folderTroublesome
-     * @covers \Vegfund\Jotta\Support\UploadReport::fileNoFolder
-     * @covers  \Vegfund\Jotta\Support\UploadReport::stop
+     * @covers \Vegfund\Jotta\Support\OperationReport::folderTroublesome
+     * @covers \Vegfund\Jotta\Support\OperationReport::fileNoFolder
+     * @covers  \Vegfund\Jotta\Support\OperationReport::stop
      */
     public function test003_upload_report_folders_troublesome()
     {
@@ -46,7 +46,7 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $uploadReport = new UploadReport();
+        $uploadReport = new OperationReport();
 
         foreach ($folders as $path => $folder) {
             $files = array_map(function ($item) {
@@ -73,8 +73,8 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers \Vegfund\Jotta\Support\UploadReport::folderCreated
-     * @covers \Vegfund\Jotta\Support\UploadReport::folderExisting
+     * @covers \Vegfund\Jotta\Support\OperationReport::folderCreated
+     * @covers \Vegfund\Jotta\Support\OperationReport::folderExisting
      */
     public function test003_upload_report_folders_by_types()
     {
@@ -86,7 +86,7 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
             'path/folder5' => 'created',
         ];
 
-        $uploadReport = new UploadReport();
+        $uploadReport = new OperationReport();
 
         foreach ($folders as $path => $type) {
             $funcName = 'folder'.ucfirst($type);
@@ -101,7 +101,7 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers \Vegfund\Jotta\Support\UploadReport::file
+     * @covers \Vegfund\Jotta\Support\OperationReport::file
      */
     public function test005_upload_report_files_overwrite()
     {
@@ -117,7 +117,7 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
 
         $generatedFiles = [];
 
-        $uploadReport = new UploadReport();
+        $uploadReport = new OperationReport();
 
         $expectedSizes = [
             'uploaded_newer_or_different' => 0,
@@ -157,14 +157,14 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers \Vegfund\Jotta\Support\UploadReport::fileFresh
+     * @covers \Vegfund\Jotta\Support\OperationReport::fileFresh
      */
     public function test007_upload_files_fresh()
     {
         $expectedSize = 0;
         $expectedCount = rand(50, 100);
 
-        $uploadReport = new UploadReport();
+        $uploadReport = new OperationReport();
 
         for ($i = 0; $i < $expectedCount; $i++) {
             $mock = \Mockery::mock(JFileInfo::class);
@@ -186,14 +186,14 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers \Vegfund\Jotta\Support\UploadReport::file
+     * @covers \Vegfund\Jotta\Support\OperationReport::file
      */
     public function test007a_upload_files_fresh_variant()
     {
         $expectedSize = 0;
         $expectedCount = rand(50, 100);
 
-        $uploadReport = new UploadReport();
+        $uploadReport = new OperationReport();
 
         for ($i = 0; $i < $expectedCount; $i++) {
             $mock = \Mockery::mock(JFileInfo::class);
@@ -215,14 +215,14 @@ class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers \Vegfund\Jotta\Support\UploadReport::fileTroublesome
+     * @covers \Vegfund\Jotta\Support\OperationReport::fileTroublesome
      */
     public function test007_upload_files_troublesome()
     {
         $expectedSize = 0;
         $expectedCount = rand(50, 100);
 
-        $uploadReport = new UploadReport();
+        $uploadReport = new OperationReport();
 
         for ($i = 0; $i < $expectedCount; $i++) {
             $mock = \Mockery::mock(JFileInfo::class);

@@ -1,6 +1,6 @@
 {
-    "name": "vegfund/php-jotta",
-    "description": "A flysystem adapter (and PHP API client) for Jottacloud using their unofficial API.",
+    "name": "vegfund/jotta-php",
+    "description": "A PHP client for Jottacloud filesystem unofficial API with Flysystem adapter integrated",
     "type": "library",
     "license": "MIT",
     "keywords": [
