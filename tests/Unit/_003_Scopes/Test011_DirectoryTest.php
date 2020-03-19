@@ -2,77 +2,70 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
+use Vegfund\Jotta\Client\Exceptions\JottaException;
+use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
+use Vegfund\Jotta\Client\Scopes\DirectoryScope;
+use Vegfund\Jotta\Jotta;
+use Vegfund\Jotta\Tests\Support\AssertExceptions;
+
+/**
+ * Class Test011_DirectoryTest
+ * @package Vegfund\Jotta\Tests\Unit\_003_Scopes
+ */
 class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
 {
-    public function test001_get_when_folder()
+    use AssertExceptions;
+
+    /**
+     * @covers \Vegfund\Jotta\Jotta::directory
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getMode
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::setMode
+     * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
+     */
+    public function test001_modes_simple()
     {
+        $client = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
+        $scope = $client->directory();
+        $this->assertInstanceOf(DirectoryScope::class, $scope);
+        $this->assertNull($scope->getMode());
+        $this->assertSame(DirectoryScope::MODE_FOLDER, $scope->setMode(DirectoryScope::MODE_FOLDER)->getMode());
+        $this->assertSame(DirectoryScope::MODE_MOUNT_POINT, $scope->setMode(DirectoryScope::MODE_MOUNT_POINT)->getMode());
+
+        $mountPoint = $client->mountPoint();
+        $this->assertSame(DirectoryScope::MODE_MOUNT_POINT, $mountPoint->getMode());
+        $folder = $client->folder();
+        $this->assertSame(DirectoryScope::MODE_FOLDER, $folder->getMode());
     }
 
-    public function test001a_get_when_mount_point()
+    /**
+     * @covers \Vegfund\Jotta\Jotta::client
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::all
+     * @throws JottaException
+     */
+    public function test003_list_mount_points()
     {
-    }
+        $client = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
 
-    public function test003_is_folder()
-    {
-    }
+        $this->shouldThrowException(JottaException::class, function () use ($client) {
+            $client->folder()->all();
+        });
 
-    public function test003a_is_mount_point()
-    {
-    }
+        $this->shouldThrowException(JottaException::class, function () use ($client) {
+            $client->mountPoint()->setMode(DirectoryScope::MODE_FOLDER)->all();
+        });
 
-    public function test005_list_contents()
-    {
-    }
+        $this->shouldNotThrowException(function () use ($client) {
+            $client->mountPoint()->all();
+            $client->directory()->setMode(DirectoryScope::MODE_MOUNT_POINT)->all();
+            $client->folder()->setMode(DirectoryScope::MODE_MOUNT_POINT)->all();
+        });
 
-    public function test007_list_contents_recursive()
-    {
-    }
+        $all = $client->mountPoint()->all();
 
-    public function test011_upload_overwrite_never()
-    {
-    }
+        $this->assertIsArray($all);
 
-    public function test013_upload_overwrite_always()
-    {
-    }
-
-    public function test015_upload_overwrite_if_newer()
-    {
-    }
-
-    public function test017_upload_overwrite_if_different()
-    {
-    }
-
-    public function test019_upload_overwrite_if_newer_or_different()
-    {
-    }
-
-    public function test021_download_overwrite_never()
-    {
-    }
-
-    public function test023_download_overwrite_always()
-    {
-    }
-
-    public function test025_download_overwrite_if_newer()
-    {
-    }
-
-    public function test027_download_overwrite_if_different()
-    {
-    }
-
-    public function test029_download_overwrite_if_newer_or_different()
-    {
-    }
-
-    public function test031_move_and_rename()
-    {
-    }
-
-    public function test033_copy()
-    {
+        array_map(function ($item) {
+            $this->assertInstanceOf(MountPoint::class, $item);
+        }, $all);
     }
 }

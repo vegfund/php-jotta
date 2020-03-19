@@ -302,6 +302,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Support\JFileInfo::getMd5
+     * @covers \Vegfund\Jotta\Support\JFileInfo::getContents
      */
     public function test023_jfile_info()
     {
