@@ -9,7 +9,6 @@
 namespace Vegfund\Jotta\Client\Scopes;
 
 use Exception;
-use Vegfund\Jotta\Traits\DirectoryScopeConfig;
 use function in_array;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
@@ -22,6 +21,7 @@ use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Support\OperationReport;
+use Vegfund\Jotta\Traits\DirectoryScopeConfig;
 
 /**
  * Class DirectoryScope.
