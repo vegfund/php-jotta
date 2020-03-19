@@ -93,6 +93,7 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::uuid
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getUuid
      * @throws JottaException
      */
     public function test007_uuid()
@@ -109,6 +110,8 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::regex
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getRegex
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::deleted
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withDeleted
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::corrupt
@@ -120,6 +123,9 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
     public function test009_other_configs()
     {
         $directory = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->directory();
+
+        $this->assertNull($directory->getUuid());
+        $this->assertNull($directory->getRegex());
 
         $this->assertFalse($directory->withDeleted());
         $this->assertFalse($directory->withCorrupt());

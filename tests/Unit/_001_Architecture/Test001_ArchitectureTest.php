@@ -18,8 +18,10 @@ use Vegfund\Jotta\Support\JFileInfo;
 class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * @covers \Vegfund\Jotta\JottaClient::__construct
      * @covers \Vegfund\Jotta\Jotta::client
      * @covers \Vegfund\Jotta\Jotta::getClient
+     * @covers \Vegfund\Jotta\Jotta::__construct
      */
     public function test001_init()
     {
@@ -28,6 +30,11 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
         $client = new JottaClient(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
         $this->assertInstanceOf(JottaClient::class, $client);
+
+        $this->assertSame(getenv('JOTTA_USERNAME'), $client->getUsername());
+
+        $client = new Jotta(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
+        $this->assertInstanceOf(JottaClient::class, $client->getClient());
     }
 
     /**
