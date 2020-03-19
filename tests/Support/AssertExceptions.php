@@ -2,12 +2,11 @@
 
 namespace Vegfund\Jotta\Tests\Support;
 
-use phpDocumentor\Reflection\Types\Callable_;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Trait AssertExceptions
- * @package Vegfund\Jotta\Tests\Support
+ * Trait AssertExceptions.
+ *
  * @mixin TestCase
  */
 trait AssertExceptions
