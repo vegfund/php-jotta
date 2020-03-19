@@ -177,6 +177,24 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::setApiUrl
+     * @throws \ReflectionException
+     */
+    public function test003d_scope_configs()
+    {
+        $mock = \Mockery::mock(Scope::class);
+        $mock->makePartial();
+
+        $mock->setApiUrl(Jotta::API_UPLOAD_URL);
+
+        $reflection = new \ReflectionClass($mock);
+        $property = $reflection->getProperty('apiUrl');
+        $property->setAccessible(true);
+
+        $this->assertSame(Jotta::API_UPLOAD_URL, $property->getValue($mock));
+    }
+
+    /**
      * @covers \Vegfund\Jotta\Client\Scopes\Scope::normalizePathSegment
      *
      * @throws \ReflectionException

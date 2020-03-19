@@ -10,12 +10,20 @@ use Vegfund\Jotta\Support\OperationReport;
 class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * @covers \Vegfund\Jotta\Support\OperationReport::__construct
      * @covers \Vegfund\Jotta\Support\OperationReport::stop
      * @covers \Vegfund\Jotta\Support\OperationReport::getReport
      */
     public function test001_upload_report_time()
     {
         $report = new OperationReport();
+
+        $reflection = new \ReflectionClass($report);
+        $property = $reflection->getProperty('start');
+        $property->setAccessible(true);
+
+        $this->assertTrue($property->getValue($report) < microtime(true));
+
         sleep(2);
         $report->stop();
 
