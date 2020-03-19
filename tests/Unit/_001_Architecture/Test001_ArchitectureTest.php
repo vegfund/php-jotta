@@ -308,6 +308,9 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
         $file = new JFileInfo(__FILE__);
         $this->assertInstanceOf(\SplFileInfo::class, $file);
         $this->assertSame(md5(file_get_contents(__FILE__)), $file->getMd5());
+
+        $contents = file_get_contents(__FILE__);
+        $this->assertSame($contents, $file->getContents());
     }
 
     /**
