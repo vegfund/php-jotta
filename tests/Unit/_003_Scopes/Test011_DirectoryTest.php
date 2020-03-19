@@ -102,7 +102,9 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
             $directory->uuid('not-an-uuid');
         });
         $this->shouldNotThrowException(function () use ($directory) {
-            $directory->uuid(Uuid::uuid4()->toString());
+            $uuid = Uuid::uuid4()->toString();
+            $directory->uuid($uuid);
+            $this->assertSame($uuid, $directory->getUuid());
         });
     }
 
