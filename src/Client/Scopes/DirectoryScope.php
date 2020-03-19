@@ -391,7 +391,7 @@ class DirectoryScope extends Scope
         ];
 
         if (in_array($this->mountPoint, $forbidden, true)) {
-            throw new Exception('The mount point '.$this->mountPoint.' cannot be deleted.');
+            throw new JottaException('The mount point '.$this->mountPoint.' cannot be deleted.');
         }
 
         $response = $this->request(

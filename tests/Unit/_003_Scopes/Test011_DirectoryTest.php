@@ -68,4 +68,23 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
             $this->assertInstanceOf(MountPoint::class, $item);
         }, $all);
     }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::delete
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::deleteMountPoint
+     */
+    public function test005_delete_built_in_mount_point()
+    {
+        $client = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
+
+        $this->shouldThrowException(JottaException::class, function () use ($client) {
+            $client->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete();
+        });
+        $this->shouldThrowException(JottaException::class, function () use ($client) {
+            $client->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->delete();
+        });
+        $this->shouldThrowException(JottaException::class, function () use ($client) {
+            $client->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SYNC)->delete();
+        });
+    }
 }
