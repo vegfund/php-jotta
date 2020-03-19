@@ -2,6 +2,7 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
+use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
@@ -124,5 +125,8 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($directory->deleted(true)->withDeleted());
         $this->assertTrue($directory->corrupt(true)->withCorrupt());
         $this->assertFalse($directory->completed(false)->withCompleted());
+
+        $regex = Str::random(32);
+        $this->assertSame($regex, $directory->regex($regex)->getRegex());
     }
 }
