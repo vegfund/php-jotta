@@ -9,6 +9,7 @@
 namespace Vegfund\Jotta\Client\Scopes;
 
 use Exception;
+use Vegfund\Jotta\Traits\DirectoryScopeConfig;
 use function in_array;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
@@ -27,6 +28,8 @@ use Vegfund\Jotta\Support\OperationReport;
  */
 class DirectoryScope extends Scope
 {
+    use DirectoryScopeConfig;
+
     const MODE_MOUNT_POINT = 1;
 
     const MODE_FOLDER = 2;

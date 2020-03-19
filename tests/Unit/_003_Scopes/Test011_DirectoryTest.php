@@ -2,6 +2,7 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
+use Ramsey\Uuid\Uuid;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
@@ -87,5 +88,41 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
         $this->shouldThrowException(JottaException::class, function () use ($client) {
             $client->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SYNC)->delete();
         });
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::uuid
+     * @throws JottaException
+     */
+    public function test007_uuid()
+    {
+        $directory = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->directory();
+        $this->shouldThrowException(\Exception::class, function () use ($directory) {
+            $directory->uuid('not-an-uuid');
+        });
+        $this->shouldNotThrowException(function () use ($directory) {
+            $directory->uuid(Uuid::uuid4()->toString());
+        });
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::deleted
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withDeleted
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::corrupt
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withCorrupt
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::completed
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withCompleted
+     * @throws JottaException
+     */
+    public function test009_other_configs()
+    {
+        $directory = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->directory();
+
+        $this->assertFalse($directory->withDeleted());
+        $this->assertFalse($directory->withCorrupt());
+        $this->assertTrue($directory->withCompleted());
+        $this->assertTrue($directory->deleted(true)->withDeleted());
+        $this->assertTrue($directory->corrupt(true)->withCorrupt());
+        $this->assertFalse($directory->completed(false)->withCompleted());
     }
 }
