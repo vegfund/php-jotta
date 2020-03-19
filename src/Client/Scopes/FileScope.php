@@ -17,8 +17,7 @@ use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 
 /**
- * Class FileScope
- * @package Vegfund\Jotta\Client\Scopes
+ * Class FileScope.
  */
 class FileScope extends Scope
 {

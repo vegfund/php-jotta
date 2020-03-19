@@ -9,8 +9,7 @@ use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
 /**
- * Class Test011_DirectoryTest
- * @package Vegfund\Jotta\Tests\Unit\_003_Scopes
+ * Class Test011_DirectoryTest.
  */
 class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -20,6 +19,7 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\Jotta::directory
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getMode
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::setMode
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test001_modes_simple()
@@ -40,6 +40,7 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers \Vegfund\Jotta\Jotta::client
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::all
+     *
      * @throws JottaException
      */
     public function test003_list_mount_points()

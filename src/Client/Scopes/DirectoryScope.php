@@ -178,10 +178,10 @@ class DirectoryScope extends Scope
      * @param string $remotePath
      * @param mixed  $overwriteMode
      *
-     * @return OperationReport
      *@throws Exception
-     *
      * @throws JottaException
+     *
+     * @return OperationReport
      */
     public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
