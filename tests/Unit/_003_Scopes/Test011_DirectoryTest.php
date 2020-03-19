@@ -94,6 +94,7 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::uuid
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getUuid
+     *
      * @throws JottaException
      */
     public function test007_uuid()
@@ -118,6 +119,7 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withCorrupt
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::completed
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withCompleted
+     *
      * @throws JottaException
      */
     public function test009_other_configs()

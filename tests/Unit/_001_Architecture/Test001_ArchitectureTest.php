@@ -178,6 +178,7 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\Scope::setApiUrl
+     *
      * @throws \ReflectionException
      */
     public function test003d_scope_configs()

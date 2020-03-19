@@ -12,8 +12,8 @@ use Exception;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 
 /**
- * Trait DirectoryScopeConfig
- * @package Vegfund\Jotta\Traits
+ * Trait DirectoryScopeConfig.
+ *
  * @mixin DirectoryScope
  */
 trait DirectoryScopeConfig
@@ -45,6 +45,7 @@ trait DirectoryScopeConfig
 
     /**
      * @param bool $deleted
+     *
      * @return $this
      */
     public function deleted($deleted = false)
@@ -64,6 +65,7 @@ trait DirectoryScopeConfig
 
     /**
      * @param bool $corrupt
+     *
      * @return $this
      */
     public function corrupt($corrupt = false)
@@ -83,6 +85,7 @@ trait DirectoryScopeConfig
 
     /**
      * @param bool $completed
+     *
      * @return $this
      */
     public function completed($completed = false)
@@ -102,6 +105,7 @@ trait DirectoryScopeConfig
 
     /**
      * @param string $regex
+     *
      * @return $this
      */
     public function regex($regex)
@@ -121,12 +125,14 @@ trait DirectoryScopeConfig
 
     /**
      * @param string $uuid
-     * @return $this
+     *
      * @throws Exception
+     *
+     * @return $this
      */
     public function uuid($uuid)
     {
-        if(!is_string($uuid) || !preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', $uuid)) {
+        if (!is_string($uuid) || !preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', $uuid)) {
             throw new Exception('This is not a valid UUID.');
         }
         $this->uuid = $uuid;
