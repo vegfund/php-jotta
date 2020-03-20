@@ -240,4 +240,23 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
 
         return $keyValueFields;
     }
+
+    /**
+     * @param $fields
+     * @return ResponseNamespace
+     */
+    final public function except($fields)
+    {
+        $fields = is_array($fields) ? $fields : [$fields];
+
+        $processed = clone $this;
+
+        foreach($fields as $field) {
+            if(isset($processed->{$field})) {
+                unset($processed->{$field});
+            }
+        }
+
+        return $processed;
+    }
 }

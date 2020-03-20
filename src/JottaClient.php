@@ -141,7 +141,7 @@ class JottaClient
      *
      * @throws JottaException
      *
-     * @return DirectoryScope|Scope
+     * @return DirectoryScope
      */
     public function mountPoint($options = [])
     {

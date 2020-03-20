@@ -15,6 +15,8 @@ use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 
 /**
  * Class MountPoint.
+ * @method string getUser()
+ * @method Metadata getMetadata()
  */
 class MountPoint extends ResponseNamespace
 {
@@ -82,5 +84,13 @@ class MountPoint extends ResponseNamespace
     public static function xmlDeserialize(Reader $reader)
     {
         return (new self())->attachFields($reader);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsername()
+    {
+        return $this->getUser();
     }
 }

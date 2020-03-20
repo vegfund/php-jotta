@@ -67,7 +67,7 @@ trait ScopeConfig
     /**
      * @param string $mountPoint
      *
-     * @return Scope
+     * @return static
      */
     final public function setMountPoint($mountPoint = Jotta::MOUNT_POINT_ARCHIVE)
     {

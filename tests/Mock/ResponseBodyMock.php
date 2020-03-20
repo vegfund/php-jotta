@@ -9,9 +9,11 @@
 namespace Vegfund\Jotta\Tests\Mock;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 use Sabre\Xml\Service;
+use Vegfund\Jotta\Jotta;
 
 /**
  * Class ResponseBodyMock.
@@ -162,26 +164,94 @@ class ResponseBodyMock
     /**
      * @return string
      */
-    public function mountPoint()
+    public function mountPoint($options = [])
     {
-        return $this->write('{}mountPoint', [
-            '{}name'     => 'Archive',
-            '{}path'     => 'path',
-            '{}abspath'  => 'path',
-            '{}size'     => rand(1024, 99999999),
-            '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
+        $definitions = [
+            '{}name'     => Arr::get($options, 'name', Jotta::MOUNT_POINT_ARCHIVE),
+            '{}path'     => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta',
+            '{}abspath'  => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta',
+            '{}size'     => Arr::get($options, 'size', rand(1024, 99999999)),
+            '{}modified' => strftime('%F-T%TZ', Arr::get($options, 'modified', time() - rand(0, 60 * 60 * 24 * 365 * 4))),
             '{}device'   => 'Jotta',
             '{}user'     => getenv('JOTTA_USERNAME'),
-            '{}folders'  => [
+//            '{}folders'  => [
+//                [
+//                    '{}folder' => [
+//                        'attributes' => [
+//                            'name' => 'somefolder',
+//                        ],
+//                    ],
+//                ],
+//            ],
+        ];
+
+        $folders = Arr::get($options, 'folders', []);
+        if(count($folders) > 0) {
+            $definitions['{}folders'] = [];
+        }
+        foreach($folders as $folder) {
+            $attributes = [
+                'name' => $folder['name']
+            ];
+            if(isset($folder['deleted'])) {
+                $attributes['deleted'] = strftime('%F-T%TZ', $folder['deleted']);
+            }
+            $definitions['{}folders'][] = [
                 [
-                    '{}folder' => [
-                        'attributes' => [
-                            'name' => 'somefolder',
-                        ],
+                    'name' => '{}folder',
+                    'attributes' => $attributes,
+                    'value' => [
+                        '{}abspath' => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'name', Jotta::MOUNT_POINT_ARCHIVE)
+                    ]
+                ],
+            ];
+        }
+
+        $files = Arr::get($options, 'files', []);
+        if(count($files) > 0) {
+            $definitions['{}files'] = [];
+        }
+        foreach($files as $file) {
+            $attributes = [
+                'name' => $file['name'],
+                'uuid' => Arr::get($file, 'uuid', Uuid::uuid4()->toString())
+            ];
+            if(isset($file['deleted'])) {
+                $attributes['deleted'] = strftime('%F-T%TZ', $file['deleted']);
+            }
+            $definitions['{}files'][] = [
+                [
+                    'name' => '{}file',
+                    'attributes' => $attributes,
+                    'value' => [
+                        '{}abspath' => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'name', Jotta::MOUNT_POINT_ARCHIVE),
+                        '{}currentRevision' => [
+                            'number' => 1,
+                            'state' => Arr::get($file, 'state', 'COMPLETED'),
+                            'created' => strftime('%F-T%TZ', Arr::get($file, 'crated', time() - 60 * 60)),
+                            'modified' => strftime('%F-T%TZ', Arr::get($file, 'crated', time() - 60 * 60)),
+                            'mime' => Arr::get($file, 'mime', 'text/plain'),
+                            'size' => Arr::get($file, 'size', strlen($file['name']) * 1024),
+                            'md5' => Arr::get($file, 'md5', md5($file['name'])),
+                            'updated' => strftime('%F-T%TZ', Arr::get($file, 'crated', time() - 60)),
+                        ]
                     ],
                 ],
-            ],
-        ]);
+            ];
+        }
+
+        $definitions['{}metadata'] = [
+                'name' => '{}metadata',
+                'attributes' => [
+                    'first' => '',
+                    'max' => '',
+                    'total' => (string) (count($files) + count($folders)),
+                    'num_folder' => (string) count($folders),
+                    'num_files' => (string) count($files)
+                ]
+        ];
+
+        return $this->write('{}mountPoint', $definitions);
     }
 
     /**

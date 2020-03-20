@@ -14,14 +14,19 @@ use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
 use Vegfund\Jotta\Support\JFileInfo;
+use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
 class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
 {
+    use AssertExceptions;
+
     /**
      * @covers \Vegfund\Jotta\JottaClient::__construct
      * @covers \Vegfund\Jotta\Jotta::client
      * @covers \Vegfund\Jotta\Jotta::getClient
      * @covers \Vegfund\Jotta\Jotta::__construct
+     * @covers \Vegfund\Jotta\JottaClient::getUsername
+     * @covers \Vegfund\Jotta\JottaClient::getClient
      */
     public function test001_init()
     {
@@ -261,25 +266,20 @@ class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\Scope::withoutExceptions
      * @covers \Vegfund\Jotta\Client\Scopes\Scope::withExceptions
+     * @covers \Vegfund\Jotta\Client\Scopes\Scope::serialize
      */
     public function test013_disable_exceptions()
     {
         $mock = \Mockery::mock(Scope::class);
         $mock->makePartial();
 
-        try {
-            $mock->withExceptions()->serialize('not a XML body');
-            $this->assertTrue(false);
-        } catch (\Exception $e) {
-            $this->assertTrue(true);
-        }
-
-        try {
+        $this->shouldNotThrowException(function () use ($mock) {
             $mock->withoutExceptions()->serialize('not a XML body');
-            $this->assertTrue(true);
-        } catch (\Exception $e) {
-            $this->assertTrue(false);
-        }
+        });
+
+        $this->shouldThrowException(\Exception::class, function () use ($mock) {
+            $mock->withExceptions()->serialize('not a XML body');
+        });
     }
 
     /**

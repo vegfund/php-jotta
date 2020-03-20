@@ -3,13 +3,18 @@
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
 use Illuminate\Support\Str;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
 use Vegfund\Jotta\Jotta;
+use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
 class Test001_AccountTest extends \PHPUnit\Framework\TestCase
 {
+    use AssertExceptions;
+
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\AccountScope::data
+     * @covers \Vegfund\Jotta\Client\Scopes\AccountScope::getUsername
      */
     public function test001_should_return_account_data()
     {
@@ -23,6 +28,7 @@ class Test001_AccountTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\AccountScope::index
+     * @covers \Vegfund\Jotta\Client\Scopes\AccountScope::getUsername
      */
     public function test001a_should_return_account_data2()
     {
@@ -39,23 +45,12 @@ class Test001_AccountTest extends \PHPUnit\Framework\TestCase
      */
     public function test003_should_throw_exception()
     {
-        $exception = null;
-
-        try {
-            $data = Jotta::client(Str::random(32), getenv('JOTTA_PASSWORD'))->account()->data();
-        } catch (\Exception $e) {
-            $exception = $e;
-        }
-        $this->assertInstanceOf(\Exception::class, $exception);
-
-        $exception = null;
-
-        try {
-            $data = Jotta::client(getenv('JOTTA_USERNAME'), Str::random(32))->account()->data();
-        } catch (\Exception $e) {
-            $exception = $e;
-        }
-        $this->assertInstanceOf(\Exception::class, $exception);
+        $this->shouldThrowException(\Exception::class, function () {
+            Jotta::client(Str::random(32), getenv('JOTTA_PASSWORD'))->account()->data();
+        });
+        $this->shouldThrowException(\Exception::class, function () {
+            Jotta::client(getenv('JOTTA_USERNAME'), Str::random(32))->account()->data();
+        });
     }
 
     /**

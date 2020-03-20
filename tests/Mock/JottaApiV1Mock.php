@@ -39,7 +39,7 @@ class JottaApiV1Mock
     /**
      * JottaApiV1Mock constructor.
      */
-    public function __construct()
+    public function __construct($body = '')
     {
         $this->responseBodyMock = new ResponseBodyMock();
 
@@ -48,9 +48,7 @@ class JottaApiV1Mock
         $this->mock->shouldAllowMockingProtectedMethods();
 
         $this->mock->shouldReceive('request')
-            ->andReturnUsing(function (...$args) {
-                return $this->mockRequest(...$args);
-            });
+            ->andReturn($this->mockResponse($body));
     }
 
     /**
@@ -72,36 +70,16 @@ class JottaApiV1Mock
      *
      * @return LegacyMockInterface|MockInterface|Response
      */
-    protected function mockRequest($uri, $method, $options)
+    protected function mockResponse($body)
     {
         $mockResponse = Mockery::mock(Response::class);
         $mockResponse->makePartial();
         $mockResponse->shouldAllowMockingProtectedMethods();
 
         $mockResponse->shouldReceive('getBody')
-            ->andReturn($this->prepareResponse($uri, $method, $options)['body']);
+            ->andReturn($body);
 
         return $mockResponse;
-    }
-
-    /**
-     * @param $uri
-     * @param $method
-     * @param $options
-     *
-     * @return array
-     */
-    protected function prepareResponse($method, $uri, $options)
-    {
-        if ($uri === $this->implodePath([getenv('JOTTA_USERNAME')])) {
-            return [
-                'body' => $this->prepareResponseBody($this->getXmlBody('user')),
-            ];
-        }
-
-        return [
-            'body' => $this->prepareResponseBody('body'),
-        ];
     }
 
     /**
@@ -125,25 +103,10 @@ class JottaApiV1Mock
         $mockStream->makePartial();
         $mockStream->shouldAllowMockingProtectedMethods();
 
-        $mockStream->shouldReceive('__toString')
-            ->andReturn($body);
+//        $mockStream->shouldReceive('__toString')
+//            ->andReturn($body);
 
         return $mockStream;
-    }
-
-    /**
-     * Prepare response body by mocking Stream object.
-     *
-     * @param $uri
-     * @param $method
-     * @param $options
-     * @param mixed $body
-     *
-     * @return LegacyMockInterface|MockInterface|Stream
-     */
-    protected function prepareResponseBody($body)
-    {
-        return $this->mockStream($body);
     }
 
     /**

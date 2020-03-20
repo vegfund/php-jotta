@@ -9,6 +9,7 @@
 namespace Vegfund\Jotta\Client\Scopes;
 
 use Exception;
+use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use function in_array;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
@@ -83,7 +84,7 @@ class DirectoryScope extends Scope
      *
      * @throws Exception
      *
-     * @return array|Folder|NamespaceContract|object|ResponseInterface|string
+     * @return MountPoint
      */
     public function get($remotePath = '', $remoteName = null)
     {
@@ -97,7 +98,7 @@ class DirectoryScope extends Scope
             $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $normalizedPath)
         );
 
-        return $this->serialize($response);
+        return $this->serialize($response)->except(['files', 'folders']);
     }
 
     /**

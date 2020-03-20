@@ -34,7 +34,7 @@ trait AssertExceptions
             $callback();
             $this->assertTrue(true);
         } catch (\Exception $e) {
-            $this->assertTrue(false);
+            $this->assertTrue(false, get_class($e) . ' ' . $e->getMessage());
         }
     }
 }

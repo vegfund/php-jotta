@@ -2,18 +2,24 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
+use Exception;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
+use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 use Vegfund\Jotta\Jotta;
+use Vegfund\Jotta\JottaClient;
+use Vegfund\Jotta\Tests\Mock\JottaApiV1Mock;
+use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
 /**
  * Class Test011_DirectoryTest.
  */
-class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
+class Test011_DirectoryTest extends TestCase
 {
     use AssertExceptions;
 
@@ -22,7 +28,7 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getMode
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::setMode
      *
-     * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
+     * @throws JottaException
      */
     public function test001_modes_simple()
     {
@@ -100,7 +106,7 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
     public function test007_uuid()
     {
         $directory = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->directory();
-        $this->shouldThrowException(\Exception::class, function () use ($directory) {
+        $this->shouldThrowException(Exception::class, function () use ($directory) {
             $directory->uuid('not-an-uuid');
         });
         $this->shouldNotThrowException(function () use ($directory) {
@@ -138,5 +144,39 @@ class Test011_DirectoryTest extends \PHPUnit\Framework\TestCase
 
         $regex = Str::random(32);
         $this->assertSame($regex, $directory->regex($regex)->getRegex());
+    }
+
+    /**
+     * @throws JottaException
+     * @throws Exception
+     */
+    public function test011_get()
+    {
+        $body = (new ResponseBodyMock())->mountPoint([
+            'name' => Jotta::MOUNT_POINT_SHARED,
+            'folders' => [
+                [
+                    'name' => 'somefolder',
+                    'deleted' => time()
+                ]
+            ],
+            'files' => [
+                [
+                    'name' => 'one.txt'
+                ]
+            ]
+        ]);
+
+        $mock = new JottaApiV1Mock($body);
+        $jotta = new JottaClient('a', 'b', $mock->getMock());
+        $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->get();
+        $this->assertInstanceOf(MountPoint::class, $result);
+        $this->assertSame(getenv('JOTTA_USERNAME'), $result->getUser());
+        $this->assertSame($result->getUser(), $result->getUsername());
+
+        $this->assertInstanceOf(Metadata::class, $result->getMetadata());
+
+        $this->assertFalse(isset($result->files));
+        $this->assertFalse(isset($result->folders));
     }
 }

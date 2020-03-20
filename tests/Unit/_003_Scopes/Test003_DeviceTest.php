@@ -5,13 +5,14 @@ namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Jotta;
+use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
 class Test003_DeviceTest extends \PHPUnit\Framework\TestCase
 {
+    use AssertExceptions;
+
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DeviceScope::all
-     *
-     * @throws \Sabre\Xml\ParseException
      */
     public function test000_list_all_devices()
     {
@@ -20,19 +21,15 @@ class Test003_DeviceTest extends \PHPUnit\Framework\TestCase
         $this->assertIsArray($devices);
         $this->assertCount(2, $devices);
 
-        $names = array_map(function (Device $device) {
-            return $device->getName();
+        array_map(function ($item) {
+            $this->assertInstanceOf(Device::class, $item);
         }, $devices);
-
-        $deviceJotta = Jotta::DEVICE_JOTTA;
-
-        $this->assertTrue(isset($deviceJotta, $names));
     }
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DeviceScope::get
      *
-     * @throws \Sabre\Xml\ParseException
+     * @throws JottaException
      */
     public function test003_get_device_jotta()
     {
@@ -48,14 +45,11 @@ class Test003_DeviceTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DeviceScope::get
      *
-     * @throws \Sabre\Xml\ParseException
      */
     public function test005_get_other_device()
     {
-        try {
-            $device = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->device()->get('other');
-        } catch (\Exception $e) {
-            $this->assertInstanceOf(JottaException::class, $e);
-        }
+        $this->shouldThrowException(JottaException::class, function () {
+            Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))->device()->get('other');
+        });
     }
 }
