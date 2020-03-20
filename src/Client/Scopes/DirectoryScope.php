@@ -9,16 +9,15 @@
 namespace Vegfund\Jotta\Client\Scopes;
 
 use Exception;
-use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use function in_array;
 use Psr\Http\Message\ResponseInterface;
 use Sabre\Xml\ParseException;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Resources\FileResource;
-use Vegfund\Jotta\Client\Resources\FolderListingResource;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
+use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Support\OperationReport;
@@ -176,11 +175,11 @@ class DirectoryScope extends Scope
 
         $listing = [];
 
-        foreach($this->applyFilters($directory->getFolders()) as $folder) {
+        foreach ($this->applyFilters($directory->getFolders()) as $folder) {
             $listing[$folder->getName()] = [];
         }
 
-        foreach($this->applyFilters($directory->getFiles()) as $file) {
+        foreach ($this->applyFilters($directory->getFiles()) as $file) {
             $listing[] = $file->getName();
         }
 

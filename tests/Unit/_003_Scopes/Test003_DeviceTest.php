@@ -44,7 +44,6 @@ class Test003_DeviceTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DeviceScope::get
-     *
      */
     public function test005_get_other_device()
     {

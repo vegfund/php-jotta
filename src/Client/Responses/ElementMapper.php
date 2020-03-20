@@ -87,9 +87,9 @@ class ElementMapper
             '{}files'  => function (Reader $reader) {
                 return repeatingElements($reader, '{}file');
             },
-            '{}file'     => File::class,
-            '{}metadata' => Metadata::class,
-            '{}currentRevision' => CurrentRevision::class
+            '{}file'            => File::class,
+            '{}metadata'        => Metadata::class,
+            '{}currentRevision' => CurrentRevision::class,
         ];
     }
 

@@ -129,8 +129,8 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
     {
         $this->attributes = $attributes ?: new Attributes([]);
 
-        foreach($attributes->all() as $key => $value) {
-            if(!isset($this->{$key})) {
+        foreach ($attributes->all() as $key => $value) {
+            if (!isset($this->{$key})) {
                 $this->{$key} = $value;
             }
         }
@@ -249,6 +249,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
 
     /**
      * @param $fields
+     *
      * @return ResponseNamespace
      */
     final public function except($fields)
@@ -257,8 +258,8 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
 
         $processed = clone $this;
 
-        foreach($fields as $field) {
-            if(isset($processed->{$field})) {
+        foreach ($fields as $field) {
+            if (isset($processed->{$field})) {
                 unset($processed->{$field});
             }
         }

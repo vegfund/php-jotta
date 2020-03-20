@@ -15,6 +15,7 @@ use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 
 /**
  * Class MountPoint.
+ *
  * @method string getUser()
  * @method Metadata getMetadata()
  */
@@ -99,7 +100,7 @@ class MountPoint extends ResponseNamespace
      */
     public function getFolders()
     {
-        if(!is_array($this->folders)) {
+        if (!is_array($this->folders)) {
             return [];
         }
 
@@ -111,7 +112,7 @@ class MountPoint extends ResponseNamespace
      */
     public function getFiles()
     {
-        if(!is_array($this->files)) {
+        if (!is_array($this->files)) {
             return [];
         }
 
