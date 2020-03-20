@@ -93,4 +93,28 @@ class MountPoint extends ResponseNamespace
     {
         return $this->getUser();
     }
+
+    /**
+     * @return array
+     */
+    public function getFolders()
+    {
+        if(!is_array($this->folders)) {
+            return [];
+        }
+
+        return $this->folders;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFiles()
+    {
+        if(!is_array($this->files)) {
+            return [];
+        }
+
+        return $this->files;
+    }
 }

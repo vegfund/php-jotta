@@ -86,7 +86,7 @@ class DirectoryScope extends Scope
      *
      * @return MountPoint
      */
-    public function get($remotePath = '', $remoteName = null)
+    public function get($remotePath = '', $remoteName = null, $except = ['files', 'folders'])
     {
         // Prepare relative path.
         $normalizedPath = $this->normalizePathSegment($remotePath);
@@ -98,7 +98,7 @@ class DirectoryScope extends Scope
             $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $normalizedPath)
         );
 
-        return $this->serialize($response)->except(['files', 'folders']);
+        return $this->serialize($response)->except($except);
     }
 
     /**
@@ -170,11 +170,21 @@ class DirectoryScope extends Scope
      *
      * @return array
      */
-    public function list($remotePath, $remoteName = null, $options = [])
+    public function list($remotePath = '', $remoteName = null, $options = [])
     {
-        $metadata = $this->get($remotePath, $remoteName);
+        $directory = $this->get($remotePath, $remoteName, []);
 
-        return [implode('/', [$metadata->abspath, $metadata->name]) => (new FolderListingResource($metadata))->toArray()];
+        $listing = [];
+
+        foreach($this->applyFilters($directory->getFolders()) as $folder) {
+            $listing[$folder->getName()] = [];
+        }
+
+        foreach($this->applyFilters($directory->getFiles()) as $file) {
+            $listing[] = $file->getName();
+        }
+
+        return $listing;
     }
 
     /**

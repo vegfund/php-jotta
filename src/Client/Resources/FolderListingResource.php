@@ -8,8 +8,13 @@
 
 namespace Vegfund\Jotta\Client\Resources;
 
+use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
+use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
+
 /**
  * Class FolderListingResource.
+ * @mixin MountPoint
+ * @mixin Folder
  */
 class FolderListingResource extends AbstractResource
 {
@@ -18,56 +23,6 @@ class FolderListingResource extends AbstractResource
      */
     public function arrayDefinition()
     {
-        if (isset($this->resource->folders)) {
-            $folders = $this->foldersDefinitions();
-        } else {
-            $folders = [];
-        }
-
-        if (isset($this->resource->files)) {
-            $files = $this->filesDefinitions();
-        } else {
-            $files = [];
-        }
-
-        return array_merge($folders, $files);
-    }
-
-    /**
-     * @return array
-     */
-    protected function foldersDefinitions()
-    {
-        $folders = array_filter($this->folders, function ($item) {
-            return !isset($item->getAttributes()->deleted);
-        });
-
-        return array_map(
-            function ($item) {
-                $item['type'] = 'folder';
-
-                return $item;
-            },
-            $folders
-        );
-    }
-
-    /**
-     * @return array
-     */
-    protected function filesDefinitions()
-    {
-        $files = array_filter($this->files, function ($item) {
-            return !isset($item->getAttributes()->deleted);
-        });
-
-        return array_map(
-            function ($item) {
-                $item['type'] = 'file';
-
-                return $item;
-            },
-            $files
-        );
+        return array_merge($this->getFolders(), $this->getFiles());
     }
 }

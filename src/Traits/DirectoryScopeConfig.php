@@ -9,6 +9,9 @@
 namespace Vegfund\Jotta\Traits;
 
 use Exception;
+use Vegfund\Jotta\Client\Responses\Namespaces\File;
+use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
+use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 
 /**
@@ -36,12 +39,12 @@ trait DirectoryScopeConfig
     /**
      * @var string
      */
-    protected $regex;
+    protected $regex = null;
 
     /**
      * @var string
      */
-    protected $uuid;
+    protected $uuid = null;
 
     /**
      * @param bool $deleted
@@ -146,5 +149,21 @@ trait DirectoryScopeConfig
     public function getUuid()
     {
         return $this->uuid;
+    }
+
+    /**
+     * @param $collection
+     * @return array
+     */
+    protected function applyFilters($collection)
+    {
+        return array_filter($collection, function (ResponseNamespace $item) {
+            return ($item instanceof Folder) || (($this->withCompleted() && $item->isCompleted() || !$this->withCompleted() && !$item->isCompleted())
+                && ($this->withDeleted() && $item->isDeleted() || !$this->withDeleted() && !$item->isDeleted())
+                && ($this->withCorrupt() && $item->isCorrupt() || !$this->withCorrupt() && !$item->isCorrupt())
+                && (null === $this->getRegex() || (null !== $this->getRegex() && false !== preg_match($this->regex, $item->getName())))
+                && (null === $this->getUuid() || (null !== $this->getUuid() && $this->getUuid() === $item->getUuid)))
+                ;
+        });
     }
 }

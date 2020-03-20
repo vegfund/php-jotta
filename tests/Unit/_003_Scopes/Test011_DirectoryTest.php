@@ -147,6 +147,9 @@ class Test011_DirectoryTest extends TestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::get
+     * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::except
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Device::xmlDeserialize
      * @throws JottaException
      * @throws Exception
      */
@@ -178,5 +181,37 @@ class Test011_DirectoryTest extends TestCase
 
         $this->assertFalse(isset($result->files));
         $this->assertFalse(isset($result->folders));
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
+     * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::except
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Device::xmlDeserialize
+     * @throws JottaException
+     * @throws Exception
+     */
+    public function test013_list()
+    {
+        $body = (new ResponseBodyMock())->mountPoint([
+            'name' => Jotta::MOUNT_POINT_SHARED,
+            'folders' => [
+                [
+                    'name' => 'somefolder',
+                    'deleted' => time()
+                ]
+            ],
+            'files' => [
+                [
+                    'name' => 'one.txt',
+                    'deleted' => time()
+                ]
+            ]
+        ]);
+
+        $mock = new JottaApiV1Mock($body);
+        $jotta = new JottaClient('a', 'b', $mock->getMock());
+        $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->list();
+
+        return $result;
     }
 }

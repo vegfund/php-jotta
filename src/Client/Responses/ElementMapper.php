@@ -89,6 +89,7 @@ class ElementMapper
             },
             '{}file'     => File::class,
             '{}metadata' => Metadata::class,
+            '{}currentRevision' => CurrentRevision::class
         ];
     }
 
