@@ -13,6 +13,7 @@ use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 
 /**
  * Class FolderListingResource.
+ *
  * @mixin MountPoint
  * @mixin Folder
  */

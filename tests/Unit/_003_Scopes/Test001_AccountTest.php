@@ -3,7 +3,6 @@
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
 use Illuminate\Support\Str;
-use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Tests\Support\AssertExceptions;

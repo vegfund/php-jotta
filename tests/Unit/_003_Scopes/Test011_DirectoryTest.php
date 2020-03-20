@@ -150,24 +150,25 @@ class Test011_DirectoryTest extends TestCase
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::get
      * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::except
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Device::xmlDeserialize
+     *
      * @throws JottaException
      * @throws Exception
      */
     public function test011_get()
     {
         $body = (new ResponseBodyMock())->mountPoint([
-            'name' => Jotta::MOUNT_POINT_SHARED,
+            'name'    => Jotta::MOUNT_POINT_SHARED,
             'folders' => [
                 [
-                    'name' => 'somefolder',
-                    'deleted' => time()
-                ]
+                    'name'    => 'somefolder',
+                    'deleted' => time(),
+                ],
             ],
             'files' => [
                 [
-                    'name' => 'one.txt'
-                ]
-            ]
+                    'name' => 'one.txt',
+                ],
+            ],
         ]);
 
         $mock = new JottaApiV1Mock($body);
@@ -187,25 +188,26 @@ class Test011_DirectoryTest extends TestCase
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
      * @covers \Vegfund\Jotta\Client\Responses\ResponseNamespace::except
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Device::xmlDeserialize
+     *
      * @throws JottaException
      * @throws Exception
      */
     public function test013_list()
     {
         $body = (new ResponseBodyMock())->mountPoint([
-            'name' => Jotta::MOUNT_POINT_SHARED,
+            'name'    => Jotta::MOUNT_POINT_SHARED,
             'folders' => [
                 [
-                    'name' => 'somefolder',
-                    'deleted' => time()
-                ]
+                    'name'    => 'somefolder',
+                    'deleted' => time(),
+                ],
             ],
             'files' => [
                 [
-                    'name' => 'one.txt',
-                    'deleted' => time()
-                ]
-            ]
+                    'name'    => 'one.txt',
+                    'deleted' => time(),
+                ],
+            ],
         ]);
 
         $mock = new JottaApiV1Mock($body);

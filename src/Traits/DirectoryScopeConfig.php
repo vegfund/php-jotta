@@ -9,7 +9,6 @@
 namespace Vegfund\Jotta\Traits;
 
 use Exception;
-use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
@@ -153,6 +152,7 @@ trait DirectoryScopeConfig
 
     /**
      * @param $collection
+     *
      * @return array
      */
     protected function applyFilters($collection)
@@ -162,8 +162,7 @@ trait DirectoryScopeConfig
                 && ($this->withDeleted() && $item->isDeleted() || !$this->withDeleted() && !$item->isDeleted())
                 && ($this->withCorrupt() && $item->isCorrupt() || !$this->withCorrupt() && !$item->isCorrupt())
                 && (null === $this->getRegex() || (null !== $this->getRegex() && false !== preg_match($this->regex, $item->getName())))
-                && (null === $this->getUuid() || (null !== $this->getUuid() && $this->getUuid() === $item->getUuid)))
-                ;
+                && (null === $this->getUuid() || (null !== $this->getUuid() && $this->getUuid() === $item->getUuid)));
         });
     }
 }
