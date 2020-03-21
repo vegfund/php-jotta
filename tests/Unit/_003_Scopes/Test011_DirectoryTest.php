@@ -199,7 +199,6 @@ class Test011_DirectoryTest extends TestCase
             'folders' => [
                 [
                     'name'    => 'somefolder',
-                    'deleted' => time(),
                 ],
             ],
             'files' => [
@@ -214,6 +213,27 @@ class Test011_DirectoryTest extends TestCase
         $jotta = new JottaClient('a', 'b', $mock->getMock());
         $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->list();
 
-        return $result;
+        $this->assertSame(['somefolder' => []], $result);
+
+
+        $body = (new ResponseBodyMock())->mountPoint([
+            'name'    => Jotta::MOUNT_POINT_SHARED,
+            'folders' => [
+                [
+                    'name'    => 'somefolder',
+                ],
+            ],
+            'files' => [
+                [
+                    'name'    => 'one.txt',
+                ],
+            ],
+        ]);
+
+        $mock = new JottaApiV1Mock($body);
+        $jotta = new JottaClient('a', 'b', $mock->getMock());
+        $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->list();
+
+        $this->assertSame(['somefolder' => [], 'one.txt'], $result);
     }
 }
