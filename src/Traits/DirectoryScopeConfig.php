@@ -9,6 +9,7 @@
 namespace Vegfund\Jotta\Traits;
 
 use Exception;
+use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
@@ -170,11 +171,11 @@ trait DirectoryScopeConfig
                 return false;
             }
 
-            if(!$this->withCorrupt() && $item->isCorrupt()) {
+            if($item instanceof File && !$this->withCorrupt() && $item->isCorrupt()) {
                 return false;
             }
 
-            if(!$this->withCompleted() && !$item->isCompleted()) {
+            if($item instanceof File && !$this->withCompleted() && !$item->isCompleted()) {
                 return false;
             }
 
