@@ -15,6 +15,7 @@ use GuzzleHttp\Psr7\Stream;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
+use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 
 /**
  * Class JottaApiV1Mock.
@@ -38,6 +39,7 @@ class JottaApiV1Mock
 
     /**
      * JottaApiV1Mock constructor.
+     * @param string $body
      */
     public function __construct($body = '')
     {

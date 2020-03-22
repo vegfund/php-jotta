@@ -99,33 +99,25 @@ class DirectoryScope extends Scope
      * Create a remote folder.
      *
      * @param string      $remotePath remote path
-     * @param null|string $remoteName remote name (if name is not specified, then only remote path will be used)
      *
      * @throws Exception
      *
      * @return array|Folder|NamespaceContract|object|ResponseInterface|string
      */
-    public function create($remotePath, $remoteName = null)
+    public function create($remotePath)
     {
         if ($this->mode === self::MODE_MOUNT_POINT) {
             return $this->createMountPoint($remotePath);
         }
         // Prepare relative path.
         $normalizedPath = $this->normalizePathSegment($remotePath);
-        if (null !== $remoteName) {
-            $normalizedPath .= DIRECTORY_SEPARATOR.$this->normalizePathSegment($remoteName);
-        }
 
         // Prepare API path.
-        $requestPath = $this->getPath(Jotta::API_UPLOAD_URL, $this->device, $this->mountPoint, $normalizedPath, ['mkdir' => true]);
+        $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $normalizedPath, ['mkDir' => 'true']);
 
-        $response = $this->getClient()->request(
+        $response = $this->request(
             $requestPath,
-            'post',
-            [
-                'JMd5'  => md5(''),
-                'JSize' => 0,
-            ]
+            'post'
         );
 
         return $this->serialize($response);
@@ -375,7 +367,8 @@ class DirectoryScope extends Scope
         }
 
         $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $path, [
-            'dlDir' => true,
+            'dlDir' => 'true',
+            'method' => 'post'
         ]);
 
         $response = $this->request($requestPath, 'post');

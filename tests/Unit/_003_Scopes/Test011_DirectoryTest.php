@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
+use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
@@ -15,13 +16,14 @@ use Vegfund\Jotta\JottaClient;
 use Vegfund\Jotta\Tests\Mock\JottaApiV1Mock;
 use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 use Vegfund\Jotta\Tests\Support\AssertExceptions;
+use Vegfund\Jotta\Tests\Support\JottaTestTrait;
 
 /**
  * Class Test011_DirectoryTest.
  */
 class Test011_DirectoryTest extends TestCase
 {
-    use AssertExceptions;
+    use AssertExceptions, JottaTestTrait;
 
     /**
      * @covers \Vegfund\Jotta\Jotta::directory
@@ -373,6 +375,71 @@ class Test011_DirectoryTest extends TestCase
         $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->deleted(true)->regex('/.*\.php$/')->list();
 
         $this->assertSame(['two.php', 'three.php'], $result);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::create
+     * @throws JottaException
+     */
+    public function test017_create_folder()
+    {
+        $folderName = md5(file_get_contents(__FILE__)) . '_017';
+        $response = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))
+            ->folder()
+            ->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)
+            ->create($folderName);
+
+        $this->assertInstanceOf(Folder::class, $response);
+        $this->assertSame($folderName, $response->getName());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::create
+     * @throws JottaException
+     */
+    public function test019_create_subfolder()
+    {
+        $folderName = md5(file_get_contents(__FILE__)) . '_019';
+        $subfolderName = md5(file_get_contents(__FILE__)) . '_sub019';
+        $response = $this->jotta()
+            ->folder()
+            ->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)
+            ->create($folderName . '/' . $subfolderName);
+
+        $this->assertInstanceOf(Folder::class, $response);
+        $this->assertSame($subfolderName, $response->getName());
+
+        $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE.'/'.$folderName, $response->getPath());
+
+        // Get the root folder
+
+        $rootResponse = $this->jotta()
+            ->folder()
+            ->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)
+            ->get($folderName);
+
+        $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE, $rootResponse->getPath());
+        $this->assertSame(1, (int) $rootResponse->getMetadata()->getAttribute('num_folders'));
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::create
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::delete
+     * @throws JottaException
+     */
+    public function test021_delete_folder()
+    {
+        // first, create
+        $folderName = md5(file_get_contents(__FILE__)) . '_021';
+        $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($folderName);
+
+        // check if created
+        $this->assertSame($folderName, $created->getName());
+
+        // delete
+        $deleted = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete($folderName);
+        $this->assertSame($folderName, $deleted->getName());
+        $this->assertTrue($deleted->isDeleted());
     }
 
 }
