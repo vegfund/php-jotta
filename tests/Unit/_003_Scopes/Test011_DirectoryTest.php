@@ -442,4 +442,70 @@ class Test011_DirectoryTest extends TestCase
         $this->assertTrue($deleted->isDeleted());
     }
 
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::move
+     * @throws JottaException
+     */
+    public function test023_move_folder_same_mount_point()
+    {
+        $rootFrom = md5(file_get_contents(__FILE__)) . '_021_from';
+        $rootTo = md5(file_get_contents(__FILE__)) . '_021_to';
+        $moved = md5(file_get_contents(__FILE__)) . '_021_moved';
+
+        // first, create
+        $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($rootFrom.'/'.$moved);
+
+        // check if created
+        $this->assertSame($moved, $created->getName());
+
+        // move
+        $movingResult = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($rootFrom.'/'.$moved, $rootTo.'/'.$moved);
+        $this->assertSame($moved, $movingResult->getName());
+        $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE.'/'.$rootTo, $movingResult->getPath());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::rename
+     * @throws JottaException
+     */
+    public function test023_rename_folder_same_mount_point()
+    {
+        $rootFrom = md5(file_get_contents(__FILE__)) . '_023_from';
+        $rootTo = md5(file_get_contents(__FILE__)) . '_023_to';
+        $moved = md5(file_get_contents(__FILE__)) . '_023_moved';
+
+        // first, create
+        $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($rootFrom.'/'.$moved);
+
+        // check if created
+        $this->assertSame($moved, $created->getName());
+
+        // move
+        $movingResult = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->rename($rootFrom.'/'.$moved, $rootTo.'/'.$moved);
+        $this->assertSame($moved, $movingResult->getName());
+        $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE.'/'.$rootTo, $movingResult->getPath());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::move
+     * @throws JottaException
+     */
+    public function test025_move_folder_different_mount_point()
+    {
+        $rootFrom = md5(file_get_contents(__FILE__)) . '_021_from';
+        $rootTo = md5(file_get_contents(__FILE__)) . '_021_to';
+        $moved = md5(file_get_contents(__FILE__)) . '_021_moved';
+
+        // first, create
+        $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($rootFrom.'/'.$moved);
+
+        // check if created
+        $this->assertSame($moved, $created->getName());
+
+        // move
+        $movingResult = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($rootFrom.'/'.$moved, $rootTo.'/'.$moved, Jotta::MOUNT_POINT_SHARED);
+        $this->assertSame($moved, $movingResult->getName());
+        $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_SHARED.'/'.$rootTo, $movingResult->getPath());
+    }
+
 }

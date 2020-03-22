@@ -326,7 +326,7 @@ class DirectoryScope extends Scope
 
         $fullPathTo = $this->getPath(null, $this->device, $mountPointTo, $pathTo);
         $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $pathFrom, [
-            'mvDir' => $fullPathTo,
+            'mvDir' => '/'.$fullPathTo,
         ]);
 
         $response = $this->request($requestPath, 'post');
