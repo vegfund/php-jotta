@@ -521,6 +521,17 @@ class Test011_DirectoryTest extends TestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::move
+     */
+    public function test026_move_should_throw_exception_mount_point_mode()
+    {
+        $folderName = Str::random(32) . '/' . Str::random(32);
+        $this->shouldThrowException(Exception::class, function () use ($folderName) {
+            $this->jotta()->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($folderName, Str::random(32));
+        });
+    }
+
+    /**
      * This test checks the implementation of a case, when a source folder name is empty.
      * In such a case, all items should be moved (but involves also files moving).
      *
