@@ -192,7 +192,7 @@ class Test011_DirectoryTest extends TestCase
      * @throws JottaException
      * @throws Exception
      */
-    public function test013_list()
+    public function test013_list_simple()
     {
         $body = (new ResponseBodyMock())->mountPoint([
             'name'    => Jotta::MOUNT_POINT_SHARED,
@@ -214,19 +214,26 @@ class Test011_DirectoryTest extends TestCase
         $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->list();
 
         $this->assertSame(['somefolder' => []], $result);
+    }
 
-
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withDeleted
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::applyFilters
+     * @throws JottaException
+     */
+    public function test015_list_with_deleted()
+    {
         $body = (new ResponseBodyMock())->mountPoint([
             'name'    => Jotta::MOUNT_POINT_SHARED,
-            'folders' => [
-                [
-                    'name'    => 'somefolder',
-                ],
-            ],
             'files' => [
                 [
                     'name'    => 'one.txt',
                 ],
+                [
+                    'name' => 'two.txt',
+                    'deleted' => time()
+                ]
             ],
         ]);
 
@@ -234,6 +241,26 @@ class Test011_DirectoryTest extends TestCase
         $jotta = new JottaClient('a', 'b', $mock->getMock());
         $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->list();
 
-        $this->assertSame(['somefolder' => [], 'one.txt'], $result);
+        $this->assertSame(['one.txt'], $result);
+
+
+        $body = (new ResponseBodyMock())->mountPoint([
+            'name'    => Jotta::MOUNT_POINT_SHARED,
+            'files' => [
+                [
+                    'name'    => 'one.txt',
+                ],
+                [
+                    'name' => 'two.txt',
+                    'deleted' => time()
+                ]
+            ],
+        ]);
+
+        $mock = new JottaApiV1Mock($body);
+        $jotta = new JottaClient('a', 'b', $mock->getMock());
+        $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->deleted(true)->list();
+
+        $this->assertSame(['one.txt', 'two.txt'], $result);
     }
 }

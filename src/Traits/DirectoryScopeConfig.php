@@ -158,11 +158,27 @@ trait DirectoryScopeConfig
     protected function applyFilters($collection)
     {
         return array_filter($collection, function (ResponseNamespace $item) {
-            return ($item instanceof Folder) || (($this->withCompleted() && $item->isCompleted() || !$this->withCompleted() && !$item->isCompleted())
-                && ($this->withDeleted() && $item->isDeleted() || !$this->withDeleted() && !$item->isDeleted())
-                && ($this->withCorrupt() && $item->isCorrupt() || !$this->withCorrupt() && !$item->isCorrupt())
-                && (null === $this->getRegex() || (null !== $this->getRegex() && false !== preg_match($this->regex, $item->getName())))
-                && (null === $this->getUuid() || (null !== $this->getUuid() && $this->getUuid() === $item->getUuid)));
+            if(null !== $this->getRegex() && false === preg_match($this->regex, $item->getName())) {
+                return false;
+            }
+
+            if(null !== $this->getUuid() && $this->getUuid() !== $item->getUuid()) {
+                return false;
+            }
+
+            if(!$this->withDeleted() && $item->isDeleted()) {
+                return false;
+            }
+
+            if(!$this->withCorrupt() && $item->isCorrupt()) {
+                return false;
+            }
+
+            if(!$this->withCompleted() && !$item->isCompleted()) {
+                return false;
+            }
+
+            return true;
         });
     }
 }
