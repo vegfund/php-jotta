@@ -104,9 +104,10 @@ class DirectoryScope extends Scope
      *
      * @return array|Folder|NamespaceContract|object|ResponseInterface|string
      */
-    public function create($remotePath)
+    public function create($remotePath = null)
     {
-        if ($this->mode === self::MODE_MOUNT_POINT) {
+        if ($this->mode === self::MODE_MOUNT_POINT || null === $remotePath) {
+            $remotePath = $remotePath ?: $this->mountPoint;
             return $this->createMountPoint($remotePath);
         }
         // Prepare relative path.
@@ -357,7 +358,7 @@ class DirectoryScope extends Scope
      */
     public function delete($path = null)
     {
-        if ($this->mode === self::MODE_MOUNT_POINT) {
+        if ($this->mode === self::MODE_MOUNT_POINT || null === $path) {
             return $this->deleteMountPoint();
         }
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
+use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
@@ -506,6 +507,44 @@ class Test011_DirectoryTest extends TestCase
         $movingResult = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($rootFrom.'/'.$moved, $rootTo.'/'.$moved, Jotta::MOUNT_POINT_SHARED);
         $this->assertSame($moved, $movingResult->getName());
         $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_SHARED.'/'.$rootTo, $movingResult->getPath());
+    }
+
+    /**
+     * This test checks the implementation of a case, when a source folder name is empty.
+     * In such a case, all items should be moved (but involves also files moving).
+     *
+     * @todo files moving
+     */
+    public function test027_move_when_folder_name_empty()
+    {
+
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::all
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::create
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::createMountPoint
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::delete
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::deleteMountPoint
+     * @throws JottaException
+     */
+    public function test029_create_and_delete_mount_point()
+    {
+        // Initial number of mountpoints
+        $count = count($this->jotta()->mountPoint()->all());
+
+        $mountPointName = md5(file_get_contents(__FILE__)) . '_029';
+        $response = $this->jotta()->directory()->setMountPoint($mountPointName)->create();
+
+        $this->assertInstanceOf(MountPoint::class, $response);
+        $this->assertSame($mountPointName, $response->getName());
+
+        // delete
+
+        $response = $this->jotta()->directory()->setMountPoint($mountPointName)->delete();
+        $this->assertInstanceOf(Device::class, $response);
+
+        $this->assertSame($count, count($this->jotta()->mountPoint()->all()));
     }
 
 }
