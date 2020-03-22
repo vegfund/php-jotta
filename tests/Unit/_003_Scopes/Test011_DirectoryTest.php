@@ -338,4 +338,41 @@ class Test011_DirectoryTest extends TestCase
 
         $this->assertSame(['three.txt'], $result);
     }
+
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::regex
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withDeleted
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::applyFilters
+     * @throws JottaException
+     */
+    public function test015_list_regex_and_deleted()
+    {
+        $body = (new ResponseBodyMock())->mountPoint([
+            'name'    => Jotta::MOUNT_POINT_SHARED,
+            'files' => [
+                [
+                    'name'    => 'one.txt',
+                ],
+                [
+                    'name' => 'two.php',
+                    'deleted' => time()
+                ],
+                [
+                    'name' => 'three.php',
+                ],
+                [
+                    'name' => 'four.txt',
+                ]
+            ],
+        ]);
+
+        $mock = new JottaApiV1Mock($body);
+        $jotta = new JottaClient('a', 'b', $mock->getMock());
+        $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->deleted(true)->regex('/.*\.php$/')->list();
+
+        $this->assertSame(['two.php', 'three.php'], $result);
+    }
+
 }
