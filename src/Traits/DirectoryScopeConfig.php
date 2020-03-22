@@ -158,7 +158,7 @@ trait DirectoryScopeConfig
     protected function applyFilters($collection)
     {
         return array_filter($collection, function (ResponseNamespace $item) {
-            if(null !== $this->getRegex() && false === preg_match($this->regex, $item->getName())) {
+            if(null !== $this->getRegex() && 0 === preg_match($this->regex, $item->getName())) {
                 return false;
             }
 

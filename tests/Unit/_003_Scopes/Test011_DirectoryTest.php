@@ -263,4 +263,37 @@ class Test011_DirectoryTest extends TestCase
 
         $this->assertSame(['one.txt', 'two.txt'], $result);
     }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::regex
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::applyFilters
+     * @throws JottaException
+     */
+    public function test015_list_with_regex()
+    {
+        $body = (new ResponseBodyMock())->mountPoint([
+            'name'    => Jotta::MOUNT_POINT_SHARED,
+            'files' => [
+                [
+                    'name'    => 'one.txt',
+                ],
+                [
+                    'name' => 'two.php',
+                ],
+                [
+                    'name' => 'three.php',
+                ],
+                [
+                    'name' => 'four.txt',
+                ]
+            ],
+        ]);
+
+        $mock = new JottaApiV1Mock($body);
+        $jotta = new JottaClient('a', 'b', $mock->getMock());
+        $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->regex('/.*\.php$/')->list();
+
+        $this->assertSame(['two.php', 'three.php'], $result);
+    }
 }
