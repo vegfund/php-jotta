@@ -78,20 +78,15 @@ class DirectoryScope extends Scope
     /**
      * Get folder metadata.
      *
-     * @param string      $remotePath remote path
-     * @param null|string $remoteName remote name (if name is not specified, then only remote path will be used)
-     *
-     * @throws Exception
-     *
+     * @param string $remotePath remote path
+     * @param array $except
      * @return MountPoint
+     * @throws Exception
      */
-    public function get($remotePath = '', $remoteName = null, $except = ['files', 'folders'])
+    public function get($remotePath = '', $except = ['files', 'folders'])
     {
         // Prepare relative path.
         $normalizedPath = $this->normalizePathSegment($remotePath);
-        if (null !== $remoteName) {
-            $normalizedPath .= DIRECTORY_SEPARATOR.$this->normalizePathSegment($remoteName);
-        }
 
         $response = $this->request(
             $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $normalizedPath)
@@ -161,17 +156,15 @@ class DirectoryScope extends Scope
     }
 
     /**
-     * @param $remotePath
-     * @param null  $remoteName
+     * @param string $remotePath
      * @param array $options
      *
-     * @throws Exception
-     *
      * @return array
+     * @throws Exception
      */
-    public function list($remotePath = '', $remoteName = null, $options = [])
+    public function list($remotePath = '', $options = [])
     {
-        $directory = $this->get($remotePath, $remoteName, []);
+        $directory = $this->get($remotePath, []);
 
         $listing = [];
 
