@@ -25,5 +25,6 @@
     <php>
         <env name="JOTTA_USERNAME" value="testing"/>
         <env name="JOTTA_PASSWORD" value="testing"/>
+        <env name="JOTTA_TEST_LARGE_FILES" value="false"/>
     </php>
 </phpunit>

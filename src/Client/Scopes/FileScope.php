@@ -25,6 +25,7 @@ class FileScope extends Scope
      * @param $remotePath
      *
      * @throws Exception
+     * @throws JottaException
      *
      * @return array|object|ResponseInterface|string|NamespaceContract
      */
@@ -34,7 +35,13 @@ class FileScope extends Scope
             $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath)
         );
 
-        return $this->serialize($response, 'file');
+        $result = $this->serialize($response);
+
+        if(!($result instanceof File)) {
+            throw new JottaException('This is not a remote file.');
+        }
+
+        return $result;
     }
 
     /**
@@ -44,6 +51,8 @@ class FileScope extends Scope
      * @throws Exception
      *
      * @return bool
+     *
+     * @todo API verification endpoint?
      */
     public function verify($remotePath, $localPath = null)
     {
@@ -63,6 +72,35 @@ class FileScope extends Scope
      */
     public function download($remotePath, $localPath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
+        $file = $this->get($remotePath);
+
+        if(file_exists($localPath) && is_file($localPath)) {
+            $fileinfo = JFileInfo::make($localPath);
+
+            $localPath = basename($localPath);
+
+            switch($overwriteMode) {
+                case Jotta::FILE_OVERWRITE_NEVER:
+                    return null;
+                    break;
+                case Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT:
+                    if($file->getMd5() === $fileinfo->getMd5() && $file->getModifed()->timestamp() <= $fileinfo->getMTime()) {
+                        return null;
+                    }
+                    break;
+                case Jotta::FILE_OVERWRITE_IF_NEWER:
+                    if($file->getModifed()->timestamp() <= $fileinfo->getMTime()) {
+                        return null;
+                    }
+                    break;
+                case Jotta::FILE_OVERWRITE_IF_DIFFERENT:
+                    if($file->getMd5() === $fileinfo->getMd5()) {
+                        return null;
+                    }
+                    break;
+            }
+        }
+
         // Prepare API path.
         $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath, ['mode' => 'bin']);
 
@@ -106,15 +144,23 @@ class FileScope extends Scope
      *
      * @return array|bool|object|ResponseInterface|string|NamespaceContract
      */
-    public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
+    public function upload($localPath, $remotePath = '', $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
         if (!file_exists($localPath) || !is_file($localPath)) {
             throw new JottaException('File does not exist or not a file.');
         }
 
-        $file = $this->get($remotePath);
+        // Don't get metadata if obviously a folder
+        if('' !== $remotePath) {
+            $remote = $this->get($remotePath);
+            if ($remote instanceof File) {
+                return null;
+            }
+        } else {
+            $remotePath = basename($localPath);
+        }
 
-        return $this->blockOverwrite($file, $overwriteMode) ? false : $this->makeUpload($localPath, $remotePath);
+        return $this->makeUpload($localPath, $remotePath);
     }
 
     /**

@@ -159,6 +159,22 @@ class File extends ResponseNamespace
     }
 
     /**
+     * @return null|string
+     */
+    public function getMd5()
+    {
+        return $this->getRevision()->getMd5();
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getSize()
+    {
+        return $this->getRevision()->getSize();
+    }
+
+    /**
      * @return CurrentRevision
      */
     protected function getRevision()
