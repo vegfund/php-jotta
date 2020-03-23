@@ -7,8 +7,7 @@ use Vegfund\Jotta\Tests\Support\AssertExceptions;
 use Vegfund\Jotta\Tests\Support\JottaTestTrait;
 
 /**
- * Class JottaTestCase
- * @package Vegfund\Jotta\Tests
+ * Class JottaTestCase.
  */
 class JottaTestCase extends TestCase
 {
@@ -17,6 +16,7 @@ class JottaTestCase extends TestCase
 
     /**
      * @param string $filename
+     *
      * @return string
      */
     public function tempPath($filename = '')

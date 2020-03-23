@@ -4,7 +4,6 @@ namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
 use Exception;
 use Illuminate\Support\Str;
-use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
@@ -12,8 +11,6 @@ use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Tests\JottaTestCase;
 use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
-use Vegfund\Jotta\Tests\Support\AssertExceptions;
-use Vegfund\Jotta\Tests\Support\JottaTestTrait;
 
 /**
  * Class Test013_FileTest.
@@ -74,7 +71,7 @@ class Test013_FileTest extends JottaTestCase
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
-        for($i = 0; $i < 256*1024; $i += 512) {
+        for ($i = 0; $i < 256 * 1024; $i += 512) {
             fwrite($f, Str::random(512));
         }
         fclose($f);
@@ -88,7 +85,7 @@ class Test013_FileTest extends JottaTestCase
 
         $this->assertSame($filename, $response->getName());
         $this->assertSame($fileinfo->getMd5(), $response->getMd5());
-        $this->assertSame(256*1024, $response->getSize());
+        $this->assertSame(256 * 1024, $response->getSize());
 
         @unlink($path);
     }
@@ -101,7 +98,7 @@ class Test013_FileTest extends JottaTestCase
      */
     public function test007_upload_simple_large_file_25mb()
     {
-        if(true !== getenv('JOTTA_TEST_LARGE_FILES')) {
+        if (true !== getenv('JOTTA_TEST_LARGE_FILES')) {
             $this->markTestSkipped('Testing large files upload skipped. Set JOTTA_TEST_LARGE_FILES env to true');
         }
 
@@ -110,7 +107,7 @@ class Test013_FileTest extends JottaTestCase
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
-        for($i = 0; $i < 25*1024*1024; $i += 512) {
+        for ($i = 0; $i < 25 * 1024 * 1024; $i += 512) {
             fwrite($f, Str::random(512));
         }
         fclose($f);
@@ -124,7 +121,7 @@ class Test013_FileTest extends JottaTestCase
 
         $this->assertSame($filename, $response->getName());
         $this->assertSame($fileinfo->getMd5(), $response->getMd5());
-        $this->assertSame(25*1024*1024, $response->getSize());
+        $this->assertSame(25 * 1024 * 1024, $response->getSize());
 
         @unlink($path);
     }
@@ -137,7 +134,7 @@ class Test013_FileTest extends JottaTestCase
      */
     public function test009_upload_simple_large_file_100mb()
     {
-        if(true !== getenv('JOTTA_TEST_LARGE_FILES')) {
+        if (true !== getenv('JOTTA_TEST_LARGE_FILES')) {
             $this->markTestSkipped('Testing large files upload skipped. Set JOTTA_TEST_LARGE_FILES env to true');
         }
 
@@ -146,7 +143,7 @@ class Test013_FileTest extends JottaTestCase
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
-        for($i = 0; $i < 100*1024*1024; $i += 512) {
+        for ($i = 0; $i < 100 * 1024 * 1024; $i += 512) {
             fwrite($f, Str::random(512));
         }
         fclose($f);
@@ -160,7 +157,7 @@ class Test013_FileTest extends JottaTestCase
 
         $this->assertSame($filename, $response->getName());
         $this->assertSame($fileinfo->getMd5(), $response->getMd5());
-        $this->assertSame(100*1024*1024, $response->getSize());
+        $this->assertSame(100 * 1024 * 1024, $response->getSize());
 
         @unlink($path);
     }
@@ -178,6 +175,7 @@ class Test013_FileTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::move
+     *
      * @throws JottaException
      */
     public function test013_move_file()
@@ -187,7 +185,7 @@ class Test013_FileTest extends JottaTestCase
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
-        for($i = 0; $i < 256*1024; $i += 512) {
+        for ($i = 0; $i < 256 * 1024; $i += 512) {
             fwrite($f, Str::random(512));
         }
         fclose($f);
@@ -216,6 +214,7 @@ class Test013_FileTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::rename
+     *
      * @throws JottaException
      */
     public function test013_rename_file()
@@ -225,7 +224,7 @@ class Test013_FileTest extends JottaTestCase
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
-        for($i = 0; $i < 256*1024; $i += 512) {
+        for ($i = 0; $i < 256 * 1024; $i += 512) {
             fwrite($f, Str::random(512));
         }
         fclose($f);
