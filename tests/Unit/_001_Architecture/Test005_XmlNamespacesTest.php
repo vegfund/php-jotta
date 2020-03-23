@@ -2,6 +2,7 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
+use Illuminate\Support\Str;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
@@ -71,14 +72,22 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::xmlDeserialize
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__call
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__get
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getMd5
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getSize
      *
      * @throws \Sabre\Xml\ParseException
      */
-    public function test007_file()
+    public function test007a_file()
     {
         $responseBodyMock = new ResponseBodyMock();
 
-        $body = $responseBodyMock->file();
+        $md5 = md5(Str::random(32));
+        $size = rand(100, 1000000);
+
+        $body = $responseBodyMock->file([
+            'md5' => $md5,
+            'size' => $size,
+        ]);
         $serialized = XmlResponseSerializer::parse($body, 'auto');
 
         $this->assertInstanceOf(File::class, $serialized);
@@ -86,6 +95,43 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($serialized->getPath(), $serialized->path);
         $this->assertInstanceOf(CurrentRevision::class, $serialized->getCurrentRevision());
         $this->assertNotNull($serialized->getAttribute('uuid'));
+        $this->assertSame($md5, $serialized->getMd5());
+        $this->assertSame($size, $serialized->getSize());
+        $this->assertFalse($serialized->isDeleted());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getAttribute
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::xmlDeserialize
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__call
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__get
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getMd5
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getSize
+     *
+     * @throws \Sabre\Xml\ParseException
+     */
+    public function test007b_file_deleted()
+    {
+        $responseBodyMock = new ResponseBodyMock();
+
+        $md5 = md5(Str::random(32));
+        $size = rand(100, 1000000);
+
+        $body = $responseBodyMock->file([
+            'md5' => $md5,
+            'size' => $size,
+            'deleted' => time() - 120
+        ]);
+        $serialized = XmlResponseSerializer::parse($body, 'auto');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertIsString($serialized->getPath());
+        $this->assertSame($serialized->getPath(), $serialized->path);
+        $this->assertInstanceOf(CurrentRevision::class, $serialized->getCurrentRevision());
+        $this->assertNotNull($serialized->getAttribute('uuid'));
+        $this->assertSame($md5, $serialized->getMd5());
+        $this->assertSame($size, $serialized->getSize());
+        $this->assertTrue($serialized->isDeleted());
     }
 
     /**
