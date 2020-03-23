@@ -317,7 +317,7 @@ class Test013_FileTest extends JottaTestCase
 
         $mock = $this->jottaMock($body);
         $this->shouldThrowException(Exception::class, function () use ($filename) {
-            $result = $mock->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete($filename);
+            $mock->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete($filename);
         });
     }
 }
