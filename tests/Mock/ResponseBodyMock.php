@@ -263,6 +263,10 @@ class ResponseBodyMock
      */
     public function folder($options = [])
     {
+        if(!isset($options['name'])) {
+            $options['name'] = Str::random(16);
+        }
+
         $relativePath = Arr::get($options, 'path', '');
 
         if($relativePath !== '') {
@@ -360,6 +364,10 @@ class ResponseBodyMock
      */
     public function file($options = [])
     {
+        if(!isset($options['name'])) {
+            $options['name'] = Str::random(16).'.txt';
+        }
+
         $definitions = [
             'name' => '{}file',
             'attributes' => [

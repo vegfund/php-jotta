@@ -596,6 +596,7 @@ class Test011_DirectoryTest extends TestCase
         $response = $this->jotta()->directory()->setMountPoint($mountPointName)->delete();
         $this->assertInstanceOf(Device::class, $response);
 
+        // Assert number of mountpoints
         $this->assertSame($count, count($this->jotta()->mountPoint()->all()));
     }
 
