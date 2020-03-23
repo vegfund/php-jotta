@@ -79,9 +79,11 @@ class DirectoryScope extends Scope
      * Get folder metadata.
      *
      * @param string $remotePath remote path
-     * @param array $except
-     * @return MountPoint
+     * @param array  $except
+     *
      * @throws Exception
+     *
+     * @return MountPoint
      */
     public function get($remotePath = '', $except = ['files', 'folders'])
     {
@@ -98,7 +100,7 @@ class DirectoryScope extends Scope
     /**
      * Create a remote folder.
      *
-     * @param string      $remotePath remote path
+     * @param string $remotePath remote path
      *
      * @throws Exception
      *
@@ -108,6 +110,7 @@ class DirectoryScope extends Scope
     {
         if ($this->mode === self::MODE_MOUNT_POINT || null === $remotePath) {
             $remotePath = $remotePath ?: $this->mountPoint;
+
             return $this->createMountPoint($remotePath);
         }
         // Prepare relative path.
@@ -150,10 +153,11 @@ class DirectoryScope extends Scope
 
     /**
      * @param string $remotePath
-     * @param array $options
+     * @param array  $options
+     *
+     * @throws Exception
      *
      * @return array
-     * @throws Exception
      */
     public function list($remotePath = '', $options = [])
     {
@@ -326,7 +330,7 @@ class DirectoryScope extends Scope
         $mountPointTo = $mountPointTo ?: $this->mountPoint;
 
         $fullPathTo = $this->getPath(null, $this->device, $mountPointTo, $pathTo);
-        if(0 !== strpos($fullPathTo, '/')) {
+        if (0 !== strpos($fullPathTo, '/')) {
             $fullPathTo = '/'.$fullPathTo;
         }
 
@@ -372,8 +376,8 @@ class DirectoryScope extends Scope
         }
 
         $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $path, [
-            'dlDir' => 'true',
-            'method' => 'post'
+            'dlDir'  => 'true',
+            'method' => 'post',
         ]);
 
         $response = $this->request($requestPath, 'post');

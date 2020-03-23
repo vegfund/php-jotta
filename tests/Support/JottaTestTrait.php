@@ -7,8 +7,8 @@ use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Tests\Mock\JottaApiV1Mock;
 
 /**
- * Trait JottaClient
- * @package Vegfund\Jotta\Tests\Support
+ * Trait JottaClient.
+ *
  * @mixin TestCase
  */
 trait JottaTestTrait
@@ -23,6 +23,7 @@ trait JottaTestTrait
 
     /**
      * @param null $body
+     *
      * @return \Vegfund\Jotta\JottaClient
      */
     public function jottaMock($body = null)

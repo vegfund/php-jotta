@@ -13,24 +13,25 @@ use Vegfund\Jotta\Tests\Support\AssertExceptions;
 use Vegfund\Jotta\Tests\Support\JottaTestTrait;
 
 /**
- * Class Test013_FileTest
- * @package Vegfund\Jotta\Tests\Unit\_003_Scopes
+ * Class Test013_FileTest.
  */
 class Test013_FileTest extends TestCase
 {
-    use AssertExceptions, JottaTestTrait;
+    use AssertExceptions;
+    use JottaTestTrait;
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::get
+     *
      * @throws JottaException
      */
-    function test001_get()
+    public function test001_get()
     {
         $filename = Str::random(12).'.txt';
         $uuid = Uuid::uuid4()->toString();
         $body = (new ResponseBodyMock())->file([
-            'name'    => $filename,
-            'uuid' => $uuid,
+            'name'       => $filename,
+            'uuid'       => $uuid,
             'mountPoint' => Jotta::MOUNT_POINT_ARCHIVE,
         ]);
 

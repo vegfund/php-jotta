@@ -24,7 +24,8 @@ use Vegfund\Jotta\Tests\Support\JottaTestTrait;
  */
 class Test011_DirectoryTest extends TestCase
 {
-    use AssertExceptions, JottaTestTrait;
+    use AssertExceptions;
+    use JottaTestTrait;
 
     /**
      * @covers \Vegfund\Jotta\Jotta::directory
@@ -223,20 +224,21 @@ class Test011_DirectoryTest extends TestCase
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withDeleted
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::applyFilters
+     *
      * @throws JottaException
      */
     public function test015_list_with_deleted()
     {
         $body = (new ResponseBodyMock())->mountPoint([
             'name'    => Jotta::MOUNT_POINT_SHARED,
-            'files' => [
+            'files'   => [
                 [
                     'name'    => 'one.txt',
                 ],
                 [
-                    'name' => 'two.txt',
-                    'deleted' => time()
-                ]
+                    'name'    => 'two.txt',
+                    'deleted' => time(),
+                ],
             ],
         ]);
 
@@ -246,17 +248,16 @@ class Test011_DirectoryTest extends TestCase
 
         $this->assertSame(['one.txt'], $result);
 
-
         $body = (new ResponseBodyMock())->mountPoint([
             'name'    => Jotta::MOUNT_POINT_SHARED,
-            'files' => [
+            'files'   => [
                 [
                     'name'    => 'one.txt',
                 ],
                 [
-                    'name' => 'two.txt',
-                    'deleted' => time()
-                ]
+                    'name'    => 'two.txt',
+                    'deleted' => time(),
+                ],
             ],
         ]);
 
@@ -271,13 +272,14 @@ class Test011_DirectoryTest extends TestCase
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::regex
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::applyFilters
+     *
      * @throws JottaException
      */
     public function test015_list_with_regex()
     {
         $body = (new ResponseBodyMock())->mountPoint([
             'name'    => Jotta::MOUNT_POINT_SHARED,
-            'files' => [
+            'files'   => [
                 [
                     'name'    => 'one.txt',
                 ],
@@ -289,7 +291,7 @@ class Test011_DirectoryTest extends TestCase
                 ],
                 [
                     'name' => 'four.txt',
-                ]
+                ],
             ],
         ]);
 
@@ -304,33 +306,34 @@ class Test011_DirectoryTest extends TestCase
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::uuid
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::applyFilters
+     *
      * @throws JottaException
      */
     public function test015_list_with_uuid()
     {
         $uuids = [];
-        for($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 4; $i++) {
             $uuids[] = Uuid::uuid4()->toString();
         }
 
         $body = (new ResponseBodyMock())->mountPoint([
             'name'    => Jotta::MOUNT_POINT_SHARED,
-            'files' => [
+            'files'   => [
                 [
                     'name'    => 'one.txt',
-                    'uuid' => $uuids[0]
+                    'uuid'    => $uuids[0],
                 ],
                 [
                     'name'    => 'two.txt',
-                    'uuid' => $uuids[1]
+                    'uuid'    => $uuids[1],
                 ],
                 [
                     'name'    => 'three.txt',
-                    'uuid' => $uuids[2]
+                    'uuid'    => $uuids[2],
                 ],
                 [
                     'name'    => 'one.txt',
-                    'uuid' => $uuids[3]
+                    'uuid'    => $uuids[3],
                 ],
             ],
         ]);
@@ -342,32 +345,32 @@ class Test011_DirectoryTest extends TestCase
         $this->assertSame(['three.txt'], $result);
     }
 
-
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::regex
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withDeleted
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::applyFilters
+     *
      * @throws JottaException
      */
     public function test015_list_regex_and_deleted()
     {
         $body = (new ResponseBodyMock())->mountPoint([
             'name'    => Jotta::MOUNT_POINT_SHARED,
-            'files' => [
+            'files'   => [
                 [
                     'name'    => 'one.txt',
                 ],
                 [
-                    'name' => 'two.php',
-                    'deleted' => time()
+                    'name'    => 'two.php',
+                    'deleted' => time(),
                 ],
                 [
                     'name' => 'three.php',
                 ],
                 [
                     'name' => 'four.txt',
-                ]
+                ],
             ],
         ]);
 
@@ -380,11 +383,12 @@ class Test011_DirectoryTest extends TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::create
+     *
      * @throws JottaException
      */
     public function test017_create_folder()
     {
-        $folderName = md5(file_get_contents(__FILE__)) . '_017';
+        $folderName = md5(file_get_contents(__FILE__)).'_017';
         $response = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'))
             ->folder()
             ->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)
@@ -396,16 +400,17 @@ class Test011_DirectoryTest extends TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::create
+     *
      * @throws JottaException
      */
     public function test019_create_subfolder()
     {
-        $folderName = md5(file_get_contents(__FILE__)) . '_019';
-        $subfolderName = md5(file_get_contents(__FILE__)) . '_sub019';
+        $folderName = md5(file_get_contents(__FILE__)).'_019';
+        $subfolderName = md5(file_get_contents(__FILE__)).'_sub019';
         $response = $this->jotta()
             ->folder()
             ->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)
-            ->create($folderName . '/' . $subfolderName);
+            ->create($folderName.'/'.$subfolderName);
 
         $this->assertInstanceOf(Folder::class, $response);
         $this->assertSame($subfolderName, $response->getName());
@@ -426,12 +431,13 @@ class Test011_DirectoryTest extends TestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::create
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::delete
+     *
      * @throws JottaException
      */
     public function test021_delete_folder()
     {
         // first, create
-        $folderName = md5(file_get_contents(__FILE__)) . '_021';
+        $folderName = md5(file_get_contents(__FILE__)).'_021';
         $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($folderName);
 
         // check if created
@@ -445,14 +451,15 @@ class Test011_DirectoryTest extends TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::delete
+     *
      * @throws Exception
      */
     public function test021a_delete_deleted_folder_should_throw_exception()
     {
         $folderName = Str::random(12);
         $body = (new ResponseBodyMock())->folder([
-            'name' => $folderName,
-            'deleted' => time() - 60*60*24*17
+            'name'    => $folderName,
+            'deleted' => time() - 60 * 60 * 24 * 17,
         ]);
         $mock = $this->jottaMock($body);
 
@@ -463,13 +470,14 @@ class Test011_DirectoryTest extends TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::move
+     *
      * @throws JottaException
      */
     public function test023_move_folder_same_mount_point()
     {
-        $rootFrom = md5(file_get_contents(__FILE__)) . '_021_from';
-        $rootTo = md5(file_get_contents(__FILE__)) . '_021_to';
-        $moved = md5(file_get_contents(__FILE__)) . '_021_moved';
+        $rootFrom = md5(file_get_contents(__FILE__)).'_021_from';
+        $rootTo = md5(file_get_contents(__FILE__)).'_021_to';
+        $moved = md5(file_get_contents(__FILE__)).'_021_moved';
 
         // first, create
         $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($rootFrom.'/'.$moved);
@@ -485,13 +493,14 @@ class Test011_DirectoryTest extends TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::rename
+     *
      * @throws JottaException
      */
     public function test023_rename_folder_same_mount_point()
     {
-        $rootFrom = md5(file_get_contents(__FILE__)) . '_023_from';
-        $rootTo = md5(file_get_contents(__FILE__)) . '_023_to';
-        $moved = md5(file_get_contents(__FILE__)) . '_023_moved';
+        $rootFrom = md5(file_get_contents(__FILE__)).'_023_from';
+        $rootTo = md5(file_get_contents(__FILE__)).'_023_to';
+        $moved = md5(file_get_contents(__FILE__)).'_023_moved';
 
         // first, create
         $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($rootFrom.'/'.$moved);
@@ -507,13 +516,14 @@ class Test011_DirectoryTest extends TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::move
+     *
      * @throws JottaException
      */
     public function test025_move_folder_different_mount_point()
     {
-        $rootFrom = md5(file_get_contents(__FILE__)) . '_021_from';
-        $rootTo = md5(file_get_contents(__FILE__)) . '_021_to';
-        $moved = md5(file_get_contents(__FILE__)) . '_021_moved';
+        $rootFrom = md5(file_get_contents(__FILE__)).'_021_from';
+        $rootTo = md5(file_get_contents(__FILE__)).'_021_to';
+        $moved = md5(file_get_contents(__FILE__)).'_021_moved';
 
         // first, create
         $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($rootFrom.'/'.$moved);
@@ -532,7 +542,7 @@ class Test011_DirectoryTest extends TestCase
      */
     public function test026_move_should_throw_exception_no_folder()
     {
-        $folderName = Str::random(32) . '/' . Str::random(32);
+        $folderName = Str::random(32).'/'.Str::random(32);
         $this->shouldThrowException(Exception::class, function () use ($folderName) {
             $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($folderName, Str::random(32));
         });
@@ -546,7 +556,7 @@ class Test011_DirectoryTest extends TestCase
         $body = (new ResponseBodyMock())->file();
         $mock = $this->jottaMock($body);
         $this->shouldThrowException(JottaException::class, function () use ($mock) {
-            $mock->folder()->move(Str::random(32) . '/' . Str::random(32), Str::random(32) . '/' . Str::random(32));
+            $mock->folder()->move(Str::random(32).'/'.Str::random(32), Str::random(32).'/'.Str::random(32));
         });
     }
 
@@ -555,7 +565,7 @@ class Test011_DirectoryTest extends TestCase
      */
     public function test026_move_should_throw_exception_mount_point_mode()
     {
-        $folderName = Str::random(32) . '/' . Str::random(32);
+        $folderName = Str::random(32).'/'.Str::random(32);
         $this->shouldThrowException(Exception::class, function () use ($folderName) {
             $this->jotta()->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($folderName, Str::random(32));
         });
@@ -569,7 +579,6 @@ class Test011_DirectoryTest extends TestCase
      */
     public function test027_move_when_folder_name_empty()
     {
-
     }
 
     /**
@@ -578,6 +587,7 @@ class Test011_DirectoryTest extends TestCase
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::createMountPoint
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::delete
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::deleteMountPoint
+     *
      * @throws JottaException
      */
     public function test029_create_and_delete_mount_point()
@@ -585,7 +595,7 @@ class Test011_DirectoryTest extends TestCase
         // Initial number of mountpoints
         $count = count($this->jotta()->mountPoint()->all());
 
-        $mountPointName = md5(file_get_contents(__FILE__)) . '_029';
+        $mountPointName = md5(file_get_contents(__FILE__)).'_029';
         $response = $this->jotta()->directory()->setMountPoint($mountPointName)->create();
 
         $this->assertInstanceOf(MountPoint::class, $response);
@@ -599,5 +609,4 @@ class Test011_DirectoryTest extends TestCase
         // Assert number of mountpoints
         $this->assertSame($count, count($this->jotta()->mountPoint()->all()));
     }
-
 }
