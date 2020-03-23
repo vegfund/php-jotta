@@ -19,6 +19,9 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::file
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::currentRevision
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision::xmlDeserialize
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision::__call
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision::__get
      *
      * @throws \Sabre\Xml\ParseException
      */
@@ -43,6 +46,9 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::device
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Device::xmlDeserialize
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Device::__call
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Device::__get
      *
      * @throws \Sabre\Xml\ParseException
      */
@@ -62,6 +68,7 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::getAttribute
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::xmlDeserialize
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__call
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::__get
      *
@@ -83,6 +90,11 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::folder
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Folder::xmlDeserialize
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Folder::__call
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Folder::__get
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Folder::getPath
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Folder::isDeleted
      *
      * @throws \Sabre\Xml\ParseException
      */
@@ -90,12 +102,13 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
     {
         $responseBodyMock = new ResponseBodyMock();
 
-        $body = $responseBodyMock->folder();
+        $body = $responseBodyMock->folder(['deleted' => time()]);
         $serialized = XmlResponseSerializer::parse($body, 'auto');
 
         $this->assertInstanceOf(Folder::class, $serialized);
         $this->assertIsArray($serialized->getFolders());
         $this->assertIsString($serialized->getPath());
+        $this->assertTrue($serialized->isDeleted());
     }
 
     /**
@@ -147,6 +160,9 @@ class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::user
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\User::__get
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\User::__call
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\User::xmlDeserialize
      *
      * @throws \Sabre\Xml\ParseException
      */
