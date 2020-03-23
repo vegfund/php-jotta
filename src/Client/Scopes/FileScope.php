@@ -37,7 +37,7 @@ class FileScope extends Scope
 
         $result = $this->serialize($response);
 
-        if(!($result instanceof File)) {
+        if (!($result instanceof File)) {
             throw new JottaException('This is not a remote file.');
         }
 
@@ -74,27 +74,27 @@ class FileScope extends Scope
     {
         $file = $this->get($remotePath);
 
-        if(file_exists($localPath) && is_file($localPath)) {
+        if (file_exists($localPath) && is_file($localPath)) {
             $fileinfo = JFileInfo::make($localPath);
 
             $localPath = basename($localPath);
 
-            switch($overwriteMode) {
+            switch ($overwriteMode) {
                 case Jotta::FILE_OVERWRITE_NEVER:
                     return null;
                     break;
                 case Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT:
-                    if($file->getMd5() === $fileinfo->getMd5() && $file->getModifed()->timestamp() <= $fileinfo->getMTime()) {
+                    if ($file->getMd5() === $fileinfo->getMd5() && $file->getModifed()->timestamp() <= $fileinfo->getMTime()) {
                         return null;
                     }
                     break;
                 case Jotta::FILE_OVERWRITE_IF_NEWER:
-                    if($file->getModifed()->timestamp() <= $fileinfo->getMTime()) {
+                    if ($file->getModifed()->timestamp() <= $fileinfo->getMTime()) {
                         return null;
                     }
                     break;
                 case Jotta::FILE_OVERWRITE_IF_DIFFERENT:
-                    if($file->getMd5() === $fileinfo->getMd5()) {
+                    if ($file->getMd5() === $fileinfo->getMd5()) {
                         return null;
                     }
                     break;
@@ -151,7 +151,7 @@ class FileScope extends Scope
         }
 
         // Don't get metadata if obviously a folder
-        if('' !== $remotePath) {
+        if ('' !== $remotePath) {
             $remote = $this->get($remotePath);
             if ($remote instanceof File) {
                 return null;
@@ -228,7 +228,7 @@ class FileScope extends Scope
         $mountPointTo = $mountPointTo ?: $this->mountPoint;
 
         $fullPathTo = $this->getPath(null, $this->device, $mountPointTo, $pathTo);
-        if(0 !== strpos($fullPathTo, '/')) {
+        if (0 !== strpos($fullPathTo, '/')) {
             $fullPathTo = '/'.$fullPathTo.'/'.basename($pathFrom);
         }
         $requestPath = $this->getPath(Jotta::API_UPLOAD_URL, $this->device, $this->mountPoint, $pathFrom, [
