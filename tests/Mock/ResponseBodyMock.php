@@ -163,6 +163,7 @@ class ResponseBodyMock
 
     /**
      * @return string
+     * @throws Exception
      */
     public function mountPoint($options = [])
     {
@@ -254,26 +255,27 @@ class ResponseBodyMock
         return $this->write('{}mountPoint', $definitions);
     }
 
+
     /**
+     * @param array $options
      * @return string
+     * @throws Exception
      */
-    public function file()
+    public function file($options = [])
     {
-        return '<?xml version="1.0" encoding="UTF-8"?>
-            <file name="filename" uuid="948ececd-edcb-4127-a4e5-66157ac9dac0" deleted="2020-03-16-T13:11:37Z" time="2020-03-16-T13:41:03Z" host="host-name">
-                <path xml:space="preserve">/**username**/Jotta/Sync/Dokumenty</path>
-                <abspath xml:space="preserve">/**username**/Jotta/Sync/Dokumenty</abspath>
-                <currentRevision>
-                    <number>1</number>
-                    <state>COMPLETED</state>
-                    <created>2020-02-21-T17:47:54Z</created>
-                    <modified>2020-02-21-T17:47:54Z</modified>
-                    <mime>application/octet-stream</mime>
-                    <size>3402</size>
-                    <md5>9fc9f50b0a9a09280e8ed1f6fa34a31a</md5>
-                    <updated>2020-03-08-T18:30:13Z</updated>
-                </currentRevision>
-            </file>';
+        $definitions = [
+            '{}path'     => Arr::get($options, 'name', Jotta::MOUNT_POINT_ARCHIVE),
+            '{}abspath'  => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta',
+        ];
+
+        $definitions['{}currentRevision'] = [
+            'name'       => '{}currentRevision',
+            'value' => [
+                '{}number' => '1'
+            ],
+        ];
+
+        return $this->write('{}file', $definitions);
     }
 
     /**

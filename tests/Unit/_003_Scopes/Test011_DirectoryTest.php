@@ -523,6 +523,18 @@ class Test011_DirectoryTest extends TestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::move
      */
+    public function test026a_move_should_throw_exception_is_a_file()
+    {
+        $body = (new ResponseBodyMock())->file();
+        $mock = $this->jottaMock($body);
+        $this->shouldThrowException(JottaException::class, function () use ($mock) {
+            $mock->folder()->move(Str::random(32) . '/' . Str::random(32), Str::random(32) . '/' . Str::random(32));
+        });
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::move
+     */
     public function test026_move_should_throw_exception_mount_point_mode()
     {
         $folderName = Str::random(32) . '/' . Str::random(32);

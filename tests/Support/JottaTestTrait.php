@@ -22,9 +22,10 @@ trait JottaTestTrait
     }
 
     /**
+     * @param null $body
      * @return \Vegfund\Jotta\JottaClient
      */
-    public function jottaMock()
+    public function jottaMock($body = null)
     {
         $mock = new JottaApiV1Mock($body);
         $jotta = new \Vegfund\Jotta\JottaClient('a', 'b', $mock->getMock());
