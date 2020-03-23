@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
+use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Tests\JottaTestCase;
@@ -252,6 +253,23 @@ class Test013_FileTest extends JottaTestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::move
+     * @throws JottaException
+     */
+    public function test013a_move_when_folder_should_throw_exception()
+    {
+        $folderName = Str::random(12);
+        $response = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($folderName);
+        $this->assertInstanceOf(Folder::class, $response);
+
+        $this->shouldThrowException(Exception::class, function () use ($folderName) {
+            $this->jotta()->directory()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($folderName, 'other/path');
+        });
+
+        $this->jotta()->directory()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete($folderName);
+    }
+
+    /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::delete
      * @throws JottaException
      */
@@ -280,5 +298,26 @@ class Test013_FileTest extends JottaTestCase
         });
 
         @unlink($path);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::delete
+     * @throws Exception
+     */
+    public function test017_delete_when_deleted_should_throw_exception()
+    {
+        $filename = Str::random(12).'.txt';
+        $uuid = Uuid::uuid4()->toString();
+        $body = (new ResponseBodyMock())->file([
+            'name'       => $filename,
+            'uuid'       => $uuid,
+            'mountPoint' => Jotta::MOUNT_POINT_ARCHIVE,
+            'deleted' => time() - 60*60*20
+        ]);
+
+        $mock = $this->jottaMock($body);
+        $this->shouldThrowException(Exception::class, function () use ($filename) {
+            $result = $mock->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete($filename);
+        });
     }
 }
