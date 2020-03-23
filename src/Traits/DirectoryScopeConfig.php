@@ -10,7 +10,6 @@ namespace Vegfund\Jotta\Traits;
 
 use Exception;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
-use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 
@@ -159,23 +158,23 @@ trait DirectoryScopeConfig
     protected function applyFilters($collection)
     {
         return array_filter($collection, function (ResponseNamespace $item) {
-            if(null !== $this->getRegex() && 0 === preg_match($this->regex, $item->getName())) {
+            if (null !== $this->getRegex() && 0 === preg_match($this->regex, $item->getName())) {
                 return false;
             }
 
-            if(null !== $this->getUuid() && $this->getUuid() !== $item->getUuid()) {
+            if (null !== $this->getUuid() && $this->getUuid() !== $item->getUuid()) {
                 return false;
             }
 
-            if(!$this->withDeleted() && $item->isDeleted()) {
+            if (!$this->withDeleted() && $item->isDeleted()) {
                 return false;
             }
 
-            if($item instanceof File && !$this->withCorrupt() && $item->isCorrupt()) {
+            if ($item instanceof File && !$this->withCorrupt() && $item->isCorrupt()) {
                 return false;
             }
 
-            if($item instanceof File && !$this->withCompleted() && !$item->isCompleted()) {
+            if ($item instanceof File && !$this->withCompleted() && !$item->isCompleted()) {
                 return false;
             }
 

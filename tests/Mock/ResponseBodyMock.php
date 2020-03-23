@@ -162,8 +162,9 @@ class ResponseBodyMock
     }
 
     /**
-     * @return string
      * @throws Exception
+     *
+     * @return string
      */
     public function mountPoint($options = [])
     {
@@ -255,38 +256,37 @@ class ResponseBodyMock
         return $this->write('{}mountPoint', $definitions);
     }
 
-
-
     /**
-     * @return string
      * @throws Exception
+     *
+     * @return string
      */
     public function folder($options = [])
     {
-        if(!isset($options['name'])) {
+        if (!isset($options['name'])) {
             $options['name'] = Str::random(16);
         }
 
         $relativePath = Arr::get($options, 'path', '');
 
-        if($relativePath !== '') {
-            if(0 !== strpos($relativePath, '/')) {
-                $relativePath = '/' . $relativePath;
+        if ($relativePath !== '') {
+            if (0 !== strpos($relativePath, '/')) {
+                $relativePath = '/'.$relativePath;
             }
         }
 
         $definitions = [
-            'name' => '{}folder',
+            'name'       => '{}folder',
             'attributes' => [
-                'name' => $options['name']
+                'name' => $options['name'],
             ],
             'value' => [
-                '{}path'     => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE).$relativePath,
+                '{}path'        => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE).$relativePath,
                 '{}abspath'     => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE).$relativePath,
-            ]
+            ],
         ];
 
-        if(isset($options['deleted'])) {
+        if (isset($options['deleted'])) {
             $definitions['attributes']['deleted'] = strftime('%F-T%TZ', $options['deleted']);
         }
 
@@ -356,29 +356,30 @@ class ResponseBodyMock
         return preg_replace('/\<.*root\>/', '', $this->write('{}root', $definitions));
     }
 
-
     /**
      * @param array $options
-     * @return string
+     *
      * @throws Exception
+     *
+     * @return string
      */
     public function file($options = [])
     {
-        if(!isset($options['name'])) {
+        if (!isset($options['name'])) {
             $options['name'] = Str::random(16).'.txt';
         }
 
         $definitions = [
-            'name' => '{}file',
+            'name'       => '{}file',
             'attributes' => [
                 'name' => $options['name'],
                 'uuid' => Arr::get($options, 'uuid', Uuid::uuid4()->toString()),
                 'time' => strftime('%F-T%TZ', time()),
             ],
             'value' => [
-                '{}path'  => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE),
+                '{}path'     => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE),
                 '{}abspath'  => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE),
-            ]
+            ],
         ];
 
         $defaultRevisions = [
@@ -391,7 +392,7 @@ class ResponseBodyMock
                 'size'     => strlen($options['name']) * 1024,
                 'md5'      => md5($options['name']),
                 'updated'  => time() - 60,
-            ]
+            ],
         ];
 
         $revisions = Arr::get($options, 'revisions', $defaultRevisions);
@@ -405,14 +406,14 @@ class ResponseBodyMock
         });
 
         $definitions['value']['{}currentRevision'] = [
-            '{}number' => (string) $currentRevision['number'],
-            '{}state' => $currentRevision['state'],
-            '{}created' => strftime('%F-T%TZ', $currentRevision['created']),
+            '{}number'   => (string) $currentRevision['number'],
+            '{}state'    => $currentRevision['state'],
+            '{}created'  => strftime('%F-T%TZ', $currentRevision['created']),
             '{}modified' => strftime('%F-T%TZ', $currentRevision['modified']),
-            '{}mime' => $currentRevision['mime'],
-            '{}size' => (string) $currentRevision['size'],
-            '{}md5' => (string) $currentRevision['md5'],
-            '{}updated' => strftime('%F-T%TZ', $currentRevision['updated']),
+            '{}mime'     => $currentRevision['mime'],
+            '{}size'     => (string) $currentRevision['size'],
+            '{}md5'      => (string) $currentRevision['md5'],
+            '{}updated'  => strftime('%F-T%TZ', $currentRevision['updated']),
         ];
 
         return preg_replace('/\<.*root\>/', '', $this->write('{}root', $definitions));
