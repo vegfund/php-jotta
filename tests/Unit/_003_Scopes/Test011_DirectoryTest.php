@@ -444,6 +444,24 @@ class Test011_DirectoryTest extends TestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::delete
+     * @throws Exception
+     */
+    public function test021a_delete_deleted_folder_should_throw_exception()
+    {
+        $folderName = Str::random(12);
+        $body = (new ResponseBodyMock())->folder([
+            'name' => $folderName,
+            'deleted' => time() - 60*60*24*17
+        ]);
+        $mock = $this->jottaMock($body);
+
+        $this->shouldThrowException(JottaException::class, function () use ($mock, $folderName) {
+            $mock->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete($folderName);
+        });
+    }
+
+    /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::move
      * @throws JottaException
      */

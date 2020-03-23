@@ -31,7 +31,6 @@ class Test013_FileTest extends TestCase
         $body = (new ResponseBodyMock())->file([
             'name'    => $filename,
             'uuid' => $uuid,
-            'device' => Jotta::DEVICE_JOTTA,
             'mountPoint' => Jotta::MOUNT_POINT_ARCHIVE,
         ]);
 

@@ -256,6 +256,103 @@ class ResponseBodyMock
     }
 
 
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function folder($options = [])
+    {
+        $relativePath = Arr::get($options, 'path', '');
+
+        if($relativePath !== '') {
+            if(0 !== strpos($relativePath, '/')) {
+                $relativePath = '/' . $relativePath;
+            }
+        }
+
+        $definitions = [
+            'name' => '{}folder',
+            'attributes' => [
+                'name' => $options['name']
+            ],
+            'value' => [
+                '{}path'     => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE).$relativePath,
+                '{}abspath'     => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE).$relativePath,
+            ]
+        ];
+
+        if(isset($options['deleted'])) {
+            $definitions['attributes']['deleted'] = strftime('%F-T%TZ', $options['deleted']);
+        }
+
+        $folders = Arr::get($options, 'folders', []);
+        if (count($folders) > 0) {
+            $definitions['value']['{}folders'] = [];
+        }
+        foreach ($folders as $folder) {
+            $attributes = [
+                'name' => $folder['name'],
+            ];
+            if (isset($folder['deleted'])) {
+                $attributes['deleted'] = strftime('%F-T%TZ', $folder['deleted']);
+            }
+            $definitions['value']['{}folders'][] = [
+                [
+                    'name'       => '{}folder',
+                    'attributes' => $attributes,
+                ],
+            ];
+        }
+
+        $files = Arr::get($options, 'files', []);
+        if (count($files) > 0) {
+            $definitions['value']['{}files'] = [];
+        }
+        foreach ($files as $file) {
+            $attributes = [
+                'name' => $file['name'],
+                'uuid' => Arr::get($file, 'uuid', Uuid::uuid4()->toString()),
+            ];
+            if (isset($file['deleted'])) {
+                $attributes['deleted'] = strftime('%F-T%TZ', $file['deleted']);
+            }
+            $definitions['value']['{}files'][] = [
+                [
+                    'name'       => '{}file',
+                    'attributes' => $attributes,
+                    'value'      => [
+                        '{}abspath'         => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'name', Jotta::MOUNT_POINT_ARCHIVE),
+                        '{}currentRevision' => [
+                            'number'   => 1,
+                            'state'    => Arr::get($file, 'state', 'COMPLETED'),
+                            'created'  => strftime('%F-T%TZ', Arr::get($file, 'created', time() - 60 * 60)),
+                            'modified' => strftime('%F-T%TZ', Arr::get($file, 'created', time() - 60 * 60)),
+                            'mime'     => Arr::get($file, 'mime', 'text/plain'),
+                            'size'     => Arr::get($file, 'size', strlen($file['name']) * 1024),
+                            'md5'      => Arr::get($file, 'md5', md5($file['name'])),
+                            'updated'  => strftime('%F-T%TZ', Arr::get($file, 'created', time() - 60)),
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        $definitions['value']['{}metadata'] = [
+            'name'       => '{}metadata',
+            'attributes' => [
+                'first'      => '',
+                'max'        => '',
+                'total'      => (string) (count($files) + count($folders)),
+                'num_folder' => (string) count($folders),
+                'num_files'  => (string) count($files),
+            ],
+        ];
+
+        return preg_replace('/\<.*root\>/', '', $this->write('{}root', $definitions));
+    }
+
+
     /**
      * @param array $options
      * @return string
@@ -311,49 +408,6 @@ class ResponseBodyMock
         ];
 
         return preg_replace('/\<.*root\>/', '', $this->write('{}root', $definitions));
-    }
-
-    /**
-     * @return string
-     */
-    public function folder()
-    {
-        return $this->write('{}folder', [
-            '{}path'    => 'path',
-            '{}abspath' => 'abspath',
-            '{}folders' => [
-                [
-                    '{}folder' => [
-                        'attributes' => [
-                            'name' => 'somefolder',
-                        ],
-                    ],
-                ],
-            ],
-            '{}files' => [
-                [
-                    '{}file' => [
-                        ['name'          => 'file',
-                            'attributes' => ['a' => 'b'],
-
-                            'abspath' => 'abspath',
-                        ],
-                    ],
-                    //                        '{}currentRevision' => [
-                    //                            [
-                    //                                '{}number' => 1,
-                    //                                '{}state' => 'COMPLETED',
-                    //                                '{}created' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 4)),
-                    //                                '{}modified' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 2)),
-                    //                                '{}mime' => 'mime',
-                    //                                '{}size' => rand(1024, 99999999),
-                    //                                '{}md5' => md5(Str::random(128)),
-                    //                                '{}updated' => strftime('%F-T%TZ', time() - rand(0, 60 * 60 * 24 * 365 * 2)),
-                    //                            ]
-                    //                        ]
-                ],
-            ],
-        ]);
     }
 
     /**
