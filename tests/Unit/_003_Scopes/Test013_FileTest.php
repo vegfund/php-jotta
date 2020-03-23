@@ -2,6 +2,7 @@
 
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
+use Exception;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -44,7 +45,7 @@ class Test013_FileTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::get
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function test003_get_if_folder_should_throw_exception()
     {
@@ -62,8 +63,9 @@ class Test013_FileTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function test005_upload_simple_small_file()
     {
@@ -93,8 +95,9 @@ class Test013_FileTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function test007_upload_simple_large_file_25mb()
     {
@@ -128,8 +131,9 @@ class Test013_FileTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function test009_upload_simple_large_file_100mb()
     {
@@ -157,6 +161,93 @@ class Test013_FileTest extends JottaTestCase
         $this->assertSame($filename, $response->getName());
         $this->assertSame($fileinfo->getMd5(), $response->getMd5());
         $this->assertSame(100*1024*1024, $response->getSize());
+
+        @unlink($path);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
+     */
+    public function test011_upload_no_file_should_throw_exception()
+    {
+        $path = $this->tempPath(Str::random(16).'.php');
+        $this->shouldThrowException(JottaException::class, function () use ($path) {
+            $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->upload($path);
+        });
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::move
+     * @throws JottaException
+     */
+    public function test013_move_file()
+    {
+        // generate random file, 256 KB
+        $filename = Str::random(16).'.txt';
+        $path = $this->tempPath($filename);
+
+        $f = fopen($path, 'a');
+        for($i = 0; $i < 256*1024; $i += 512) {
+            fwrite($f, Str::random(512));
+        }
+        fclose($f);
+
+        $fileinfo = JFileInfo::make($path);
+
+        //
+        $response = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->upload($path);
+        $this->assertInstanceOf(File::class, $response);
+        $this->assertTrue($response->isCompleted());
+
+        // test moving
+        $destinationPath = Str::random(12);
+        $response = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($filename, $destinationPath);
+        $this->assertInstanceOf(File::class, $response);
+        $this->assertTrue($response->isCompleted());
+        $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE.'/'.$destinationPath, $response->getPath());
+        $this->assertSame($fileinfo->getMd5(), $response->getMd5());
+
+        $this->shouldThrowException(Exception::class, function () use ($filename) {
+            $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->get($filename);
+        });
+
+        @unlink($path);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::rename
+     * @throws JottaException
+     */
+    public function test013_rename_file()
+    {
+        // generate random file, 256 KB
+        $filename = Str::random(16).'.txt';
+        $path = $this->tempPath($filename);
+
+        $f = fopen($path, 'a');
+        for($i = 0; $i < 256*1024; $i += 512) {
+            fwrite($f, Str::random(512));
+        }
+        fclose($f);
+
+        $fileinfo = JFileInfo::make($path);
+
+        //
+        $response = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->upload($path);
+        $this->assertInstanceOf(File::class, $response);
+        $this->assertTrue($response->isCompleted());
+
+        // test moving
+        $destinationPath = Str::random(12);
+        $response = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->rename($filename, $destinationPath);
+        $this->assertInstanceOf(File::class, $response);
+        $this->assertTrue($response->isCompleted());
+        $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE.'/'.$destinationPath, $response->getPath());
+        $this->assertSame($fileinfo->getMd5(), $response->getMd5());
+
+        $this->shouldThrowException(Exception::class, function () use ($filename) {
+            $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->get($filename);
+        });
 
         @unlink($path);
     }

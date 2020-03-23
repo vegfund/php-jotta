@@ -228,7 +228,10 @@ class FileScope extends Scope
         $mountPointTo = $mountPointTo ?: $this->mountPoint;
 
         $fullPathTo = $this->getPath(null, $this->device, $mountPointTo, $pathTo);
-        $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $pathFrom, [
+        if(0 !== strpos($fullPathTo, '/')) {
+            $fullPathTo = '/'.$fullPathTo.'/'.basename($pathFrom);
+        }
+        $requestPath = $this->getPath(Jotta::API_UPLOAD_URL, $this->device, $this->mountPoint, $pathFrom, [
             'mv' => $fullPathTo,
         ]);
 
