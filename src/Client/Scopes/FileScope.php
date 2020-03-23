@@ -268,7 +268,7 @@ class FileScope extends Scope
         }
 
         $response = $this->request($this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $path, [
-            'rm' => true,
+            'rm' => 'true',
         ]), 'post');
 
         return $this->serialize($response);

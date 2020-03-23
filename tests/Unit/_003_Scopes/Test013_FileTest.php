@@ -250,4 +250,35 @@ class Test013_FileTest extends JottaTestCase
 
         @unlink($path);
     }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::delete
+     * @throws JottaException
+     */
+    public function test015_delete_file()
+    {
+        // generate random file, 256 KB
+        $filename = Str::random(16).'.txt';
+        $path = $this->tempPath($filename);
+
+        $f = fopen($path, 'a');
+        for ($i = 0; $i < 256 * 1024; $i += 512) {
+            fwrite($f, Str::random(512));
+        }
+        fclose($f);
+
+        //
+        $response = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->upload($path);
+        $this->assertInstanceOf(File::class, $response);
+        $this->assertTrue($response->isCompleted());
+        $this->assertSame($filename, $response->getName());
+
+        // Delete tests
+        $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete($filename);
+        $this->shouldThrowException(Exception::class, function () use ($filename) {
+            $file = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->get($filename);
+        });
+
+        @unlink($path);
+    }
 }
