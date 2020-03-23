@@ -229,12 +229,12 @@ class ResponseBodyMock
                         '{}currentRevision' => [
                             'number'   => 1,
                             'state'    => Arr::get($file, 'state', 'COMPLETED'),
-                            'created'  => strftime('%F-T%TZ', Arr::get($file, 'crated', time() - 60 * 60)),
-                            'modified' => strftime('%F-T%TZ', Arr::get($file, 'crated', time() - 60 * 60)),
+                            'created'  => strftime('%F-T%TZ', Arr::get($file, 'created', time() - 60 * 60)),
+                            'modified' => strftime('%F-T%TZ', Arr::get($file, 'created', time() - 60 * 60)),
                             'mime'     => Arr::get($file, 'mime', 'text/plain'),
                             'size'     => Arr::get($file, 'size', strlen($file['name']) * 1024),
                             'md5'      => Arr::get($file, 'md5', md5($file['name'])),
-                            'updated'  => strftime('%F-T%TZ', Arr::get($file, 'crated', time() - 60)),
+                            'updated'  => strftime('%F-T%TZ', Arr::get($file, 'created', time() - 60)),
                         ],
                     ],
                 ],
@@ -264,18 +264,53 @@ class ResponseBodyMock
     public function file($options = [])
     {
         $definitions = [
-            '{}path'     => Arr::get($options, 'name', Jotta::MOUNT_POINT_ARCHIVE),
-            '{}abspath'  => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta',
-        ];
-
-        $definitions['{}currentRevision'] = [
-            'name'       => '{}currentRevision',
-            'value' => [
-                '{}number' => '1'
+            'name' => '{}file',
+            'attributes' => [
+                'name' => $options['name'],
+                'uuid' => Arr::get($options, 'uuid', Uuid::uuid4()->toString()),
+                'time' => strftime('%F-T%TZ', time()),
             ],
+            'value' => [
+                '{}path'  => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE),
+                '{}abspath'  => '/'.Arr::get($options, 'username', getenv('JOTTA_USERNAME')).'/Jotta/'.Arr::get($options, 'mountPoint', Jotta::MOUNT_POINT_ARCHIVE),
+            ]
         ];
 
-        return $this->write('{}file', $definitions);
+        $defaultRevisions = [
+            [
+                'number'   => 1,
+                'state'    => 'COMPLETED',
+                'created'  => time() - 60 * 60,
+                'modified' => time() - 60 * 60,
+                'mime'     => 'text/plain',
+                'size'     => strlen($options['name']) * 1024,
+                'md5'      => md5($options['name']),
+                'updated'  => time() - 60,
+            ]
+        ];
+
+        $revisions = Arr::get($options, 'revisions', $defaultRevisions);
+
+        $currentRevision = array_filter($defaultRevisions, function ($item) {
+            return $item['number'] === 1;
+        })[0];
+
+        $otherRevisions = array_filter($defaultRevisions, function ($item) {
+            return $item['number'] !== 1;
+        });
+
+        $definitions['value']['{}currentRevision'] = [
+            '{}number' => (string) $currentRevision['number'],
+            '{}state' => $currentRevision['state'],
+            '{}created' => strftime('%F-T%TZ', $currentRevision['created']),
+            '{}modified' => strftime('%F-T%TZ', $currentRevision['modified']),
+            '{}mime' => $currentRevision['mime'],
+            '{}size' => (string) $currentRevision['size'],
+            '{}md5' => (string) $currentRevision['md5'],
+            '{}updated' => strftime('%F-T%TZ', $currentRevision['updated']),
+        ];
+
+        return preg_replace('/\<.*root\>/', '', $this->write('{}root', $definitions));
     }
 
     /**
