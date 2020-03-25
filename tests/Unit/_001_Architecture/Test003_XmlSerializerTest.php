@@ -130,7 +130,7 @@ class Test003_XmlSerializerTest extends JottaTestCase
     }
 
     /**
-     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Attributes::get
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Attributes::__get
      */
     public function test007a_no_attributes()
     {
