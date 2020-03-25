@@ -53,11 +53,11 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
     public function __get($name)
     {
         if (isset($this->{$name})) {
-            return $name;
+            return $this->{$name};
         }
 
-        if (isset($this->attributes)) {
-            return $this->attributes->get($name);
+        if(null !== ($value = $this->getAttribute($name))) {
+            return $value;
         }
 
         throw new JottaException('The attribute '.$name.' does not exist.');

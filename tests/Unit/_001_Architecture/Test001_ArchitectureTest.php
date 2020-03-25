@@ -6,6 +6,8 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 use Vegfund\Jotta\Client\Contracts\ScopeContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
+use Vegfund\Jotta\Client\Responses\Namespaces\Attributes;
+use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Client\Scopes\AccountScope;
 use Vegfund\Jotta\Client\Scopes\DeviceScope;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
@@ -374,7 +376,7 @@ class Test001_ArchitectureTest extends JottaTestCase
      * @covers \Vegfund\Jotta\Support\JFileInfo::__construct
      * @covers \Vegfund\Jotta\Support\JFileInfo::make
      */
-    public function test009_cast_file_to_jfile()
+    public function test027_cast_file_to_jfile()
     {
         $thisFile = __FILE__;
         $this->assertInstanceOf(JFileInfo::class, JFileInfo::make($thisFile));
@@ -384,5 +386,31 @@ class Test001_ArchitectureTest extends JottaTestCase
 
         $thisFile = new JFileInfo($thisFile);
         $this->assertInstanceOf(JFileInfo::class, JFileInfo::make($thisFile));
+    }
+
+    /**
+     * @covers ResponseNamespace::__get
+     * @throws \ReflectionException
+     */
+    public function test029_scope_getter()
+    {
+        $mock = \Mockery::mock(ResponseNamespace::class);
+        $mock->makePartial();
+        $mock->shouldAllowMockingProtectedMethods();
+
+        $mock->testAttribute1 = 'abc';
+        $this->assertSame('abc', $mock->testAttribute1);
+
+        $attributes = new Attributes(['testAttribute2' => 'def']);
+        $method = new \ReflectionMethod(ResponseNamespace::class, 'setAttributes');
+        $method->setAccessible(true);
+
+        $method->invoke($mock, $attributes);
+
+        $this->assertSame('def', $mock->testAttribute2);
+
+        $this->shouldThrowException(JottaException::class, function () use ($mock) {
+            $nonExistant = $mock->nonExistant;
+        });
     }
 }
