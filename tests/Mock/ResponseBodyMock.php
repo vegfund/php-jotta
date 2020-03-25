@@ -382,7 +382,7 @@ class ResponseBodyMock
             ],
         ];
 
-        if(isset($options['deleted'])) {
+        if (isset($options['deleted'])) {
             $definitions['attributes']['deleted'] = strftime('%F-T%TZ', $options['deleted']);
         }
 

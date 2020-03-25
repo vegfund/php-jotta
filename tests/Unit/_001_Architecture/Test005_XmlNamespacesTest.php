@@ -86,7 +86,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
         $size = rand(100, 1000000);
 
         $body = $responseBodyMock->file([
-            'md5' => $md5,
+            'md5'  => $md5,
             'size' => $size,
         ]);
         $serialized = XmlResponseSerializer::parse($body, 'auto');
@@ -119,9 +119,9 @@ class Test005_XmlNamespacesTest extends JottaTestCase
         $size = rand(100, 1000000);
 
         $body = $responseBodyMock->file([
-            'md5' => $md5,
-            'size' => $size,
-            'deleted' => time() - 120
+            'md5'     => $md5,
+            'size'    => $size,
+            'deleted' => time() - 120,
         ]);
         $serialized = XmlResponseSerializer::parse($body, 'auto');
 
