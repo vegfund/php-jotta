@@ -4,6 +4,7 @@ namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Str;
+use Mockery;
 use Vegfund\Jotta\Client\Contracts\ScopeContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Attributes;
@@ -49,6 +50,18 @@ class Test001_ArchitectureTest extends JottaTestCase
     {
         $client = Jotta::client(getenv('JOTTA_USERNAME'), getenv('JOTTA_PASSWORD'));
         $this->assertInstanceOf(Client::class, $client->getClient());
+
+        $mock = Mockery::mock(Scope::class);
+        $mock->makePartial();
+        $mock->shouldAllowMockingProtectedMethods();
+
+        $property = new \ReflectionProperty(Scope::class, 'jottaClient');
+        $property->setAccessible(true);
+        $property->setValue($mock, $client);
+        $method = new \ReflectionMethod(Scope::class, 'getClient');
+        $method->setAccessible(true);
+
+        $this->assertInstanceOf(get_class($client), $method->invoke($mock));
     }
 
     /**
