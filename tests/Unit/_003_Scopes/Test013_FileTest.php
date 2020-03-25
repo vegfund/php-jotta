@@ -254,6 +254,7 @@ class Test013_FileTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::move
+     *
      * @throws JottaException
      */
     public function test013a_move_when_folder_should_throw_exception()
@@ -271,6 +272,7 @@ class Test013_FileTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::delete
+     *
      * @throws JottaException
      */
     public function test015_delete_file()
@@ -302,6 +304,7 @@ class Test013_FileTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::delete
+     *
      * @throws Exception
      */
     public function test017_delete_when_deleted_should_throw_exception()
@@ -312,7 +315,7 @@ class Test013_FileTest extends JottaTestCase
             'name'       => $filename,
             'uuid'       => $uuid,
             'mountPoint' => Jotta::MOUNT_POINT_ARCHIVE,
-            'deleted' => time() - 60*60*20
+            'deleted'    => time() - 60 * 60 * 20,
         ]);
 
         $mock = $this->jottaMock($body);

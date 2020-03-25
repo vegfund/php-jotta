@@ -15,7 +15,6 @@ use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Tests\JottaTestCase;
-use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
 class Test001_ArchitectureTest extends JottaTestCase
 {

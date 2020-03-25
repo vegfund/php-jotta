@@ -4,7 +4,6 @@ namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
 use Exception;
 use Illuminate\Support\Str;
-use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
@@ -17,15 +16,12 @@ use Vegfund\Jotta\JottaClient;
 use Vegfund\Jotta\Tests\JottaTestCase;
 use Vegfund\Jotta\Tests\Mock\JottaApiV1Mock;
 use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
-use Vegfund\Jotta\Tests\Support\AssertExceptions;
-use Vegfund\Jotta\Tests\Support\JottaTestTrait;
 
 /**
  * Class Test011_DirectoryTest.
  */
 class Test011_DirectoryTest extends JottaTestCase
 {
-
     /**
      * @covers \Vegfund\Jotta\Jotta::directory
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getMode

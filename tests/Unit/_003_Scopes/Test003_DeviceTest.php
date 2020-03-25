@@ -6,7 +6,6 @@ use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Tests\JottaTestCase;
-use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
 class Test003_DeviceTest extends JottaTestCase
 {
