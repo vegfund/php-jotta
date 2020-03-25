@@ -5,11 +5,11 @@ namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 use Illuminate\Support\Str;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
 use Vegfund\Jotta\Jotta;
+use Vegfund\Jotta\Tests\JottaTestCase;
 use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
-class Test001_AccountTest extends \PHPUnit\Framework\TestCase
+class Test001_AccountTest extends JottaTestCase
 {
-    use AssertExceptions;
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\AccountScope::data

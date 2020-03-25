@@ -14,12 +14,11 @@ use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
 use Vegfund\Jotta\Support\JFileInfo;
+use Vegfund\Jotta\Tests\JottaTestCase;
 use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
-class Test001_ArchitectureTest extends \PHPUnit\Framework\TestCase
+class Test001_ArchitectureTest extends JottaTestCase
 {
-    use AssertExceptions;
-
     /**
      * @covers \Vegfund\Jotta\JottaClient::__construct
      * @covers \Vegfund\Jotta\Jotta::client

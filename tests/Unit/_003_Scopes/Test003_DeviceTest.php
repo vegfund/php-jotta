@@ -5,12 +5,11 @@ namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Jotta;
+use Vegfund\Jotta\Tests\JottaTestCase;
 use Vegfund\Jotta\Tests\Support\AssertExceptions;
 
-class Test003_DeviceTest extends \PHPUnit\Framework\TestCase
+class Test003_DeviceTest extends JottaTestCase
 {
-    use AssertExceptions;
-
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DeviceScope::all
      */

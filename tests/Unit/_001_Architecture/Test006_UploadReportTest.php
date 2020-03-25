@@ -6,8 +6,9 @@ use Illuminate\Support\Str;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Support\OperationReport;
+use Vegfund\Jotta\Tests\JottaTestCase;
 
-class Test006_UploadReportTest extends \PHPUnit\Framework\TestCase
+class Test006_UploadReportTest extends JottaTestCase
 {
     /**
      * @covers \Vegfund\Jotta\Support\OperationReport::__construct

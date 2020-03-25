@@ -13,9 +13,10 @@ use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
 use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
+use Vegfund\Jotta\Tests\JottaTestCase;
 use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 
-class Test005_XmlNamespacesTest extends \PHPUnit\Framework\TestCase
+class Test005_XmlNamespacesTest extends JottaTestCase
 {
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::file

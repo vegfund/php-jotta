@@ -9,8 +9,9 @@ use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
 use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\JottaClient;
+use Vegfund\Jotta\Tests\JottaTestCase;
 
-class Test001_ExceptionsTest extends \PHPUnit\Framework\TestCase
+class Test001_ExceptionsTest extends JottaTestCase
 {
     /**
      * @covers \Vegfund\Jotta\Client\Responses\XmlResponseSerializer::getRootNamespace

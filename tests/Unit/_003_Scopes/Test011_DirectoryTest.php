@@ -14,6 +14,7 @@ use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
+use Vegfund\Jotta\Tests\JottaTestCase;
 use Vegfund\Jotta\Tests\Mock\JottaApiV1Mock;
 use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 use Vegfund\Jotta\Tests\Support\AssertExceptions;
@@ -22,10 +23,8 @@ use Vegfund\Jotta\Tests\Support\JottaTestTrait;
 /**
  * Class Test011_DirectoryTest.
  */
-class Test011_DirectoryTest extends TestCase
+class Test011_DirectoryTest extends JottaTestCase
 {
-    use AssertExceptions;
-    use JottaTestTrait;
 
     /**
      * @covers \Vegfund\Jotta\Jotta::directory

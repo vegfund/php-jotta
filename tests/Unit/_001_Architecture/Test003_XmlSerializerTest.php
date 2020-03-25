@@ -5,9 +5,10 @@ namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 use Vegfund\Jotta\Client\Responses\Namespaces\Attributes;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
+use Vegfund\Jotta\Tests\JottaTestCase;
 use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 
-class Test003_XmlSerializerTest extends \PHPUnit\Framework\TestCase
+class Test003_XmlSerializerTest extends JottaTestCase
 {
     /**
      * @covers \Vegfund\Jotta\Client\Responses\XmlResponseSerializer::getRootNamespace
