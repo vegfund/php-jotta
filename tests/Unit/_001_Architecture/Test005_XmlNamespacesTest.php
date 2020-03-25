@@ -194,9 +194,16 @@ class Test005_XmlNamespacesTest extends JottaTestCase
      */
     public function test013_mount_point()
     {
-        $responseBodyMock = new ResponseBodyMock();
-
-        $body = $responseBodyMock->mountPoint();
+        $body = (new ResponseBodyMock())->mountPoint([
+            'folders' => [
+                ['name' => 'folder1'],
+                ['name' => 'folder2'],
+            ],
+            'files' => [
+                ['name' => 'file1.txt'],
+                ['name' => 'file2.txt'],
+            ]
+        ]);
         $serialized = XmlResponseSerializer::parse($body, 'auto');
 
         $this->assertInstanceOf(MountPoint::class, $serialized);

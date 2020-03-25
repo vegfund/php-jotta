@@ -10,6 +10,7 @@ use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
 use Vegfund\Jotta\Client\Scopes\Scope;
 use Vegfund\Jotta\JottaClient;
 use Vegfund\Jotta\Tests\JottaTestCase;
+use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 
 class Test001_ExceptionsTest extends JottaTestCase
 {
@@ -59,7 +60,7 @@ class Test001_ExceptionsTest extends JottaTestCase
      *
      * @throws \ReflectionException
      */
-    public function test005_jotta_client_handle_exception()
+    public function test005_jotta_client_handle_exception_plain()
     {
         $method = new \ReflectionMethod(JottaClient::class, 'handleException');
         $method->setAccessible(true);
@@ -89,6 +90,18 @@ class Test001_ExceptionsTest extends JottaTestCase
             $this->assertInstanceOf(ServerException::class, $e);
             $this->assertSame('message', $e->getMessage());
         }
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\JottaClient::handleException
+     */
+    public function test006a_jotta_client_test_xml_error_exception()
+    {
+        $body = (new ResponseBodyMock())->error();
+        $mock = $this->jottaMock($body);
+        $this->shouldThrowException(\Exception::class, function () use ($mock) {
+            $mock->account()->data();
+        });
     }
 
     /**
