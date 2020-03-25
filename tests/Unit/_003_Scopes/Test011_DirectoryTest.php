@@ -391,6 +391,8 @@ class Test011_DirectoryTest extends JottaTestCase
 
         $this->assertInstanceOf(Folder::class, $response);
         $this->assertSame($folderName, $response->getName());
+
+        $this->addToTempList($folderName);
     }
 
     /**
@@ -421,6 +423,9 @@ class Test011_DirectoryTest extends JottaTestCase
 
         $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE, $rootResponse->getPath());
         $this->assertSame(1, (int) $rootResponse->getMetadata()->getAttribute('num_folders'));
+
+        $this->addToTempList($folderName);
+        $this->addToTempList($subfolderName);
     }
 
     /**
@@ -442,6 +447,8 @@ class Test011_DirectoryTest extends JottaTestCase
         $deleted = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete($folderName);
         $this->assertSame($folderName, $deleted->getName());
         $this->assertTrue($deleted->isDeleted());
+
+        $this->addToTempList($folderName);
     }
 
     /**
@@ -484,6 +491,10 @@ class Test011_DirectoryTest extends JottaTestCase
         $movingResult = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($rootFrom.'/'.$moved, $rootTo.'/'.$moved);
         $this->assertSame($moved, $movingResult->getName());
         $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE.'/'.$rootTo, $movingResult->getPath());
+
+        $this->addToTempList($rootFrom);
+        $this->addToTempList($rootTo);
+        $this->addToTempList($moved);
     }
 
     /**

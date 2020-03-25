@@ -36,7 +36,8 @@
         "php-coveralls/php-coveralls": "^2.0",
         "phpunit/php-code-coverage": "^6.0|^7.0",
         "phpunit/phpunit": "^7.0|^8.0",
-        "ramsey/uuid": "^3.0"
+        "ramsey/uuid": "^3.0",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
