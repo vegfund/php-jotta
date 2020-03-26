@@ -391,7 +391,7 @@ class ResponseBodyMock
                 'number'   => 1,
                 'state'    => Arr::get($options, 'state', 'COMPLETED'),
                 'created'  => time() - 60 * 60,
-                'modified' => Arr::get($options, 'modified', time()-60*60),
+                'modified' => Arr::get($options, 'modified', time() - 60 * 60),
                 'mime'     => 'text/plain',
                 'size'     => Arr::get($options, 'size', strlen($options['name']) * 1024),
                 'md5'      => Arr::get($options, 'md5', md5($options['name'])),

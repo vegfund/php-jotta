@@ -105,7 +105,8 @@ class MountPoint extends ResponseNamespace
             if (is_array($this->folders)) {
                 return $this->folders;
             }
-        } catch (JottaException $e) {}
+        } catch (JottaException $e) {
+        }
 
         return [];
     }
@@ -119,7 +120,8 @@ class MountPoint extends ResponseNamespace
             if (is_array($this->files)) {
                 return $this->files;
             }
-        } catch (JottaException $e) {}
+        } catch (JottaException $e) {
+        }
 
         return [];
     }
