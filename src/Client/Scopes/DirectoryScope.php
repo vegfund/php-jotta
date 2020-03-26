@@ -421,10 +421,6 @@ class DirectoryScope extends Scope
         $files = scandir($localPath);
 
         foreach ($files as $key => $value) {
-            if (!isset($results[$localPath])) {
-                $results[$localPath] = [];
-            }
-
             $path = realpath($localPath.DIRECTORY_SEPARATOR.$value);
             if (!is_dir($path)) {
                 $results[$localPath][] = (new JFileInfo($localPath.'/'.$value));

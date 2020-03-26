@@ -587,16 +587,6 @@ class Test011_DirectoryTest extends JottaTestCase
     }
 
     /**
-     * This test checks the implementation of a case, when a source folder name is empty.
-     * In such a case, all items should be moved (but involves also files moving).
-     *
-     * @todo files moving
-     */
-    public function test027_move_when_folder_name_empty()
-    {
-    }
-
-    /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::all
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::create
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::createMountPoint
