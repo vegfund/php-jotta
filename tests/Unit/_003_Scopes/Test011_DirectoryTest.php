@@ -392,7 +392,7 @@ class Test011_DirectoryTest extends JottaTestCase
         $this->assertInstanceOf(Folder::class, $response);
         $this->assertSame($folderName, $response->getName());
 
-        $this->addToTempList($folderName);
+        $this->addToTempList($folderName, 'folder');
     }
 
     /**
@@ -424,8 +424,8 @@ class Test011_DirectoryTest extends JottaTestCase
         $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE, $rootResponse->getPath());
         $this->assertSame(1, (int) $rootResponse->getMetadata()->getAttribute('num_folders'));
 
-        $this->addToTempList($folderName);
-        $this->addToTempList($subfolderName);
+        $this->addToTempList($folderName, 'folder');
+        $this->addToTempList($subfolderName, 'folder');
     }
 
     /**
@@ -448,7 +448,7 @@ class Test011_DirectoryTest extends JottaTestCase
         $this->assertSame($folderName, $deleted->getName());
         $this->assertTrue($deleted->isDeleted());
 
-        $this->addToTempList($folderName);
+        $this->addToTempList($folderName, 'folder');
     }
 
     /**
@@ -477,9 +477,9 @@ class Test011_DirectoryTest extends JottaTestCase
      */
     public function test023_move_folder_same_mount_point()
     {
-        $rootFrom = Str::random(6).md5(file_get_contents(__FILE__)).'_021_from';
-        $rootTo = Str::random(6).md5(file_get_contents(__FILE__)).'_021_to';
-        $moved = Str::random(6).md5(file_get_contents(__FILE__)).'_021_moved';
+        $rootFrom = Str::random(6).md5(file_get_contents(__FILE__)).'_023_from';
+        $rootTo = Str::random(6).md5(file_get_contents(__FILE__)).'_023_to';
+        $moved = Str::random(6).md5(file_get_contents(__FILE__)).'_023_moved';
 
         // first, create
         $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($rootFrom.'/'.$moved);
@@ -492,9 +492,9 @@ class Test011_DirectoryTest extends JottaTestCase
         $this->assertSame($moved, $movingResult->getName());
         $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE.'/'.$rootTo, $movingResult->getPath());
 
-        $this->addToTempList($rootFrom);
-        $this->addToTempList($rootTo);
-        $this->addToTempList($moved);
+        $this->addToTempList($rootTo.'/'.$moved, 'folder');
+        $this->addToTempList($rootTo, 'folder');
+        $this->addToTempList($rootFrom, 'folder');
     }
 
     /**
@@ -502,11 +502,11 @@ class Test011_DirectoryTest extends JottaTestCase
      *
      * @throws JottaException
      */
-    public function test023_rename_folder_same_mount_point()
+    public function test023a_rename_folder_same_mount_point()
     {
-        $rootFrom = Str::random(6).md5(file_get_contents(__FILE__)).'_023_from';
-        $rootTo = Str::random(6).md5(file_get_contents(__FILE__)).'_023_to';
-        $moved = Str::random(6).md5(file_get_contents(__FILE__)).'_023_moved';
+        $rootFrom = Str::random(6).md5(file_get_contents(__FILE__)).'_023a_from';
+        $rootTo = Str::random(6).md5(file_get_contents(__FILE__)).'_023a_to';
+        $moved = Str::random(6).md5(file_get_contents(__FILE__)).'_023a_moved';
 
         // first, create
         $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($rootFrom.'/'.$moved);
@@ -518,6 +518,10 @@ class Test011_DirectoryTest extends JottaTestCase
         $movingResult = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->rename($rootFrom.'/'.$moved, $rootTo.'/'.$moved);
         $this->assertSame($moved, $movingResult->getName());
         $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_ARCHIVE.'/'.$rootTo, $movingResult->getPath());
+
+        $this->addToTempList($rootTo.'/'.$moved, 'folder');
+        $this->addToTempList($rootTo, 'folder');
+        $this->addToTempList($rootFrom, 'folder');
     }
 
     /**
@@ -527,9 +531,9 @@ class Test011_DirectoryTest extends JottaTestCase
      */
     public function test025_move_folder_different_mount_point()
     {
-        $rootFrom = Str::random(6).md5(file_get_contents(__FILE__)).'_021_from';
-        $rootTo = Str::random(6).md5(file_get_contents(__FILE__)).'_021_to';
-        $moved = Str::random(6).md5(file_get_contents(__FILE__)).'_021_moved';
+        $rootFrom = Str::random(6).md5(file_get_contents(__FILE__)).'_025_from';
+        $rootTo = Str::random(6).md5(file_get_contents(__FILE__)).'_025_to';
+        $moved = Str::random(6).md5(file_get_contents(__FILE__)).'_025_moved';
 
         // first, create
         $created = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($rootFrom.'/'.$moved);
@@ -541,6 +545,11 @@ class Test011_DirectoryTest extends JottaTestCase
         $movingResult = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($rootFrom.'/'.$moved, $rootTo.'/'.$moved, Jotta::MOUNT_POINT_SHARED);
         $this->assertSame($moved, $movingResult->getName());
         $this->assertSame('/'.getenv('JOTTA_USERNAME').'/'.Jotta::DEVICE_JOTTA.'/'.Jotta::MOUNT_POINT_SHARED.'/'.$rootTo, $movingResult->getPath());
+
+        $this->addToTempList($rootFrom, 'folder');
+        $this->addToTempList($rootFrom.'/'.$moved, 'folder');
+        $this->addToTempList($rootTo, 'folder');
+        $this->addToTempList($rootTo.'/'.$moved, 'folder', Jotta::MOUNT_POINT_SHARED);
     }
 
     /**

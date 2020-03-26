@@ -191,11 +191,6 @@ class JottaClient
         return $response;
     }
 
-    public function detect($path)
-    {
-        return $this->getScope(PathScope::class)->detect($path, $this);
-    }
-
     /**
      * @param string $name    scope name
      * @param mixed  $options scope options array

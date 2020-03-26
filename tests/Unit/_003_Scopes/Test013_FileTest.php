@@ -68,7 +68,7 @@ class Test013_FileTest extends JottaTestCase
     public function test005_upload_simple_small_file()
     {
         // generate random file, 256 KB
-        $filename = Str::random(16).'.txt';
+        $filename = Str::random(16).'_005.txt';
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
@@ -88,6 +88,8 @@ class Test013_FileTest extends JottaTestCase
         $this->assertSame($fileinfo->getMd5(), $response->getMd5());
         $this->assertSame(256 * 1024, $response->getSize());
 
+        $this->addToTempList($filename, 'file');
+
         @unlink($path);
     }
 
@@ -104,7 +106,7 @@ class Test013_FileTest extends JottaTestCase
         }
 
         // generate random file, 25 MB
-        $filename = Str::random(16).'.txt';
+        $filename = Str::random(16).'_007.txt';
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
@@ -124,6 +126,8 @@ class Test013_FileTest extends JottaTestCase
         $this->assertSame($fileinfo->getMd5(), $response->getMd5());
         $this->assertSame(25 * 1024 * 1024, $response->getSize());
 
+        $this->addToTempList($filename, 'file');
+
         @unlink($path);
     }
 
@@ -140,7 +144,7 @@ class Test013_FileTest extends JottaTestCase
         }
 
         // generate random file, 100 MB
-        $filename = Str::random(16).'.txt';
+        $filename = Str::random(16).'_009.txt';
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
@@ -159,6 +163,8 @@ class Test013_FileTest extends JottaTestCase
         $this->assertSame($filename, $response->getName());
         $this->assertSame($fileinfo->getMd5(), $response->getMd5());
         $this->assertSame(100 * 1024 * 1024, $response->getSize());
+
+        $this->addToTempList($filename, 'file');
 
         @unlink($path);
     }
@@ -182,7 +188,7 @@ class Test013_FileTest extends JottaTestCase
     public function test013_move_file()
     {
         // generate random file, 256 KB
-        $filename = Str::random(16).'.txt';
+        $filename = Str::random(16).'_013.txt';
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
@@ -199,7 +205,7 @@ class Test013_FileTest extends JottaTestCase
         $this->assertTrue($response->isCompleted());
 
         // test moving
-        $destinationPath = Str::random(12);
+        $destinationPath = Str::random(12).'_13_to';
         $response = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($filename, $destinationPath);
         $this->assertInstanceOf(File::class, $response);
         $this->assertTrue($response->isCompleted());
@@ -210,6 +216,10 @@ class Test013_FileTest extends JottaTestCase
             $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->get($filename);
         });
 
+        $this->addToTempList($destinationPath.'/'.$filename, 'file');
+        $this->addToTempList($destinationPath, 'folder');
+        $this->addToTempList($filename, 'file');
+
         @unlink($path);
     }
 
@@ -218,10 +228,10 @@ class Test013_FileTest extends JottaTestCase
      *
      * @throws JottaException
      */
-    public function test013_rename_file()
+    public function test013a_rename_file()
     {
         // generate random file, 256 KB
-        $filename = Str::random(16).'.txt';
+        $filename = Str::random(16).'_013a.txt';
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
@@ -238,7 +248,7 @@ class Test013_FileTest extends JottaTestCase
         $this->assertTrue($response->isCompleted());
 
         // test moving
-        $destinationPath = Str::random(12);
+        $destinationPath = Str::random(12).'_013a_to';
         $response = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->rename($filename, $destinationPath);
         $this->assertInstanceOf(File::class, $response);
         $this->assertTrue($response->isCompleted());
@@ -249,6 +259,10 @@ class Test013_FileTest extends JottaTestCase
             $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->get($filename);
         });
 
+        $this->addToTempList($destinationPath.'/'.$filename, 'file');
+        $this->addToTempList($destinationPath, 'folder');
+        $this->addToTempList($filename, 'file');
+
         @unlink($path);
     }
 
@@ -257,9 +271,9 @@ class Test013_FileTest extends JottaTestCase
      *
      * @throws JottaException
      */
-    public function test013a_move_when_folder_should_throw_exception()
+    public function test013b_move_when_folder_should_throw_exception()
     {
-        $folderName = Str::random(12);
+        $folderName = Str::random(12).'_013b';
         $response = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($folderName);
         $this->assertInstanceOf(Folder::class, $response);
 
@@ -278,7 +292,7 @@ class Test013_FileTest extends JottaTestCase
     public function test015_delete_file()
     {
         // generate random file, 256 KB
-        $filename = Str::random(16).'.txt';
+        $filename = Str::random(16).'_015.txt';
         $path = $this->tempPath($filename);
 
         $f = fopen($path, 'a');
@@ -299,6 +313,8 @@ class Test013_FileTest extends JottaTestCase
             $file = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->get($filename);
         });
 
+        $this->addToTempList($filename, 'file');
+
         @unlink($path);
     }
 
@@ -309,7 +325,7 @@ class Test013_FileTest extends JottaTestCase
      */
     public function test017_delete_when_deleted_should_throw_exception()
     {
-        $filename = Str::random(12).'.txt';
+        $filename = Str::random(12).'_017.txt';
         $uuid = Uuid::uuid4()->toString();
         $body = (new ResponseBodyMock())->file([
             'name'       => $filename,
