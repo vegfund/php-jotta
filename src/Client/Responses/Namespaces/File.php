@@ -20,6 +20,10 @@ use Vegfund\Jotta\Support\JFileInfo;
  */
 class File extends ResponseNamespace
 {
+    const STATE_COMPLETED = 'COMPLETED';
+
+    const STATE_CORRUPT = 'CORRUPT';
+
     /**
      * @var string
      */
@@ -107,7 +111,7 @@ class File extends ResponseNamespace
      */
     public function isCorrupt()
     {
-        return 'CORRUPT' === $this->getRevision()->state || 'CORRUPT' === $this->getRevision()->state;
+        return self::STATE_CORRUPT === $this->getRevision()->state || self::STATE_CORRUPT === $this->getRevision()->state;
     }
 
     /**
@@ -115,7 +119,7 @@ class File extends ResponseNamespace
      */
     public function isCompleted()
     {
-        return 'COMPLETED' === $this->getRevision()->state || 'COMPLETED' === $this->getRevision()->state;
+        return self::STATE_COMPLETED === $this->getRevision()->state || self::STATE_COMPLETED === $this->getRevision()->state;
     }
 
     /**
@@ -133,7 +137,7 @@ class File extends ResponseNamespace
      */
     public function isNewerThan($file)
     {
-        return $this->getRevision()->modified->getTimestamp() >= $file->getMTime();
+        return $this->getRevision()->modified->getTimestamp() > $file->getMTime();
     }
 
     /**
@@ -143,7 +147,7 @@ class File extends ResponseNamespace
      */
     public function isDifferentThan($file)
     {
-        return $this->getRevision()->md5 !== JFileInfo::make($file)->getMd5();
+        return ($this->getRevision()->getSize() !== JFileInfo::make($file)->getSize()) || ($this->getRevision()->md5 !== JFileInfo::make($file)->getMd5());
     }
 
     /**

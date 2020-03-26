@@ -13,6 +13,7 @@ use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
 use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
+use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Tests\JottaTestCase;
 use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 
@@ -304,5 +305,231 @@ class Test005_XmlNamespacesTest extends JottaTestCase
             $casted = $method->invoke($mock, $primitive['value'], $primitive['cast']);
             $this->assertSame($primitive['expected'], $casted);
         }
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDeleted
+     * @throws JottaException
+     */
+    public function test021_file_is_deleted()
+    {
+        $responseBodyMock = new ResponseBodyMock();
+
+        // NOT DELETED
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt']);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertFalse($serialized->isDeleted());
+
+        // DELETED
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'deleted' => time()]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertTrue($serialized->isDeleted());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCorrupt
+     * @throws JottaException
+     */
+    public function test023_file_is_corrupt()
+    {
+        $responseBodyMock = new ResponseBodyMock();
+
+        // NOT CORRUPT
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'state' => File::STATE_COMPLETED]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertFalse($serialized->isCorrupt());
+
+        // CORRUPT
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'state' => File::STATE_CORRUPT]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertTrue($serialized->isCorrupt());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isValid
+     * @throws JottaException
+     */
+    public function test025_file_is_valid()
+    {
+        $responseBodyMock = new ResponseBodyMock();
+
+        // VALID
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'state' => File::STATE_COMPLETED]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertTrue($serialized->isValid());
+
+        // COMPLETED BUT DELETED
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'deleted' => time(), 'state' => File::STATE_COMPLETED]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertFalse($serialized->isValid());
+
+        // CORRUPT
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'state' => File::STATE_CORRUPT]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertFalse($serialized->isValid());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isNewerThan
+     * @throws JottaException
+     */
+    public function test027_file_is_newer_than()
+    {
+        $responseBodyMock = new ResponseBodyMock();
+
+        // NEWER THAN LOCAL
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'modified' => time()]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $fileMock = \Mockery::mock(JFileInfo::class);
+        $fileMock->makePartial();
+        $fileMock->shouldAllowMockingProtectedMethods();
+        $fileMock->shouldReceive('getMTime')->andReturn(time() - 1000);
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertTrue($serialized->isNewerThan($fileMock));
+
+        // SAME AS LOCAL
+
+        $timestamp = time() - 60;
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'modified' => $timestamp]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $fileMock = \Mockery::mock(JFileInfo::class);
+        $fileMock->makePartial();
+        $fileMock->shouldAllowMockingProtectedMethods();
+        $fileMock->shouldReceive('getMTime')->andReturn($timestamp);
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertFalse($serialized->isNewerThan($fileMock));
+
+        // OLDER AS LOCAL
+
+        $timestamp = time() - 60;
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'modified' => $timestamp - 10000]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $fileMock = \Mockery::mock(JFileInfo::class);
+        $fileMock->makePartial();
+        $fileMock->shouldAllowMockingProtectedMethods();
+        $fileMock->shouldReceive('getMTime')->andReturn($timestamp);
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertFalse($serialized->isNewerThan($fileMock));
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDifferentThan
+     * @throws JottaException
+     */
+    public function test029_file_is_different()
+    {
+        $responseBodyMock = new ResponseBodyMock();
+
+        // SAME SIZE AND MD5
+
+        $size = rand(100, 100000);
+        $md5 = md5(Str::random(10000));
+
+        $body = $responseBodyMock->file(['name' => Str::random(12) . '.txt', 'size' => $size, 'md5' => $md5]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $fileMock = \Mockery::mock(JFileInfo::class);
+        $fileMock->makePartial();
+        $fileMock->shouldAllowMockingProtectedMethods();
+        $fileMock->shouldReceive('getSize')->andReturn($size);
+        $fileMock->shouldReceive('getMd5')->andReturn($md5);
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertFalse($serialized->isDifferentThan($fileMock));
+
+        // SAME SIZE, DIFFERENT MD5
+
+        $size = rand(100, 100000);
+        $md5 = md5(Str::random(10000));
+
+        $body = $responseBodyMock->file(['name' => Str::random(12) . '.txt', 'size' => $size, 'md5' => $md5]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $fileMock = \Mockery::mock(JFileInfo::class);
+        $fileMock->makePartial();
+        $fileMock->shouldAllowMockingProtectedMethods();
+        $fileMock->shouldReceive('getSize')->andReturn($size);
+        $fileMock->shouldReceive('getMd5')->andReturn(md5($md5));
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertTrue($serialized->isDifferentThan($fileMock));
+
+        // SAME MD5, DIFFERENT SIZE
+
+        $size = rand(100, 100000);
+        $md5 = md5(Str::random(10000));
+
+        $body = $responseBodyMock->file(['name' => Str::random(12) . '.txt', 'size' => $size, 'md5' => $md5]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $fileMock = \Mockery::mock(JFileInfo::class);
+        $fileMock->makePartial();
+        $fileMock->shouldAllowMockingProtectedMethods();
+        $fileMock->shouldReceive('getSize')->andReturn($size * rand(2,10));
+        $fileMock->shouldReceive('getMd5')->andReturn($md5);
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertTrue($serialized->isDifferentThan($fileMock));
+
+        // BOTH DIFFERENT
+
+        $size = rand(100, 100000);
+        $md5 = md5(Str::random(10000));
+
+        $body = $responseBodyMock->file(['name' => Str::random(12) . '.txt', 'size' => $size, 'md5' => $md5]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $fileMock = \Mockery::mock(JFileInfo::class);
+        $fileMock->makePartial();
+        $fileMock->shouldAllowMockingProtectedMethods();
+        $fileMock->shouldReceive('getSize')->andReturn($size * rand(2,10));
+        $fileMock->shouldReceive('getMd5')->andReturn(md5($md5));
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertTrue($serialized->isDifferentThan($fileMock));
     }
 }

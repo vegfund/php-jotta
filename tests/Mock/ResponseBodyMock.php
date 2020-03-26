@@ -231,7 +231,7 @@ class ResponseBodyMock
                             'number'   => 1,
                             'state'    => Arr::get($file, 'state', 'COMPLETED'),
                             'created'  => strftime('%F-T%TZ', Arr::get($file, 'created', time() - 60 * 60)),
-                            'modified' => strftime('%F-T%TZ', Arr::get($file, 'created', time() - 60 * 60)),
+                            'modified' => strftime('%F-T%TZ', Arr::get($file, 'modified', time() - 60 * 60)),
                             'mime'     => Arr::get($file, 'mime', 'text/plain'),
                             'size'     => Arr::get($file, 'size', strlen($file['name']) * 1024),
                             'md5'      => Arr::get($file, 'md5', md5($file['name'])),
@@ -389,9 +389,9 @@ class ResponseBodyMock
         $defaultRevisions = [
             [
                 'number'   => 1,
-                'state'    => 'COMPLETED',
+                'state'    => Arr::get($options, 'state', 'COMPLETED'),
                 'created'  => time() - 60 * 60,
-                'modified' => time() - 60 * 60,
+                'modified' => Arr::get($options, 'modified', time()-60*60),
                 'mime'     => 'text/plain',
                 'size'     => Arr::get($options, 'size', strlen($options['name']) * 1024),
                 'md5'      => Arr::get($options, 'md5', md5($options['name'])),
