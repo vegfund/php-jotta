@@ -52,13 +52,37 @@ class FileScope extends Scope
      *
      * @return bool
      *
-     * @todo API verification endpoint?
+     * @see https://github.com/albertony/jafs/blob/master/JottacloudFileSystem/JaFS.cs (VerifyFile)
      */
     public function verify($remotePath, $localPath = null)
     {
-        $file = $this->get($remotePath);
+        if(null === $localPath) {
+            // only check the remote file
+            $file = $this->get($remotePath);
+            return null !== $file && null !== $file->currentRevision && $file->isValid() && (null === $localPath || null !== $localPath && md5(file_get_contents($localPath)) === $file->currentRevision->md5);
+        } else {
+            if(!file_exists($localPath) || !is_file($localPath)) {
+                throw new JottaException('File does not exist or not a file.');
+            }
 
-        return null !== $file && null !== $file->currentRevision && $file->isValid() && (null === $localPath || null !== $localPath && md5(file_get_contents($localPath)) === $file->currentRevision->md5);
+            $fileInfo = JFileInfo::make($localPath);
+
+            $headers = [
+                'JMd5' => $fileInfo->getMd5(),
+                'JSize' => $fileInfo->getSize(),
+                'JCreated' => $fileInfo->getCTime(),
+                'JModified' => $fileInfo->getMTime()
+            ];
+
+            $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath, ['cphash' => 'true']);
+
+            try {
+                $serialized = $this->serialize($this->request($requestPath, 'post', $headers));
+                return true;
+            } catch (Exception $e) {
+                return false;
+            }
+        }
     }
 
     /**

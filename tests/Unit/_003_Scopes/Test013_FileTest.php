@@ -339,4 +339,41 @@ class Test013_FileTest extends JottaTestCase
             $mock->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->delete($filename);
         });
     }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::verify
+     * @throws JottaException
+     */
+    public function test019_verify_file()
+    {
+        // generate random file, 256 KB
+        $filename = Str::random(16).'_013.txt';
+        $path = $this->tempPath($filename);
+
+        $f = fopen($path, 'a');
+        for ($i = 0; $i < 256 * 1024; $i += 512) {
+            fwrite($f, Str::random(512));
+        }
+        fclose($f);
+
+        //
+        $response = $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->upload($path);
+        $this->assertInstanceOf(File::class, $response);
+        $this->assertTrue($response->isCompleted());
+
+        $this->assertTrue($this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->verify($filename, $path));
+        $this->assertTrue($this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->verify($filename));
+
+        $f = fopen($path, 'a');
+        for ($i = 0; $i < 256 * 1024; $i += 512) {
+            fwrite($f, Str::random(512));
+        }
+        fclose($f);
+
+        $this->assertFalse($this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->verify($filename, $path));
+        $this->assertTrue($this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->verify($filename));
+
+        $this->addToTempList($filename, 'file');
+        @unlink($path);
+    }
 }
