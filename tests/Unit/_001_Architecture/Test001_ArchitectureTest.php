@@ -403,6 +403,7 @@ class Test001_ArchitectureTest extends JottaTestCase
 
     /**
      * @covers ResponseNamespace::__get
+     *
      * @throws \ReflectionException
      */
     public function test029_scope_getter()

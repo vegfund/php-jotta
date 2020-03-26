@@ -52,7 +52,7 @@ abstract class ResponseNamespace implements NamespaceContract, XmlDeserializable
      */
     public function __get($name)
     {
-        if(null !== ($value = $this->getAttribute($name))) {
+        if (null !== ($value = $this->getAttribute($name))) {
             return $value;
         }
 
