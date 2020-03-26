@@ -309,6 +309,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDeleted
+     *
      * @throws JottaException
      */
     public function test021_file_is_deleted()
@@ -337,6 +338,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCorrupt
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCompleted
+     *
      * @throws JottaException
      */
     public function test023_file_is_corrupt()
@@ -366,6 +368,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isValid
+     *
      * @throws JottaException
      */
     public function test025_file_is_valid()
@@ -402,6 +405,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isNewerThan
+     *
      * @throws JottaException
      */
     public function test027_file_is_newer_than()
@@ -457,6 +461,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDifferentThan
+     *
      * @throws JottaException
      */
     public function test029_file_is_different()
@@ -468,7 +473,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
         $size = rand(100, 100000);
         $md5 = md5(Str::random(10000));
 
-        $body = $responseBodyMock->file(['name' => Str::random(12) . '.txt', 'size' => $size, 'md5' => $md5]);
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'size' => $size, 'md5' => $md5]);
         $mock = $this->jottaMock($body);
         $serialized = $mock->file()->get('somepath');
 
@@ -486,7 +491,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
         $size = rand(100, 100000);
         $md5 = md5(Str::random(10000));
 
-        $body = $responseBodyMock->file(['name' => Str::random(12) . '.txt', 'size' => $size, 'md5' => $md5]);
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'size' => $size, 'md5' => $md5]);
         $mock = $this->jottaMock($body);
         $serialized = $mock->file()->get('somepath');
 
@@ -504,14 +509,14 @@ class Test005_XmlNamespacesTest extends JottaTestCase
         $size = rand(100, 100000);
         $md5 = md5(Str::random(10000));
 
-        $body = $responseBodyMock->file(['name' => Str::random(12) . '.txt', 'size' => $size, 'md5' => $md5]);
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'size' => $size, 'md5' => $md5]);
         $mock = $this->jottaMock($body);
         $serialized = $mock->file()->get('somepath');
 
         $fileMock = \Mockery::mock(JFileInfo::class);
         $fileMock->makePartial();
         $fileMock->shouldAllowMockingProtectedMethods();
-        $fileMock->shouldReceive('getSize')->andReturn($size * rand(2,10));
+        $fileMock->shouldReceive('getSize')->andReturn($size * rand(2, 10));
         $fileMock->shouldReceive('getMd5')->andReturn($md5);
 
         $this->assertInstanceOf(File::class, $serialized);
@@ -522,14 +527,14 @@ class Test005_XmlNamespacesTest extends JottaTestCase
         $size = rand(100, 100000);
         $md5 = md5(Str::random(10000));
 
-        $body = $responseBodyMock->file(['name' => Str::random(12) . '.txt', 'size' => $size, 'md5' => $md5]);
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'size' => $size, 'md5' => $md5]);
         $mock = $this->jottaMock($body);
         $serialized = $mock->file()->get('somepath');
 
         $fileMock = \Mockery::mock(JFileInfo::class);
         $fileMock->makePartial();
         $fileMock->shouldAllowMockingProtectedMethods();
-        $fileMock->shouldReceive('getSize')->andReturn($size * rand(2,10));
+        $fileMock->shouldReceive('getSize')->andReturn($size * rand(2, 10));
         $fileMock->shouldReceive('getMd5')->andReturn(md5($md5));
 
         $this->assertInstanceOf(File::class, $serialized);
@@ -539,6 +544,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\MountPoint::getUser
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\MountPoint::getUsername
+     *
      * @throws JottaException
      */
     public function test031_mount_point_get_username()
@@ -556,6 +562,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getWithContents
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\MountPoint::getUser
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\MountPoint::getUsername
+     *
      * @throws JottaException
      */
     public function test033_mount_point_get_folders()

@@ -99,8 +99,10 @@ class DirectoryScope extends Scope
 
     /**
      * @param string $remotePath
-     * @return MountPoint
+     *
      * @throws Exception
+     *
+     * @return MountPoint
      */
     public function getWithContents($remotePath = '')
     {
