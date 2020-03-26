@@ -24,7 +24,6 @@ use Vegfund\Jotta\Client\Scopes\AccountScope;
 use Vegfund\Jotta\Client\Scopes\DeviceScope;
 use Vegfund\Jotta\Client\Scopes\DirectoryScope;
 use Vegfund\Jotta\Client\Scopes\FileScope;
-use Vegfund\Jotta\Client\Scopes\PathScope;
 use Vegfund\Jotta\Client\Scopes\Scope;
 
 /**

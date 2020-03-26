@@ -39,8 +39,9 @@ class JottaTestCase extends TestCase
                     $client->file()->setMountPoint($item['mount_point'])->delete($item['path']);
                 }
             }
-        } catch (JottaException $e) {}
-        catch (\Exception $e) {}
+        } catch (JottaException $e) {
+        } catch (\Exception $e) {
+        }
 
         @unlink(__DIR__.DIRECTORY_SEPARATOR.'temp.json');
 
@@ -65,9 +66,9 @@ class JottaTestCase extends TestCase
     {
         $jsonList = json_decode(file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'temp.json'), true);
         $jsonList[] = [
-            'path' => $path,
-            'type' => $type,
-            'mount_point' => $mountPoint
+            'path'        => $path,
+            'type'        => $type,
+            'mount_point' => $mountPoint,
         ];
 
         $f = fopen(__DIR__.DIRECTORY_SEPARATOR.'temp.json', 'w');

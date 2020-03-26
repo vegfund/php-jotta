@@ -202,7 +202,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
             'files' => [
                 ['name' => 'file1.txt'],
                 ['name' => 'file2.txt'],
-            ]
+            ],
         ]);
         $serialized = XmlResponseSerializer::parse($body, 'auto');
 
