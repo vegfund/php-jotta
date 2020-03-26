@@ -336,6 +336,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCorrupt
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCompleted
      * @throws JottaException
      */
     public function test023_file_is_corrupt()
@@ -350,6 +351,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
         $this->assertInstanceOf(File::class, $serialized);
         $this->assertFalse($serialized->isCorrupt());
+        $this->assertTrue($serialized->isCompleted());
 
         // CORRUPT
 
@@ -359,6 +361,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
         $this->assertInstanceOf(File::class, $serialized);
         $this->assertTrue($serialized->isCorrupt());
+        $this->assertFalse($serialized->isCompleted());
     }
 
     /**
@@ -531,5 +534,62 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
         $this->assertInstanceOf(File::class, $serialized);
         $this->assertTrue($serialized->isDifferentThan($fileMock));
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\MountPoint::getUser
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\MountPoint::getUsername
+     * @throws JottaException
+     */
+    public function test031_mount_point_get_username()
+    {
+        $responseBodyMock = new ResponseBodyMock();
+        $body = $responseBodyMock->mountPoint();
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->mountPoint()->get('somepath');
+
+        $this->assertSame($serialized->getUser(), $serialized->getUsername());
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\MountPoint::xmlDeserialize
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getWithContents
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\MountPoint::getUser
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\MountPoint::getUsername
+     * @throws JottaException
+     */
+    public function test033_mount_point_get_folders()
+    {
+        $responseBodyMock = new ResponseBodyMock();
+
+        // NO FOLDERS, NO FILES
+
+        $body = $responseBodyMock->mountPoint(['files' => [], 'folders' => []]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->mountPoint()->get('somepath');
+
+        $this->assertSame([], $serialized->getFolders());
+        $this->assertSame([], $serialized->getFiles());
+
+        // TWO FOLDERS, NO FILES
+
+        $body = $responseBodyMock->mountPoint(['files' => [], 'folders' => [['name' => '1'], ['name' => '2']]]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->mountPoint()->getWithContents('somepath');
+
+        $this->assertSame([], $serialized->getFiles());
+        $this->assertIsArray($serialized->getFolders());
+        $this->assertCount(2, $serialized->getFolders());
+
+        // TWO FOLDERS, TWO FILES
+
+        $body = $responseBodyMock->mountPoint(['files' => [['name' => '1.txt'], ['name' => '2.txt']], 'folders' => [['name' => '1'], ['name' => '2']]]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->mountPoint()->getWithContents('somepath');
+
+        $this->assertIsArray($serialized->getFolders());
+        $this->assertCount(2, $serialized->getFolders());
+        $this->assertIsArray($serialized->getFiles());
+        $this->assertCount(2, $serialized->getFiles());
     }
 }

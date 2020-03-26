@@ -11,6 +11,7 @@ namespace Vegfund\Jotta\Client\Responses\Namespaces;
 use Sabre\Xml\LibXMLException;
 use Sabre\Xml\ParseException;
 use Sabre\Xml\Reader;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 
 /**
@@ -100,11 +101,13 @@ class MountPoint extends ResponseNamespace
      */
     public function getFolders()
     {
-        if (!is_array($this->folders)) {
-            return [];
-        }
+        try {
+            if (is_array($this->folders)) {
+                return $this->folders;
+            }
+        } catch (JottaException $e) {}
 
-        return $this->folders;
+        return [];
     }
 
     /**
@@ -112,10 +115,12 @@ class MountPoint extends ResponseNamespace
      */
     public function getFiles()
     {
-        if (!is_array($this->files)) {
-            return [];
-        }
+        try {
+            if (is_array($this->files)) {
+                return $this->files;
+            }
+        } catch (JottaException $e) {}
 
-        return $this->files;
+        return [];
     }
 }

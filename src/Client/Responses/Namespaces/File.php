@@ -111,7 +111,7 @@ class File extends ResponseNamespace
      */
     public function isCorrupt()
     {
-        return self::STATE_CORRUPT === $this->getRevision()->state || self::STATE_CORRUPT === $this->getRevision()->state;
+        return self::STATE_CORRUPT === $this->getRevision()->state;
     }
 
     /**
@@ -119,7 +119,7 @@ class File extends ResponseNamespace
      */
     public function isCompleted()
     {
-        return self::STATE_COMPLETED === $this->getRevision()->state || self::STATE_COMPLETED === $this->getRevision()->state;
+        return self::STATE_COMPLETED === $this->getRevision()->state;
     }
 
     /**

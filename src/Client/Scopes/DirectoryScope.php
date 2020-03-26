@@ -98,6 +98,16 @@ class DirectoryScope extends Scope
     }
 
     /**
+     * @param string $remotePath
+     * @return MountPoint
+     * @throws Exception
+     */
+    public function getWithContents($remotePath = '')
+    {
+        return $this->get($remotePath, []);
+    }
+
+    /**
      * Create a remote folder.
      *
      * @param string $remotePath remote path
