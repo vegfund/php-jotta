@@ -244,6 +244,12 @@ class Test001_ArchitectureTest extends JottaTestCase
 
         $path = $method->invoke($mock, Jotta::API_BASE_URL, Jotta::DEVICE_JOTTA, Jotta::MOUNT_POINT_ARCHIVE, 'somefolder/gone/missing/', ['umode' => 'nomultipart']);
         $this->assertSame('https://jottacloud.com/jfs/'.getenv('JOTTA_USERNAME').'/Jotta/Archive/somefolder/gone/missing?umode=nomultipart', $path);
+
+        $path = $method->invoke($mock, null, null, null, null);
+        $this->assertSame(getenv('JOTTA_USERNAME'), $path);
+
+        $path = $method->invoke($mock, '', '', '', '');
+        $this->assertSame(getenv('JOTTA_USERNAME'), $path);
     }
 
     /**
