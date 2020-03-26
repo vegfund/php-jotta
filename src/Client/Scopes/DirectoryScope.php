@@ -198,7 +198,7 @@ class DirectoryScope extends Scope
      *
      * @return OperationReport
      */
-    public function upload($localPath, $remotePath, $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
+    public function upload($localPath, $remotePath = '', $overwriteMode = Jotta::FILE_OVERWRITE_NEVER)
     {
         if (!file_exists($localPath) || !is_dir($localPath)) {
             throw new JottaException('This is not a folder or it does not exist');
@@ -288,27 +288,10 @@ class DirectoryScope extends Scope
         }
 
         foreach ($folder->getFiles() as $file) {
-            if (false === $this->checkFileRecursive($file, $options)) {
-                continue;
-            }
-            $recursive[] = (new FileResource($file))->toArray();
+            $recursive[] = $file;
         }
 
         return $recursive;
-    }
-
-    /**
-     * @param File  $file
-     * @param array $options
-     *
-     * @return bool
-     */
-    protected function checkFileRecursive(File $file, $options = [])
-    {
-        return !((isset($options['uuid']) && $file->uuid !== $options['uuid'])
-            || (isset($options['with_deleted']) && true === $options['with_deleted'] && $file->isDeleted())
-            || (isset($options['with_completed']) && false === $options['with_completed'] && $file->isCompleted())
-            || (isset($options['regex']) && 0 === preg_match($options['regex'], $file->name)));
     }
 
     /**
