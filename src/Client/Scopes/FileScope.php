@@ -101,7 +101,7 @@ class FileScope extends Scope
         if (file_exists($localPath) && is_file($localPath)) {
             $fileinfo = JFileInfo::make($localPath);
 
-            $localPath = basename($localPath);
+            $localPath = $fileinfo->getPath();
 
             switch ($overwriteMode) {
                 case Jotta::FILE_OVERWRITE_NEVER:
@@ -127,6 +127,8 @@ class FileScope extends Scope
 
         // Prepare API path.
         $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath, ['mode' => 'bin']);
+
+        @mkdir(dirname($localPath));
 
         $f = fopen($localPath, 'w');
 

@@ -376,4 +376,15 @@ class Test013_FileTest extends JottaTestCase
         $this->addToTempList($filename, 'file');
         @unlink($path);
     }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::verify
+     */
+    public function test021_verify_file_local_missing_should_throw_exception()
+    {
+        $filename = Str::random(16).'_013.txt';
+        $this->shouldThrowException(JottaException::class, function () use ($filename) {
+            $this->jotta()->file()->verify($filename, $filename);
+        });
+    }
 }
