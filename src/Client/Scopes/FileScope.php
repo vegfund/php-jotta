@@ -101,8 +101,6 @@ class FileScope extends Scope
         if (file_exists($localPath) && is_file($localPath)) {
             $fileinfo = JFileInfo::make($localPath);
 
-            $localPath = $fileinfo->getPath();
-
             switch ($overwriteMode) {
                 case Jotta::FILE_OVERWRITE_NEVER:
                     return null;
@@ -147,15 +145,10 @@ class FileScope extends Scope
      */
     public function thumbnail($remotePath, $localPath, $size = Jotta::THUMBNAIL_SIZE_MEDIUM)
     {
+        @mkdir(dirname($localPath));
         $f = fopen($localPath, 'w');
 
         $this->request($this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath, ['mode' => 'thumb', 'ts' => $size]), 'get', [], ['save_to' => $f]);
-
-        fclose($f);
-
-        if (!$this->verify($remotePath, $localPath)) {
-            throw new JottaException('File not uploaded.');
-        }
 
         return true;
     }
