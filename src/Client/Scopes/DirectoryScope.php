@@ -83,7 +83,7 @@ class DirectoryScope extends Scope
      *
      * @throws Exception
      *
-     * @return MountPoint
+     * @return MountPoint|Folder
      */
     public function get($remotePath = '', $except = ['files', 'folders'])
     {
@@ -102,7 +102,7 @@ class DirectoryScope extends Scope
      *
      * @throws Exception
      *
-     * @return MountPoint
+     * @return MountPoint|Folder
      */
     public function getWithContents($remotePath = '')
     {
