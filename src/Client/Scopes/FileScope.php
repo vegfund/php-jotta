@@ -106,12 +106,12 @@ class FileScope extends Scope
                     return null;
                     break;
                 case Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT:
-                    if ($file->getMd5() === $fileinfo->getMd5() && $file->getModifed()->timestamp() <= $fileinfo->getMTime()) {
+                    if ($file->getMd5() === $fileinfo->getMd5() && !$file->isNewerThan($localPath)) {
                         return null;
                     }
                     break;
                 case Jotta::FILE_OVERWRITE_IF_NEWER:
-                    if ($file->getModifed()->timestamp() <= $fileinfo->getMTime()) {
+                    if (!$file->isNewerThan($localPath)) {
                         return null;
                     }
                     break;

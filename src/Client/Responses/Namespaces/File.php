@@ -137,7 +137,7 @@ class File extends ResponseNamespace
      */
     public function isNewerThan($file)
     {
-        return $this->getRevision()->modified->getTimestamp() > $file->getMTime();
+        return $this->getRevision()->modified->getTimestamp() > JFileInfo::make($file)->getMTime();
     }
 
     /**
