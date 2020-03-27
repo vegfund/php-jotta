@@ -229,7 +229,7 @@ class FileScope extends Scope
         $requestPath = $this->getPath(Jotta::API_UPLOAD_URL, $this->device, $this->mountPoint, $remotePath);
         $file = JFileInfo::make($localPath);
 
-        $uploaded = $this->serialize($this->request(
+        $this->serialize($this->request(
             $requestPath,
             'post',
             [
