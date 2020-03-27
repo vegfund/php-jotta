@@ -217,20 +217,6 @@ class FileScope extends Scope
     }
 
     /**
-     * @param File $file
-     * @param $overwriteMode
-     *
-     * @return bool
-     */
-    protected function blockOverwrite(File $file, $overwriteMode)
-    {
-        return null !== $file && (($overwriteMode === Jotta::FILE_OVERWRITE_NEVER) ||
-            ($overwriteMode === Jotta::FILE_OVERWRITE_IF_DIFFERENT && !$file->isDifferentThan($localPath)) ||
-            ($overwriteMode === Jotta::FILE_OVERWRITE_IF_NEWER && !$file->isNewerThan($localPath)) ||
-            ($overwriteMode === Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT && (!$file->isDifferentThan($localPath) && !$file->isNewerThan($localPath))));
-    }
-
-    /**
      * @param $localPath
      * @param $remotePath
      *
