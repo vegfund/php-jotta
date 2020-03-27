@@ -353,6 +353,7 @@ class Test013_FileTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::verify
+     *
      * @throws JottaException
      */
     public function test019_verify_file()
