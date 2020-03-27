@@ -236,7 +236,7 @@ class FileScope extends Scope
         $requestPath = $this->getPath(Jotta::API_UPLOAD_URL, $this->device, $this->mountPoint, $remotePath);
         $file = JFileInfo::make($localPath);
 
-        return $this->serialize($this->request(
+        $uploaded = $this->serialize($this->request(
             $requestPath,
             'post',
             [
@@ -252,6 +252,12 @@ class FileScope extends Scope
                 ],
             ]
         ));
+
+        if($this->verify($remotePath, $localPath)) {
+            return $this->get($remotePath);
+        }
+
+        throw new JottaException('File cannot be uploaded.');
     }
 
     /**
