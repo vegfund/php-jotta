@@ -73,6 +73,8 @@ class Test013b_FileUploadTest extends JottaTestCase
         $this->assertTrue($uploaded->isValid());
         $this->assertTrue($this->jotta()->file()->verify($localFile, $localPath));
 
+        $this->assertNull($this->jotta()->file()->upload($localPath, $localFile, Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT));
+
         // 5. Tear down
         $this->addToTempList($localFile, 'file');
         @unlink($localPath);
@@ -156,10 +158,10 @@ class Test013b_FileUploadTest extends JottaTestCase
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
-    public function test007_upload_overwrite_if_different_fail()
+    public function test009_upload_overwrite_if_different_fail()
     {
         // 1. Create local file
-        $localOlderFile = Str::random(24).'_007_older.txt';
+        $localOlderFile = Str::random(24).'_009_older.txt';
         $localOlderPath = $this->tempPath($localOlderFile);
 
         file_put_contents($localOlderPath, Str::random(1024));
@@ -183,6 +185,169 @@ class Test013b_FileUploadTest extends JottaTestCase
 
         $uploaded = $this->jotta()->file()->get($localNewerFile);
         $this->assertSame(JFileInfo::make($localNewerPath)->getMd5(), $uploaded->getMd5());
+
+        // 6. Tear down
+        $this->addToTempList($localOlderFile, 'file');
+        $this->addToTempList($localNewerFile, 'file');
+        @unlink($localNewerPath);
+        @unlink($localOlderPath);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
+     */
+    public function test011_upload_overwrite_if_newer_success()
+    {
+        // 1. Create local (older) file
+        $localOlderFile = Str::random(24).'_011_older.txt';
+        $localOlderPath = $this->tempPath($localOlderFile);
+
+        file_put_contents($localOlderPath, Str::random(1024));
+
+        // 2. Wait 3 seconds
+        sleep(3);
+
+        // 3. Create local (newer) file
+        $localNewerFile = Str::random(24).'_011_newer.txt';
+        $localNewerPath = $this->tempPath($localOlderFile);
+
+        file_put_contents($localOlderPath, Str::random(1024));
+
+        // 4. Upload older file
+        $this->shouldNotThrowException(function () use ($localOlderFile, $localOlderPath) {
+            $this->jotta()->file()->upload($localOlderPath, $localOlderFile);
+        });
+
+        // 5. Upload local (newer) file
+        $this->shouldNotThrowException(function () use ($localOlderFile, $localNewerPath) {
+            $this->jotta()->file()->upload($localNewerPath, $localOlderFile, Jotta::FILE_OVERWRITE_IF_NEWER);
+        });
+
+        $uploaded = $this->jotta()->file()->get($localOlderFile);
+        $this->assertSame(JFileInfo::make($localOlderPath)->getMd5(), $uploaded->getMd5());
+
+        // 6. Tear down
+        $this->addToTempList($localOlderFile, 'file');
+        $this->addToTempList($localNewerFile, 'file');
+        @unlink($localNewerPath);
+        @unlink($localOlderPath);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
+     */
+    public function test013_upload_overwrite_if_newer_fail()
+    {
+        // 1. Create local file
+        $localOlderFile = Str::random(24).'_013_older.txt';
+        $localOlderPath = $this->tempPath($localOlderFile);
+
+        file_put_contents($localOlderPath, Str::random(1024));
+
+        // 2. Wait 3 seconds
+        sleep(3);
+
+        // 3. Create local (newer) file
+        $localNewerFile = $localOlderFile;
+        $localNewerPath = $localOlderPath;
+
+        // 4. Upload newer file
+        $this->shouldNotThrowException(function () use ($localNewerFile, $localNewerPath) {
+            $this->jotta()->file()->upload($localNewerPath, $localNewerFile);
+        });
+
+        // 5. Upload local (older) file
+        $this->shouldNotThrowException(function () use ($localNewerFile, $localOlderPath) {
+            $this->assertNull($this->jotta()->file()->upload($localOlderPath, $localNewerFile, Jotta::FILE_OVERWRITE_IF_NEWER));
+        });
+
+        $uploaded = $this->jotta()->file()->get($localNewerFile);
+        $this->assertSame(JFileInfo::make($localNewerPath)->getMd5(), $uploaded->getMd5());
+
+        // 6. Tear down
+        $this->addToTempList($localOlderFile, 'file');
+        $this->addToTempList($localNewerFile, 'file');
+        @unlink($localNewerPath);
+        @unlink($localOlderPath);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
+     */
+    public function test015_upload_overwrite_if_different_or_newer_success()
+    {
+        // DIFFERENT
+
+        // 1. Create local (older) file
+        $localOlderFile = Str::random(24).'_015_older.txt';
+        $localOlderPath = $this->tempPath($localOlderFile);
+
+        file_put_contents($localOlderPath, Str::random(1024));
+
+        // 2. Wait 3 seconds
+        sleep(3);
+
+        // 3. Create local (newer) file
+        $localNewerFile = Str::random(24).'_015_newer.txt';
+        $localNewerPath = $this->tempPath($localOlderFile);
+
+        file_put_contents($localOlderPath, Str::random(1024));
+
+        // 4. Upload newer file
+        $this->shouldNotThrowException(function () use ($localNewerFile, $localNewerPath) {
+            $this->jotta()->file()->upload($localNewerPath, $localNewerFile);
+        });
+
+        // 5. Upload local (older) file
+        $this->shouldNotThrowException(function () use ($localNewerFile, $localOlderPath) {
+            $this->jotta()->file()->upload($localOlderPath, $localNewerFile, Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT);
+        });
+
+        $uploaded = $this->jotta()->file()->get($localNewerFile);
+        $this->assertSame(JFileInfo::make($localNewerPath)->getMd5(), $uploaded->getMd5());
+
+        // 6. Tear down
+        $this->addToTempList($localOlderFile, 'file');
+        $this->addToTempList($localNewerFile, 'file');
+        @unlink($localNewerPath);
+        @unlink($localOlderPath);
+
+        // NEWER
+
+
+        // 1. Create local (older) file
+        $localOlderFile = Str::random(24).'_011_older.txt';
+        $localOlderPath = $this->tempPath($localOlderFile);
+
+        file_put_contents($localOlderPath, Str::random(1024));
+
+        // 2. Wait 3 seconds
+        sleep(3);
+
+        // 3. Create local (newer) file
+        $localNewerFile = Str::random(24).'_011_newer.txt';
+        $localNewerPath = $this->tempPath($localOlderFile);
+
+        file_put_contents($localOlderPath, Str::random(1024));
+
+        // 4. Upload older file
+        $this->shouldNotThrowException(function () use ($localOlderFile, $localOlderPath) {
+            $this->jotta()->file()->upload($localOlderPath, $localOlderFile);
+        });
+
+        // 5. Upload local (newer) file
+        $this->shouldNotThrowException(function () use ($localOlderFile, $localNewerPath) {
+            $this->jotta()->file()->upload($localNewerPath, $localOlderFile, Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT);
+        });
+
+        $uploaded = $this->jotta()->file()->get($localOlderFile);
+        $this->assertSame(JFileInfo::make($localOlderPath)->getMd5(), $uploaded->getMd5());
 
         // 6. Tear down
         $this->addToTempList($localOlderFile, 'file');
