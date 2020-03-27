@@ -159,7 +159,7 @@ class File extends ResponseNamespace
     {
         $file = JFileInfo::make($file);
 
-        return $this->isValid() && !$this->isNewerThan($file) && !$this->isDifferentThan($file);
+        return $this->isValid() && !$this->isDifferentThan($file);
     }
 
     /**

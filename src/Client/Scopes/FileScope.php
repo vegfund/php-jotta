@@ -13,6 +13,8 @@ use Psr\Http\Message\ResponseInterface;
 use Vegfund\Jotta\Client\Contracts\NamespaceContract;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
+use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
+use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 
@@ -169,14 +171,35 @@ class FileScope extends Scope
             throw new JottaException('File does not exist or not a file.');
         }
 
-        // Don't get metadata if obviously a folder
-        if ('' !== $remotePath) {
-            $remote = $this->get($remotePath);
-            if ($remote instanceof File) {
-                return null;
+        if($remotePath !== '') {
+            $result = $this->serialize($this->request($this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath)));
+            if($result instanceof File) {
+                // overwriting
+                $fileinfo = JFileInfo::make($localPath);
+
+                switch ($overwriteMode) {
+                    case Jotta::FILE_OVERWRITE_NEVER:
+                        return null;
+                        break;
+                    case Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT:
+                        if ($file->getMd5() === $fileinfo->getMd5() && $file->isNewerThan($fileinfo)) {
+                            return null;
+                        }
+                        break;
+                    case Jotta::FILE_OVERWRITE_IF_NEWER:
+                        if ($file->isNewerThan($localPath)) {
+                            return null;
+                        }
+                        break;
+                    case Jotta::FILE_OVERWRITE_IF_DIFFERENT:
+                        if ($file->getMd5() === $fileinfo->getMd5()) {
+                            return null;
+                        }
+                        break;
+                }
+            } elseif ($result instanceof Folder || $result instanceof MountPoint) {
+                $remotePath = implode('/', [$remotePath, basename($localPath)]);
             }
-        } else {
-            $remotePath = basename($localPath);
         }
 
         return $this->makeUpload($localPath, $remotePath);

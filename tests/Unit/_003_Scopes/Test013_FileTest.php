@@ -181,6 +181,17 @@ class Test013_FileTest extends JottaTestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
+     */
+    public function test011a_upload_no_file_should_throw_exception()
+    {
+        $path = $this->tempPath(Str::random(16).'.php');
+        $this->shouldThrowException(JottaException::class, function () use ($path) {
+            $this->jotta()->file()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->upload($path);
+        });
+    }
+
+    /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::move
      *
      * @throws JottaException

@@ -227,6 +227,96 @@ class Test013a_FileDownloadTest extends JottaTestCase
         $this->assertTrue(file_exists($localDestPath));
         $this->assertNotSame(JFileInfo::make($localSourcePath)->getMd5(), JFileInfo::make($localDestPath)->getMd5());
 
+        $this->assertNotNull($this->jotta()->file()->download($localSourceFile, $localDestPath, Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT));
+
+        // 99. Tear down
+        $this->addToTempList($localSourceFile, 'file');
+
+        @unlink($localSourcePath);
+        @unlink($localDestPath);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::download
+     * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
+     */
+    public function test009_download_overwrite_if_different_success()
+    {
+        // 0. Create local destination folder
+        $localSourceFile = Str::random(12).'.txt';
+        $localDestFolder = $this->tempPath(Str::random(24).'_009_to');
+        $localDestPath = $localDestFolder.DIRECTORY_SEPARATOR.$localSourceFile;
+
+        // 0. First, create the local destination file
+        @mkdir($localDestFolder);
+        $f = fopen($localDestPath, 'w');
+        for ($i = 0; $i < 256 * 1024; $i += 512) {
+            fwrite($f, Str::random(512));
+        }
+        fclose($f);
+
+        sleep(3);
+
+        // 1. Create local source folder and file
+        $localSourceFolder = $this->tempPath(Str::random(24).'_009_from');
+        $localSourcePath = $localSourceFolder.DIRECTORY_SEPARATOR.$localSourceFile;
+
+        @mkdir($localSourceFolder);
+        $f = fopen($localSourcePath, 'w');
+        for ($i = 0; $i < 256 * 1024; $i += 512) {
+            fwrite($f, Str::random(512));
+        }
+        fclose($f);
+
+        // 3. Upload
+        $this->jotta()->file()->upload($localSourcePath);
+        $this->assertTrue($this->jotta()->file()->verify($localSourceFile, $localSourcePath));
+
+        // 4. Try downloading
+        $this->jotta()->file()->download($localSourceFile, $localDestPath, Jotta::FILE_OVERWRITE_IF_DIFFERENT);
+        $this->assertTrue(file_exists($localDestPath));
+        $this->assertSame(JFileInfo::make($localSourcePath)->getMd5(), JFileInfo::make($localDestPath)->getMd5());
+
+        // 99. Tear down
+        $this->addToTempList($localSourceFile, 'file');
+
+        @unlink($localSourcePath);
+        @unlink($localDestPath);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::download
+     * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
+     */
+    public function test009a_download_overwrite_if_different_fail()
+    {
+        // 0. Create local destination folder
+        $localSourceFile = Str::random(12).'.txt';
+        $localDestFolder = $this->tempPath(Str::random(24).'_009a_to');
+        $localDestPath = $localDestFolder.DIRECTORY_SEPARATOR.$localSourceFile;
+
+        // 1. Create local source folder and file
+        $localSourceFolder = $this->tempPath(Str::random(24).'_009a_from');
+        $localSourcePath = $localSourceFolder.DIRECTORY_SEPARATOR.$localSourceFile;
+
+        @mkdir($localSourceFolder);
+        $f = fopen($localSourcePath, 'w');
+        for ($i = 0; $i < 256 * 1024; $i += 512) {
+            fwrite($f, Str::random(512));
+        }
+        fclose($f);
+
+        @mkdir($localDestFolder);
+        copy($localSourcePath, $localDestPath);
+
+        // 3. Upload
+        $this->jotta()->file()->upload($localSourcePath);
+        $this->assertTrue($this->jotta()->file()->verify($localSourceFile, $localSourcePath));
+
+        // 4. Try downloading
+        $this->assertNull($this->jotta()->file()->download($localSourceFile, $localDestPath, Jotta::FILE_OVERWRITE_IF_DIFFERENT));
+        $this->assertNotNull($this->jotta()->file()->download($localSourceFile, $localDestPath, Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT));
+
         // 99. Tear down
         $this->addToTempList($localSourceFile, 'file');
 

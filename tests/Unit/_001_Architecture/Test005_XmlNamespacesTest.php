@@ -461,6 +461,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isDifferentThan
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isSameAs
      *
      * @throws JottaException
      */
@@ -485,6 +486,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
         $this->assertInstanceOf(File::class, $serialized);
         $this->assertFalse($serialized->isDifferentThan($fileMock));
+        $this->assertTrue($serialized->isSameAs($fileMock));
 
         // SAME SIZE, DIFFERENT MD5
 
@@ -503,6 +505,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
         $this->assertInstanceOf(File::class, $serialized);
         $this->assertTrue($serialized->isDifferentThan($fileMock));
+        $this->assertFalse($serialized->isSameAs($fileMock));
 
         // SAME MD5, DIFFERENT SIZE
 
@@ -539,6 +542,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
 
         $this->assertInstanceOf(File::class, $serialized);
         $this->assertTrue($serialized->isDifferentThan($fileMock));
+        $this->assertFalse($serialized->isSameAs($fileMock));
     }
 
     /**
