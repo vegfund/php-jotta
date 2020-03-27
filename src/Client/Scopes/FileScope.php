@@ -200,6 +200,8 @@ class FileScope extends Scope
             } elseif ($result instanceof Folder || $result instanceof MountPoint) {
                 $remotePath = implode('/', [$remotePath, basename($localPath)]);
             }
+        } else {
+            $remotePath = implode('/', [$remotePath, basename($localPath)]);
         }
 
         return $this->makeUpload($localPath, $remotePath);
