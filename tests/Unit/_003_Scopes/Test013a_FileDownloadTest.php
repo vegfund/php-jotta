@@ -12,6 +12,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
 {
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::download
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test001_download()
@@ -50,6 +51,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::download
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test003_download_overwrite_never()
@@ -94,6 +96,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::download
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test005_download_overwrite_always()
@@ -140,6 +143,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::download
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test007_download_overwrite_if_newer_success()
@@ -188,6 +192,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::download
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test007a_download_overwrite_if_newer_fail()
@@ -238,6 +243,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::download
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test009_download_overwrite_if_different_success()
@@ -286,6 +292,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::download
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test009a_download_overwrite_if_different_fail()
@@ -326,6 +333,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::thumbnail
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test017_download_thumbnail()
@@ -357,7 +365,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
         $this->assertTrue(file_exists($localThumbnailWm));
         $image = Image::load($localThumbnailWm);
         $this->assertSame(240, $image->getWidth());
-        $this->assertSame(240*6/8, $image->getHeight());
+        $this->assertSame(240 * 6 / 8, $image->getHeight());
         $this->assertSame('image/jpeg', mime_content_type($localThumbnailWm));
 
         // 3. Thumbnail size large (WL)
@@ -366,7 +374,7 @@ class Test013a_FileDownloadTest extends JottaTestCase
         $this->assertTrue(file_exists($localThumbnailWl));
         $image = Image::load($localThumbnailWl);
         $this->assertSame(560, $image->getWidth());
-        $this->assertSame(560*6/8, $image->getHeight());
+        $this->assertSame(560 * 6 / 8, $image->getHeight());
         $this->assertSame('image/jpeg', mime_content_type($localThumbnailWl));
 
         // 3. Thumbnail size extra large (WXL)
@@ -375,14 +383,14 @@ class Test013a_FileDownloadTest extends JottaTestCase
         $this->assertTrue(file_exists($localThumbnailWxl));
         $image = Image::load($localThumbnailWxl);
         $this->assertSame(1024, $image->getWidth());
-        $this->assertSame(1024*6/8, $image->getHeight());
+        $this->assertSame(1024 * 6 / 8, $image->getHeight());
         $this->assertSame('image/jpeg', mime_content_type($localThumbnailWxl));
 
         // 99. Tear down
         $this->addToTempList($localFilename, 'file');
         @unlink($localThumbnailWs);
-        @unlink($localThumbnailWm);;
-        @unlink($localThumbnailWl);;
+        @unlink($localThumbnailWm);
+        @unlink($localThumbnailWl);
         @unlink($localThumbnailWxl);
         @unlink($this->tempPath($localFilename));
     }
