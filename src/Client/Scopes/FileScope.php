@@ -174,33 +174,40 @@ class FileScope extends Scope
         }
 
         if ($remotePath !== '') {
-            $result = $this->serialize($this->request($this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath)));
-            if ($result instanceof File) {
-                // overwriting
-                $fileinfo = JFileInfo::make($localPath);
+            try {
+                $result = $this->serialize($this->request($this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath)));
 
-                switch ($overwriteMode) {
-                    case Jotta::FILE_OVERWRITE_NEVER:
-                        return null;
-                        break;
-                    case Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT:
-                        if ($file->getMd5() === $fileinfo->getMd5() && $file->isNewerThan($fileinfo)) {
+
+                if ($result instanceof File) {
+                    // overwriting
+                    $fileinfo = JFileInfo::make($localPath);
+
+                    switch ($overwriteMode) {
+                        case Jotta::FILE_OVERWRITE_NEVER:
                             return null;
-                        }
-                        break;
-                    case Jotta::FILE_OVERWRITE_IF_NEWER:
-                        if ($file->isNewerThan($localPath)) {
-                            return null;
-                        }
-                        break;
-                    case Jotta::FILE_OVERWRITE_IF_DIFFERENT:
-                        if ($file->getMd5() === $fileinfo->getMd5()) {
-                            return null;
-                        }
-                        break;
+                            break;
+                        case Jotta::FILE_OVERWRITE_IF_NEWER_OR_DIFFERENT:
+                            if ($result->getMd5() === $fileinfo->getMd5() && $result->isNewerThan($fileinfo)) {
+                                return null;
+                            }
+                            break;
+                        case Jotta::FILE_OVERWRITE_IF_NEWER:
+                            if ($result->isNewerThan($localPath)) {
+                                return null;
+                            }
+                            break;
+                        case Jotta::FILE_OVERWRITE_IF_DIFFERENT:
+                            if ($result->getMd5() === $fileinfo->getMd5()) {
+                                return null;
+                            }
+                            break;
+                    }
                 }
-            } elseif ($result instanceof Folder || $result instanceof MountPoint) {
-                $remotePath = implode('/', [$remotePath, basename($localPath)]);
+                elseif ($result instanceof Folder || $result instanceof MountPoint) {
+                    $remotePath = implode('/', [$remotePath, basename($localPath)]);
+                }
+            } catch (Exception $e) {
+                // File doesn't exist on remote storage
             }
         } else {
             $remotePath = implode('/', [$remotePath, basename($localPath)]);
