@@ -51,10 +51,14 @@ class JottaTestCase extends TestCase
 
         @unlink(__DIR__.DIRECTORY_SEPARATOR.'temp.json');
 
-        $files = scandir($this->tempPath());
-        foreach ($files as $file) {
-            if ($file !== '.' && $file !== '..' && $file !== '.gitignore') {
-                @unlink($file);
+        $items = scandir($this->tempPath());
+        foreach ($items as $item) {
+            if ($item !== '.' && $item !== '..' && $item !== '.gitignore') {
+                if(is_file($item)) {
+                    @unlink($this->tempPath($item));
+                } else {
+                    @rmdir($this->tempPath($item));
+                }
             }
         }
 
