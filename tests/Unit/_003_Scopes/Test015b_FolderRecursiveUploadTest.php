@@ -58,7 +58,7 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
     {
         // 1. Create remote folder for storing data
         $localPath = realpath(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src');
-        $folderName = Str::random(12).'_test007';
+        $folderName = Str::random(12).'_test007_upload_rec';
 
         $remoteFolder = $this->jotta()->folder()->create($folderName);
         $this->assertInstanceOf(Folder::class, $remoteFolder);
@@ -93,11 +93,54 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
         }
     }
 
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::listRecursive
+     * @throws JottaException
+     * @throws \Sabre\Xml\ParseException
+     */
     public function test009_list_recursive()
     {
         // 1. First, find folder from the previous test
-        $folders = $this->jotta()->mountPoint()->list();
-//        var_dump($folders); die();
+        $folders = $this->jotta()->mountPoint()->regex('/_test007_upload_rec$/')->list();
+        $this->assertTrue(count($folders) >= 1);
+
+        $localPath = realpath(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src');
+        $localTree = [basename($localPath) => $this->getExpectedDirTree($localPath)];
+
+        $rootFolderName = array_keys($folders)[0];
+
+        $listRecursive = $this->jotta()->folder()->listRecursive($rootFolderName);
+        $this->assertSame($localTree, $listRecursive);
+
+        // 2. Tear down
+        $this->addToTempList($rootFolderName, 'folder');
+    }
+
+    /**
+     * @param $localPath
+     * @param array $tree
+     * @return array
+     */
+    protected function getExpectedDirTree($localPath, $tree = [])
+    {
+        $items = scandir($localPath);
+        foreach($items as $item) {
+            if($item === '.' || $item === '..') {
+                continue;
+            }
+
+            if(is_dir($localPath.DIRECTORY_SEPARATOR.$item)) {
+                $tree[$item] = $this->getExpectedDirTree($localPath.DIRECTORY_SEPARATOR.$item);
+            }
+
+            if(is_file($localPath.DIRECTORY_SEPARATOR.$item)) {
+                $tree[] = $item;
+            }
+        }
+
+        asort($tree);
+
+        return $tree;
     }
 
     /**

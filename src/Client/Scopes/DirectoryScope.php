@@ -271,32 +271,36 @@ class DirectoryScope extends Scope
 
     /**
      * @param $remotePath
-     * @param array $options
      * @param array $recursive
      *
-     * @throws Exception
-     * @throws ParseException
-     *
+     * @param bool $responseObjects
      * @return array
+     * @throws ParseException
      */
-    public function listRecursive($remotePath, $options = [], $recursive = [])
+    public function listRecursive($remotePath, $recursive = [], $responseObjects = false)
     {
-        $folder = $this->get($remotePath);
+        $folder = $this->getWithContents($remotePath);
 
         foreach ($folder->getFolders() as $childFolder) {
             if (is_array($childFolder)) {
                 $childFolder = $childFolder['value'];
             }
             if (!$folder->isDeleted()) {
-                if ([] !== ($subtree = $this->listRecursive($this->normalizePathSegment($remotePath).'/'.$this->normalizePathSegment($childFolder->name), $options, $recursive))) {
+                if ([] !== ($subtree = $this->listRecursive($this->normalizePathSegment($remotePath).'/'.$this->normalizePathSegment($childFolder->name)))) {
                     $recursive[$childFolder->name] = $subtree;
                 }
             }
         }
 
         foreach ($folder->getFiles() as $file) {
-            $recursive[] = $file;
+            if($responseObjects) {
+                $recursive[] = $file;
+            } else {
+                $recursive[] = $file->getName();
+            }
         }
+
+        asort($recursive);
 
         return $recursive;
     }
