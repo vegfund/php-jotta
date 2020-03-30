@@ -8,7 +8,6 @@ php:
   - 7.3
 
 install:
-  - travis settings maximum_number_of_builds --set 1
   - composer update --prefer-source --no-interaction
 
 script:
