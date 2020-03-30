@@ -4,7 +4,7 @@ namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
 use Illuminate\Support\Str;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
-use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
+use Vegfund\Jotta\Client\Responses\Namespaces\Revision;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
@@ -22,9 +22,9 @@ class Test005_XmlNamespacesTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::file
      * @covers \Vegfund\Jotta\Client\Responses\ElementMapper::currentRevision
-     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision::xmlDeserialize
-     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision::__call
-     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision::__get
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Revision::xmlDeserialize
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Revision::__call
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\Revision::__get
      *
      * @throws \Sabre\Xml\ParseException
      */
@@ -36,7 +36,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
         $serialized = XmlResponseSerializer::parse($body, 'auto');
 
         $this->assertInstanceOf(File::class, $serialized);
-        $this->assertInstanceOf(CurrentRevision::class, $serialized->getCurrentRevision());
+        $this->assertInstanceOf(Revision::class, $serialized->getCurrentRevision());
 
         $currentRevision = $serialized->getCurrentRevision();
 
@@ -95,7 +95,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
         $this->assertInstanceOf(File::class, $serialized);
         $this->assertIsString($serialized->getPath());
         $this->assertSame($serialized->getPath(), $serialized->path);
-        $this->assertInstanceOf(CurrentRevision::class, $serialized->getCurrentRevision());
+        $this->assertInstanceOf(Revision::class, $serialized->getCurrentRevision());
         $this->assertNotNull($serialized->getAttribute('uuid'));
         $this->assertSame($md5, $serialized->getMd5());
         $this->assertSame($size, $serialized->getSize());
@@ -129,7 +129,7 @@ class Test005_XmlNamespacesTest extends JottaTestCase
         $this->assertInstanceOf(File::class, $serialized);
         $this->assertIsString($serialized->getPath());
         $this->assertSame($serialized->getPath(), $serialized->path);
-        $this->assertInstanceOf(CurrentRevision::class, $serialized->getCurrentRevision());
+        $this->assertInstanceOf(Revision::class, $serialized->getCurrentRevision());
         $this->assertNotNull($serialized->getAttribute('uuid'));
         $this->assertSame($md5, $serialized->getMd5());
         $this->assertSame($size, $serialized->getSize());

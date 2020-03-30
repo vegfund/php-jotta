@@ -10,7 +10,7 @@ namespace Vegfund\Jotta\Client\Responses;
 
 use function Sabre\Xml\Deserializer\repeatingElements;
 use Sabre\Xml\Reader;
-use Vegfund\Jotta\Client\Responses\Namespaces\CurrentRevision;
+use Vegfund\Jotta\Client\Responses\Namespaces\Revision;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
@@ -89,8 +89,12 @@ class ElementMapper
             },
             '{}file'            => File::class,
             '{}metadata'        => Metadata::class,
-            '{}currentRevision' => CurrentRevision::class,
-            '{}latestRevision'  => CurrentRevision::class,
+            '{}revisions' => function (Reader $reader) {
+                return repeatingElements($reader, '{}revision');
+            },
+            '{}revision' => Revision::class,
+            '{}currentRevision' => Revision::class,
+            '{}latestRevision'  => Revision::class,
         ];
     }
 
@@ -109,8 +113,12 @@ class ElementMapper
             },
             '{}file'     => File::class,
             '{}metadata' => Metadata::class,
-            '{}currentRevision' => CurrentRevision::class,
-            '{}latestRevision'  => CurrentRevision::class,
+            '{}revisions' => function (Reader $reader) {
+                return repeatingElements($reader, '{}revision');
+            },
+            '{}revision' => Revision::class,
+            '{}currentRevision' => Revision::class,
+            '{}latestRevision'  => Revision::class,
         ];
     }
 
@@ -121,8 +129,12 @@ class ElementMapper
     {
         return [
             '{}file'            => File::class,
-            '{}currentRevision' => CurrentRevision::class,
-            '{}latestRevision'  => CurrentRevision::class,
+            '{}revisions' => function (Reader $reader) {
+                return repeatingElements($reader, '{}revision');
+            },
+            '{}revision' => Revision::class,
+            '{}currentRevision' => Revision::class,
+            '{}latestRevision'  => Revision::class,
             '{}metadata'        => Metadata::class,
         ];
     }

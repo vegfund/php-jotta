@@ -47,12 +47,12 @@ class File extends ResponseNamespace
     public $host;
 
     /**
-     * @var CurrentRevision
+     * @var Revision
      */
     public $currentRevision;
 
     /**
-     * @var CurrentRevision
+     * @var Revision
      */
     public $latestRevision;
 
@@ -197,7 +197,7 @@ class File extends ResponseNamespace
     }
 
     /**
-     * @return CurrentRevision
+     * @return Revision
      */
     protected function getRevision()
     {

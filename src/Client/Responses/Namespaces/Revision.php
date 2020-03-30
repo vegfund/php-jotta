@@ -16,7 +16,7 @@ use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 /**
  * Class CurrentRevision.
  */
-class CurrentRevision extends ResponseNamespace
+class Revision extends ResponseNamespace
 {
     /**
      * @var string
