@@ -59,6 +59,11 @@ class File extends ResponseNamespace
     /**
      * @var array
      */
+    public $revisions;
+
+    /**
+     * @var array
+     */
     protected $keyValueMap = [
         'name',
         'uuid',
@@ -74,6 +79,13 @@ class File extends ResponseNamespace
         'currentRevision',
         'latestRevision',
         'metadata',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $enumMap = [
+        'revisions'
     ];
 
     /**
@@ -197,6 +209,7 @@ class File extends ResponseNamespace
     }
 
     /**
+     * @todo Get from revisions list
      * @return Revision
      */
     protected function getRevision()

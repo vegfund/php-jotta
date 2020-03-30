@@ -97,7 +97,7 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
     {
         // 1. First, find folder from the previous test
         $folders = $this->jotta()->mountPoint()->list();
-        var_dump($folders); die();
+//        var_dump($folders); die();
     }
 
     /**

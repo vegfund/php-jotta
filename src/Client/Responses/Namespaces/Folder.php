@@ -56,6 +56,7 @@ class Folder extends ResponseNamespace
      */
     protected $objectValueMap = [
         'currentRevision',
+        'latestRevision',
         'metadata',
     ];
 

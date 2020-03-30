@@ -14,7 +14,7 @@ use Sabre\Xml\Reader;
 use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 
 /**
- * Class CurrentRevision.
+ * Class Revision.
  */
 class Revision extends ResponseNamespace
 {
