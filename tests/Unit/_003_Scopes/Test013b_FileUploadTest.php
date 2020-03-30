@@ -16,6 +16,7 @@ class Test013b_FileUploadTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test001_upload_when_path_is_a_folder()
@@ -49,6 +50,7 @@ class Test013b_FileUploadTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test003_upload_overwrite_always_success()
@@ -85,6 +87,7 @@ class Test013b_FileUploadTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test005_upload_overwrite_never()
@@ -116,6 +119,7 @@ class Test013b_FileUploadTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test007_upload_overwrite_if_different_success()
@@ -158,6 +162,7 @@ class Test013b_FileUploadTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test009_upload_overwrite_if_different_fail()
@@ -198,6 +203,7 @@ class Test013b_FileUploadTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test011_upload_overwrite_if_newer_success()
@@ -240,6 +246,7 @@ class Test013b_FileUploadTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test013_upload_overwrite_if_newer_fail()
@@ -280,6 +287,7 @@ class Test013b_FileUploadTest extends JottaTestCase
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
      * @covers \Vegfund\Jotta\Client\Scopes\FileScope::makeUpload
+     *
      * @throws \Vegfund\Jotta\Client\Exceptions\JottaException
      */
     public function test015_upload_overwrite_if_different_or_newer_success()
@@ -321,7 +329,6 @@ class Test013b_FileUploadTest extends JottaTestCase
         @unlink($localOlderPath);
 
         // NEWER
-
 
         // 1. Create local (older) file
         $localOlderFile = Str::random(24).'_011_older.txt';

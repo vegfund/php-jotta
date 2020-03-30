@@ -85,7 +85,7 @@ class File extends ResponseNamespace
      * @var array
      */
     protected $enumMap = [
-        'revisions'
+        'revisions',
     ];
 
     /**
@@ -132,7 +132,8 @@ class File extends ResponseNamespace
         try {
             return self::STATE_CORRUPT === $this->getRevision()->state;
         } catch (\Exception $e) {
-            var_dump($this); die();
+            var_dump($this);
+            die();
         }
     }
 
@@ -210,6 +211,7 @@ class File extends ResponseNamespace
 
     /**
      * @todo Get from revisions list
+     *
      * @return Revision
      */
     protected function getRevision()

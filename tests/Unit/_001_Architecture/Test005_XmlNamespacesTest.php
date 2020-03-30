@@ -4,12 +4,12 @@ namespace Vegfund\Jotta\Tests\Unit\_001_Architecture;
 
 use Illuminate\Support\Str;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
-use Vegfund\Jotta\Client\Responses\Namespaces\Revision;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
+use Vegfund\Jotta\Client\Responses\Namespaces\Revision;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
 use Vegfund\Jotta\Client\Responses\ResponseNamespace;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
