@@ -52,6 +52,7 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::upload
+     *
      * @throws JottaException
      */
     public function test007_upload_folder_recursive_src()
@@ -69,8 +70,8 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
         // 3. Start asserting
         $expected = [];
         $this->getExpectedDirContents($localPath, $expected);
-        foreach($expected as $expectedPath => $expectedFolder) {
-            $expectedPath = $folderName . '/' . basename($localPath) . str_replace($localPath, '', $expectedPath);
+        foreach ($expected as $expectedPath => $expectedFolder) {
+            $expectedPath = $folderName.'/'.basename($localPath).str_replace($localPath, '', $expectedPath);
 
             // 1. Assert folder exists
             $folder = $this->jotta()->folder()->get($expectedPath);
@@ -79,9 +80,9 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
             $filesCount = 0;
 
             // 2. Assert folder has all files
-            foreach($expectedFolder as $item) {
-                if($item instanceof JFileInfo || $item instanceof \SplFileInfo) {
-                    $expectedFilePath = $expectedPath . '/' . $item->getFilename();
+            foreach ($expectedFolder as $item) {
+                if ($item instanceof JFileInfo || $item instanceof \SplFileInfo) {
+                    $expectedFilePath = $expectedPath.'/'.$item->getFilename();
                     $this->assertTrue($this->jotta()->file()->verify($expectedFilePath, $item->getRealPath()));
 
                     $filesCount++;
@@ -95,6 +96,7 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
 
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::listRecursive
+     *
      * @throws JottaException
      * @throws \Sabre\Xml\ParseException
      */
@@ -119,21 +121,22 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
     /**
      * @param $localPath
      * @param array $tree
+     *
      * @return array
      */
     protected function getExpectedDirTree($localPath, $tree = [])
     {
         $items = scandir($localPath);
-        foreach($items as $item) {
-            if($item === '.' || $item === '..') {
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
                 continue;
             }
 
-            if(is_dir($localPath.DIRECTORY_SEPARATOR.$item)) {
+            if (is_dir($localPath.DIRECTORY_SEPARATOR.$item)) {
                 $tree[$item] = $this->getExpectedDirTree($localPath.DIRECTORY_SEPARATOR.$item);
             }
 
-            if(is_file($localPath.DIRECTORY_SEPARATOR.$item)) {
+            if (is_file($localPath.DIRECTORY_SEPARATOR.$item)) {
                 $tree[] = $item;
             }
         }

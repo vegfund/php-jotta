@@ -40,7 +40,7 @@ class FileScope extends Scope
         $result = $this->serialize($response);
 
         if (!($result instanceof File)) {
-            if(null !== $result) {
+            if (null !== $result) {
                 throw new JottaException('This is not a remote file.');
             }
 
@@ -181,7 +181,6 @@ class FileScope extends Scope
             try {
                 $result = $this->serialize($this->request($this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $remotePath)));
 
-
                 if ($result instanceof File) {
                     // overwriting
                     $fileinfo = JFileInfo::make($localPath);
@@ -206,8 +205,7 @@ class FileScope extends Scope
                             }
                             break;
                     }
-                }
-                elseif ($result instanceof Folder || $result instanceof MountPoint) {
+                } elseif ($result instanceof Folder || $result instanceof MountPoint) {
                     $remotePath = implode('/', [$remotePath, basename($localPath)]);
                 }
             } catch (Exception $e) {
@@ -250,7 +248,7 @@ class FileScope extends Scope
             ]
         ));
 
-        if($this->verify($remotePath, $localPath)) {
+        if ($this->verify($remotePath, $localPath)) {
             return $this->get($remotePath);
         }
 

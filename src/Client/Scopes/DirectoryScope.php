@@ -94,7 +94,7 @@ class DirectoryScope extends Scope
 
         $serialized = $this->serialize($response);
 
-        if(null !== $serialized) {
+        if (null !== $serialized) {
             return $serialized->except($except);
         }
 
@@ -214,7 +214,7 @@ class DirectoryScope extends Scope
 
         foreach ($contents as $path => $files) {
             // Get path relative to script
-            $relativePath = $this->normalizePathSegment($remotePath . '/' . $this->getRelativePath($path));
+            $relativePath = $this->normalizePathSegment($remotePath.'/'.$this->getRelativePath($path));
 
             $threwExceptions = $this->shouldThrowExceptions;
             $this->withoutExceptions();
@@ -253,7 +253,7 @@ class DirectoryScope extends Scope
              * @var \SplFileInfo
              */
             foreach ($files as $file) {
-                $fileRelativePath = $this->normalizePathSegment($remotePath . '/' . $this->getRelativePath($path));
+                $fileRelativePath = $this->normalizePathSegment($remotePath.'/'.$this->getRelativePath($path));
 
                 try {
                     $fileScope->upload($file->getRealPath(), $fileRelativePath, $overwriteMode);
@@ -272,10 +272,11 @@ class DirectoryScope extends Scope
     /**
      * @param $remotePath
      * @param array $recursive
+     * @param bool  $responseObjects
      *
-     * @param bool $responseObjects
-     * @return array
      * @throws ParseException
+     *
+     * @return array
      */
     public function listRecursive($remotePath, $recursive = [], $responseObjects = false)
     {
@@ -293,7 +294,7 @@ class DirectoryScope extends Scope
         }
 
         foreach ($folder->getFiles() as $file) {
-            if($responseObjects) {
+            if ($responseObjects) {
                 $recursive[] = $file;
             } else {
                 $recursive[] = $file->getName();

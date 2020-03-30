@@ -54,7 +54,7 @@ class JottaTestCase extends TestCase
         $items = scandir($this->tempPath());
         foreach ($items as $item) {
             if ($item !== '.' && $item !== '..' && $item !== '.gitignore') {
-                if(is_file($item)) {
+                if (is_file($item)) {
                     @unlink($this->tempPath($item));
                 } else {
                     @rmdir($this->tempPath($item));

@@ -112,6 +112,7 @@ trait DirectoryScopeConfig
 
     /**
      * @param bool $incomplete
+     *
      * @return $this
      */
     public function incomplete($incomplete = false)

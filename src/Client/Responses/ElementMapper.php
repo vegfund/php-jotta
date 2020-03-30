@@ -10,12 +10,12 @@ namespace Vegfund\Jotta\Client\Responses;
 
 use function Sabre\Xml\Deserializer\repeatingElements;
 use Sabre\Xml\Reader;
-use Vegfund\Jotta\Client\Responses\Namespaces\Revision;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
+use Vegfund\Jotta\Client\Responses\Namespaces\Revision;
 use Vegfund\Jotta\Client\Responses\Namespaces\User;
 
 /**
@@ -89,10 +89,10 @@ class ElementMapper
             },
             '{}file'            => File::class,
             '{}metadata'        => Metadata::class,
-            '{}revisions' => function (Reader $reader) {
+            '{}revisions'       => function (Reader $reader) {
                 return repeatingElements($reader, '{}revision');
             },
-            '{}revision' => Revision::class,
+            '{}revision'        => Revision::class,
             '{}currentRevision' => Revision::class,
             '{}latestRevision'  => Revision::class,
         ];
@@ -111,12 +111,12 @@ class ElementMapper
             '{}files'  => function (Reader $reader) {
                 return repeatingElements($reader, '{}file');
             },
-            '{}file'     => File::class,
-            '{}metadata' => Metadata::class,
+            '{}file'      => File::class,
+            '{}metadata'  => Metadata::class,
             '{}revisions' => function (Reader $reader) {
                 return repeatingElements($reader, '{}revision');
             },
-            '{}revision' => Revision::class,
+            '{}revision'        => Revision::class,
             '{}currentRevision' => Revision::class,
             '{}latestRevision'  => Revision::class,
         ];
@@ -129,10 +129,10 @@ class ElementMapper
     {
         return [
             '{}file'            => File::class,
-            '{}revisions' => function (Reader $reader) {
+            '{}revisions'       => function (Reader $reader) {
                 return repeatingElements($reader, '{}revision');
             },
-            '{}revision' => Revision::class,
+            '{}revision'        => Revision::class,
             '{}currentRevision' => Revision::class,
             '{}latestRevision'  => Revision::class,
             '{}metadata'        => Metadata::class,
