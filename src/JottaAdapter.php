@@ -8,14 +8,34 @@
 
 namespace Vegfund\Jotta;
 
+use Exception;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Config;
+use Sabre\Xml\ParseException;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
+use Vegfund\Jotta\Traits\PathTrait;
 
 /**
  * Class JottaAdapter.
  */
 class JottaAdapter extends AbstractAdapter
 {
+    use PathTrait;
+
+    /**
+     * @var JottaClient
+     */
+    protected $client;
+
+    /**
+     * JottaAdapter constructor.
+     * @param JottaClient $client
+     */
+    public function __construct(JottaClient $client)
+    {
+        $this->client = $client;
+    }
+
     /**
      * Write a new file.
      *
@@ -82,7 +102,17 @@ class JottaAdapter extends AbstractAdapter
      */
     public function rename($path, $newpath)
     {
-        // TODO: Implement rename() method.
+        $mountPointFrom = $this->getMountPointFromPath($path);
+        $mountPointTo = $this->getMountPointFromPath($newpath);
+        $pathFrom = $this->stripMountPointFromPath($path);
+        $pathTo = $this->stripMountPointFromPath($newpath);
+
+        try {
+            $this->client->file()->setMountPoint($mountPointFrom)->rename($pathFrom, $pathTo, $mountPointTo);
+            return true;
+        } catch (JottaException $e) {} catch (Exception $e) {}
+
+        return false;
     }
 
     /**
@@ -131,7 +161,15 @@ class JottaAdapter extends AbstractAdapter
      */
     public function createDir($dirname, Config $config)
     {
-        // TODO: Implement createDir() method.
+        $mountPoint = $this->getMountPointFromPath($dirname);
+        $path = $this->stripMountPointFromPath($dirname);
+
+        try {
+            $folder = $this->client->directory()->setMountPoint($mountPoint)->create($path);
+            return ['path' => $dirname, 'type' => 'dir'];
+        } catch (JottaException $e) {} catch (Exception $e) {}
+
+        return false;
     }
 
     /**
@@ -152,11 +190,18 @@ class JottaAdapter extends AbstractAdapter
      *
      * @param string $path
      *
-     * @return null|array|bool
+     * @return bool
      */
     public function has($path)
     {
-        // TODO: Implement has() method.
+        $mountPoint = $this->getMountPointFromPath($path);
+        $path = $this->stripMountPointFromPath($path);
+
+        try {
+            return null !== $this->client->file()->setMountPoint($mountPoint)->verify($path);
+        } catch (JottaException $e) {} catch (Exception $e) {}
+
+        return false;
     }
 
     /**
@@ -187,13 +232,29 @@ class JottaAdapter extends AbstractAdapter
      * List contents of a directory.
      *
      * @param string $directory
-     * @param bool   $recursive
+     * @param bool $recursive
      *
      * @return array
+     * @throws JottaException
+     * @throws ParseException
+     * @throws Exception
      */
     public function listContents($directory = '', $recursive = false)
     {
-        // TODO: Implement listContents() method.
+        $mountPoint = $this->getMountPointFromPath($directory);
+        $path = $this->stripMountPointFromPath($directory);
+
+        if($path === '') {
+            $scope = $this->client->mountPoint()->setMountPoint($mountPoint);
+        } else {
+            $scope = $this->client->folder()->setMountPoint($mountPoint);
+        }
+
+        if ($recursive) {
+            return $scope->listRecursive($path);
+        } else {
+            return $scope->list($path);
+        }
     }
 
     /**
@@ -217,7 +278,14 @@ class JottaAdapter extends AbstractAdapter
      */
     public function getSize($path)
     {
-        // TODO: Implement getSize() method.
+        $mountPoint = $this->getMountPointFromPath($directory);
+        $path = $this->stripMountPointFromPath($directory);
+
+        try {
+            return ['size' => $this->client->file()->setMountPoint($mountPoint)->get($path)->getSize()];
+        } catch (JottaException $e) {} catch (Exception $e) {}
+
+        return false;
     }
 
     /**
@@ -229,7 +297,14 @@ class JottaAdapter extends AbstractAdapter
      */
     public function getMimetype($path)
     {
-        // TODO: Implement getMimetype() method.
+        $mountPoint = $this->getMountPointFromPath($directory);
+        $path = $this->stripMountPointFromPath($directory);
+
+        try {
+            return ['mimetype' => $this->client->file()->setMountPoint($mountPoint)->get($path)->getMime()];
+        } catch (JottaException $e) {} catch (Exception $e) {}
+
+        return false;
     }
 
     /**
@@ -241,7 +316,14 @@ class JottaAdapter extends AbstractAdapter
      */
     public function getTimestamp($path)
     {
-        // TODO: Implement getTimestamp() method.
+        $mountPoint = $this->getMountPointFromPath($directory);
+        $path = $this->stripMountPointFromPath($directory);
+
+        try {
+            return ['timestamp' => $this->client->file()->setMountPoint($mountPoint)->get($path)->getModified()->toTimestamp()];
+        } catch (JottaException $e) {} catch (Exception $e) {}
+
+        return false;
     }
 
     /**

@@ -10,12 +10,12 @@ use Vegfund\Jotta\Jotta;
  *
  * @mixin Scope
  */
-trait ScopeConfig
+trait ScopeConfigTrait
 {
     /**
      * @param string $username
      *
-     * @return Scope
+     * @return $this
      */
     final public function setUsername($username)
     {
@@ -35,7 +35,7 @@ trait ScopeConfig
     /**
      * @param string $apiUrl
      *
-     * @return Scope
+     * @return $this
      */
     public function setApiUrl($apiUrl = Jotta::API_BASE_URL)
     {
@@ -47,7 +47,7 @@ trait ScopeConfig
     /**
      * @param string $device
      *
-     * @return Scope
+     * @return $this
      */
     final public function setDevice($device = Jotta::DEVICE_JOTTA)
     {
@@ -67,7 +67,7 @@ trait ScopeConfig
     /**
      * @param string $mountPoint
      *
-     * @return static
+     * @return $this
      */
     final public function setMountPoint($mountPoint = Jotta::MOUNT_POINT_ARCHIVE)
     {

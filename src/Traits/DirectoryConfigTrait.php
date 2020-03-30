@@ -18,7 +18,7 @@ use Vegfund\Jotta\Client\Scopes\DirectoryScope;
  *
  * @mixin DirectoryScope
  */
-trait DirectoryScopeConfig
+trait DirectoryConfigTrait
 {
     /**
      * @var bool

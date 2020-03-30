@@ -291,13 +291,13 @@ class FileScope extends Scope
      * @param $nameFrom
      * @param $nameTo
      *
-     * @throws JottaException
-     *
+     * @param null $mountPointTo
      * @return array|object|ResponseInterface|string|NamespaceContract
+     * @throws JottaException
      */
-    public function rename($nameFrom, $nameTo)
+    public function rename($nameFrom, $nameTo, $mountPointTo = null)
     {
-        return $this->move($nameFrom, $nameTo);
+        return $this->move($nameFrom, $nameTo, $mountPointTo);
     }
 
     /**

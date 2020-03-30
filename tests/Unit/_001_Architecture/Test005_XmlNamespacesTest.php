@@ -367,6 +367,37 @@ class Test005_XmlNamespacesTest extends JottaTestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isIncomplete
+     * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isCompleted
+     *
+     * @throws JottaException
+     */
+    public function test024_file_is_incomplete()
+    {
+        $responseBodyMock = new ResponseBodyMock();
+
+        // NOT CORRUPT
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'state' => File::STATE_COMPLETED]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertFalse($serialized->isIncomplete());
+        $this->assertTrue($serialized->isCompleted());
+
+        // CORRUPT
+
+        $body = $responseBodyMock->file(['name' => Str::random(12).'.txt', 'state' => File::STATE_INCOMPLETE]);
+        $mock = $this->jottaMock($body);
+        $serialized = $mock->file()->get('somepath');
+
+        $this->assertInstanceOf(File::class, $serialized);
+        $this->assertTrue($serialized->isIncomplete());
+        $this->assertFalse($serialized->isCompleted());
+    }
+
+    /**
      * @covers \Vegfund\Jotta\Client\Responses\Namespaces\File::isValid
      *
      * @throws JottaException

@@ -16,14 +16,15 @@ use Vegfund\Jotta\Client\Contracts\ScopeContract;
 use Vegfund\Jotta\Client\Responses\XmlResponseSerializer;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\JottaClient;
-use Vegfund\Jotta\Traits\ScopeConfig;
+use Vegfund\Jotta\Traits\PathTrait;
+use Vegfund\Jotta\Traits\ScopeConfigTrait;
 
 /**
  * Class Scope.
  */
 abstract class Scope implements ScopeContract
 {
-    use ScopeConfig;
+    use PathTrait, ScopeConfigTrait;
 
     /**
      * @var JottaClient
@@ -183,40 +184,5 @@ abstract class Scope implements ScopeContract
 
             return null;
         }, $segments))).(0 === \count($queryParams) ? '' : '?'.http_build_query($queryParams));
-    }
-
-    /**
-     * Normalize path segment for path generation.
-     *
-     * @param string $segment
-     *
-     * @return string
-     */
-    protected function normalizePathSegment($segment)
-    {
-        return preg_replace([
-            '/^(\\/)*/',
-            '/(\\/)*$/',
-        ], '', $segment);
-    }
-
-    /**
-     * @param $path
-     *
-     * @return string
-     */
-    protected function getRootPath($path)
-    {
-        return $this->normalizePathSegment(str_replace(basename($path), '', $path));
-    }
-
-    /**
-     * @param $path
-     *
-     * @return string
-     */
-    protected function getRelativePath($path)
-    {
-        return $this->normalizePathSegment(str_replace(getcwd(), '', $path));
     }
 }

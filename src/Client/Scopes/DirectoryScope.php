@@ -19,14 +19,14 @@ use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Support\OperationReport;
-use Vegfund\Jotta\Traits\DirectoryScopeConfig;
+use Vegfund\Jotta\Traits\DirectoryConfigTrait;
 
 /**
  * Class DirectoryScope.
  */
 class DirectoryScope extends Scope
 {
-    use DirectoryScopeConfig;
+    use DirectoryConfigTrait;
 
     const MODE_MOUNT_POINT = 1;
 
