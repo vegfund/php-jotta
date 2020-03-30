@@ -129,12 +129,7 @@ class File extends ResponseNamespace
      */
     public function isCorrupt()
     {
-        try {
-            return self::STATE_CORRUPT === $this->getRevision()->state;
-        } catch (\Exception $e) {
-            var_dump($this);
-            die();
-        }
+        return self::STATE_CORRUPT === $this->getRevision()->state;
     }
 
     /**
