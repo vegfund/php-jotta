@@ -40,7 +40,11 @@ class FileScope extends Scope
         $result = $this->serialize($response);
 
         if (!($result instanceof File)) {
-            throw new JottaException('This is not a remote file.');
+            if(null !== $result) {
+                throw new JottaException('This is not a remote file.');
+            }
+
+            return null;
         }
 
         return $result;

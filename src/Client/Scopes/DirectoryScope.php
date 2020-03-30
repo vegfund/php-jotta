@@ -92,7 +92,13 @@ class DirectoryScope extends Scope
             $requestPath = $this->getPath(Jotta::API_BASE_URL, $this->device, $this->mountPoint, $normalizedPath)
         );
 
-        return $this->serialize($response)->except($except);
+        $serialized = $this->serialize($response);
+
+        if(null !== $serialized) {
+            return $serialized->except($except);
+        }
+
+        return null;
     }
 
     /**
@@ -191,7 +197,7 @@ class DirectoryScope extends Scope
      * @param string $remotePath
      * @param mixed  $overwriteMode
      *
-     *@throws Exception
+     * @throws Exception
      * @throws JottaException
      *
      * @return OperationReport
@@ -209,12 +215,18 @@ class DirectoryScope extends Scope
 
         foreach ($contents as $path => $files) {
             // Get path relative to script
-            $relativePath = $this->getRelativePath($path);
+            $relativePath = $this->normalizePathSegment($remotePath . '/' . $this->getRelativePath($path));
 
             $threwExceptions = $this->shouldThrowExceptions;
             $this->withoutExceptions();
 
-            if (null !== ($folder = $this->get($relativePath))) {
+            try {
+                $folder = $this->get($relativePath);
+            } catch (Exception $e) {
+                $folder = null;
+            }
+
+            if (null !== $folder) {
                 $report->folderExisting($relativePath);
             } else {
                 $this->create($relativePath);
@@ -242,14 +254,12 @@ class DirectoryScope extends Scope
              * @var \SplFileInfo
              */
             foreach ($files as $file) {
-                $fileRelativePath = $this->getRelativePath($file->getRealPath());
-                $existed = null !== $fileScope->get($fileRelativePath);
+                $fileRelativePath = $this->normalizePathSegment($remotePath . '/' . $this->getRelativePath($path));
 
-                $remoteFile = $fileScope->upload($file->getRealPath(), $fileRelativePath, $overwriteMode);
-
-                if (null !== $remoteFile && $remoteFile->isSameAs($file->getRealPath())) {
+                try {
+                    $fileScope->upload($file->getRealPath(), $fileRelativePath, $overwriteMode);
                     $report->file($existed, $fileRelativePath, $overwriteMode);
-                } else {
+                } catch (Exception $e) {
                     $report->fileTroublesome($fileRelativePath);
                 }
             }

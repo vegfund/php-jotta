@@ -4,10 +4,11 @@ namespace Vegfund\Jotta\Tests;
 
 use Illuminate\Support\Str;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
+use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Tests\Support\DirectoryScopeExtended;
 
-class Test015_DirectoryRecursiveTests extends JottaTestCase
+class Test015b_FolderRecursiveUploadTest extends JottaTestCase
 {
     /**
      * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::getDirContents
@@ -47,6 +48,50 @@ class Test015_DirectoryRecursiveTests extends JottaTestCase
         $this->shouldThrowException(JottaException::class, function () use ($path) {
             $this->jotta()->folder()->upload($path);
         });
+    }
+
+    /**
+     * @throws JottaException
+     */
+    public function test007_upload_folder_recursive_src()
+    {
+        // 1. Create remote folder for storing data
+        $localPath = realpath(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src');
+        $folderName = Str::random(12).'_test007';
+
+        $remoteFolder = $this->jotta()->folder()->create($folderName);
+        $this->assertInstanceOf(Folder::class, $remoteFolder);
+
+        // 2. Try uploading the src folder contents
+        $result = $this->jotta()->folder()->upload($localPath, $folderName);
+
+        // 3. Start asserting
+        $expected = [];
+        $this->getExpectedDirContents($localPath, $expected);
+        foreach($expected as $expectedPath => $expectedFolder) {
+            $expectedPath = $folderName . '/' . basename($localPath) . str_replace($localPath, '', $expectedPath);
+
+            // 1. Assert folder exists
+            $folder = $this->jotta()->folder()->get($expectedPath);
+            $this->assertInstanceOf(Folder::class, $folder);
+
+            $filesCount = 0;
+
+            // 2. Assert folder has all files
+            foreach($expectedFolder as $item) {
+                if($item instanceof JFileInfo || $item instanceof \SplFileInfo) {
+                    $expectedFilePath = $expectedPath . '/' . $item->getFilename();
+                    $this->assertTrue($this->jotta()->file()->verify($expectedFilePath, $item->getRealPath()));
+
+                    $filesCount++;
+                }
+            }
+
+            $files = $this->jotta()->folder()->getWithContents($expectedPath)->getFiles();
+            $this->assertSame($filesCount, count($files));
+        }
+
+        $this->addToTempList($remoteFolder, 'folder');
     }
 
     /**

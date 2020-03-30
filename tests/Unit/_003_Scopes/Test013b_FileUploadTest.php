@@ -3,11 +3,13 @@
 namespace Vegfund\Jotta\Tests\Unit\_003_Scopes;
 
 use Illuminate\Support\Str;
+use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Jotta;
 use Vegfund\Jotta\Support\JFileInfo;
 use Vegfund\Jotta\Tests\JottaTestCase;
+use Vegfund\Jotta\Tests\Mock\ResponseBodyMock;
 
 class Test013b_FileUploadTest extends JottaTestCase
 {
@@ -354,5 +356,18 @@ class Test013b_FileUploadTest extends JottaTestCase
         $this->addToTempList($localNewerFile, 'file');
         @unlink($localNewerPath);
         @unlink($localOlderPath);
+    }
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\FileScope::upload
+     */
+    public function test017_file_cannot_be_uploaded()
+    {
+        $body = (new ResponseBodyMock())->error();
+        $mock = $this->jottaMock($body);
+
+        $this->shouldThrowException(JottaException::class, function () use ($mock) {
+            $mock->file()->upload('local', 'remote');
+        });
     }
 }

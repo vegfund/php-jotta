@@ -288,7 +288,7 @@ class Test013_FileTest extends JottaTestCase
         $response = $this->jotta()->folder()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->create($folderName);
         $this->assertInstanceOf(Folder::class, $response);
 
-        $this->shouldThrowException(Exception::class, function () use ($folderName) {
+        $this->shouldThrowException(JottaException::class, function () use ($folderName) {
             $this->jotta()->directory()->setMountPoint(Jotta::MOUNT_POINT_ARCHIVE)->move($folderName, 'other/path');
         });
 
