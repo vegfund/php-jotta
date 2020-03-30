@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 use Vegfund\Jotta\Client\Exceptions\JottaException;
 use Vegfund\Jotta\Client\Responses\Namespaces\Device;
+use Vegfund\Jotta\Client\Responses\Namespaces\File;
 use Vegfund\Jotta\Client\Responses\Namespaces\Folder;
 use Vegfund\Jotta\Client\Responses\Namespaces\Metadata;
 use Vegfund\Jotta\Client\Responses\Namespaces\MountPoint;
@@ -137,9 +138,11 @@ class Test011_DirectoryTest extends JottaTestCase
         $this->assertFalse($directory->withDeleted());
         $this->assertFalse($directory->withCorrupt());
         $this->assertTrue($directory->withCompleted());
+        $this->assertFalse($directory->withIncomplete());
         $this->assertTrue($directory->deleted(true)->withDeleted());
         $this->assertTrue($directory->corrupt(true)->withCorrupt());
         $this->assertFalse($directory->completed(false)->withCompleted());
+        $this->assertTrue($directory->incomplete(true)->withIncomplete());
 
         $regex = Str::random(32);
         $this->assertSame($regex, $directory->regex($regex)->getRegex());
@@ -259,6 +262,56 @@ class Test011_DirectoryTest extends JottaTestCase
         $mock = new JottaApiV1Mock($body);
         $jotta = new JottaClient('a', 'b', $mock->getMock());
         $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->deleted(true)->list();
+
+        $this->assertSame(['one.txt', 'two.txt'], $result);
+    }
+
+
+    /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::list
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::incomplete
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::withIncomplete
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::applyFilters
+     *
+     * @throws JottaException
+     */
+    public function test016_list_with_incomplete()
+    {
+        $body = (new ResponseBodyMock())->mountPoint([
+            'name'    => Jotta::MOUNT_POINT_SHARED,
+            'files'   => [
+                [
+                    'name'    => 'one.txt',
+                ],
+                [
+                    'name'    => 'two.txt',
+                    'state' => File::STATE_INCOMPLETE,
+                ],
+            ],
+        ]);
+
+        $mock = new JottaApiV1Mock($body);
+        $jotta = new JottaClient('a', 'b', $mock->getMock());
+        $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->list();
+
+        $this->assertSame(['one.txt'], $result);
+
+        $body = (new ResponseBodyMock())->mountPoint([
+            'name'    => Jotta::MOUNT_POINT_SHARED,
+            'files'   => [
+                [
+                    'name'    => 'one.txt',
+                ],
+                [
+                    'name'    => 'two.txt',
+                    'state' => File::STATE_INCOMPLETE,
+                ],
+            ],
+        ]);
+
+        $mock = new JottaApiV1Mock($body);
+        $jotta = new JottaClient('a', 'b', $mock->getMock());
+        $result = $jotta->mountPoint()->setMountPoint(Jotta::MOUNT_POINT_SHARED)->incomplete(true)->list();
 
         $this->assertSame(['one.txt', 'two.txt'], $result);
     }
