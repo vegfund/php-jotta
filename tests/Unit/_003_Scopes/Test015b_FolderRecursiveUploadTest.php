@@ -51,6 +51,7 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
     }
 
     /**
+     * @covers \Vegfund\Jotta\Client\Scopes\DirectoryScope::upload
      * @throws JottaException
      */
     public function test007_upload_folder_recursive_src()
@@ -90,8 +91,13 @@ class Test015b_FolderRecursiveUploadTest extends JottaTestCase
             $files = $this->jotta()->folder()->getWithContents($expectedPath)->getFiles();
             $this->assertSame($filesCount, count($files));
         }
+    }
 
-        $this->addToTempList($remoteFolder, 'folder');
+    public function test009_list_recursive()
+    {
+        // 1. First, find folder from the previous test
+        $folders = $this->jotta()->mountPoint()->list();
+        var_dump($folders); die();
     }
 
     /**

@@ -169,15 +169,14 @@ class DirectoryScope extends Scope
 
     /**
      * @param string $remotePath
-     * @param array  $options
      *
      * @throws Exception
      *
      * @return array
      */
-    public function list($remotePath = '', $options = [])
+    public function list($remotePath = '')
     {
-        $directory = $this->get($remotePath, []);
+        $directory = $this->getWithContents($remotePath);
 
         $listing = [];
 

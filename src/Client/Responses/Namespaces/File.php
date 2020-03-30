@@ -24,6 +24,8 @@ class File extends ResponseNamespace
 
     const STATE_CORRUPT = 'CORRUPT';
 
+    const STATE_INCOMPLETE = 'INCOMPLETE';
+
     /**
      * @var string
      */
@@ -43,11 +45,15 @@ class File extends ResponseNamespace
      * @var string
      */
     public $host;
+
     /**
      * @var CurrentRevision
      */
     public $currentRevision;
 
+    /**
+     * @var CurrentRevision
+     */
     public $latestRevision;
 
     /**
@@ -111,7 +117,11 @@ class File extends ResponseNamespace
      */
     public function isCorrupt()
     {
-        return self::STATE_CORRUPT === $this->getRevision()->state;
+        try {
+            return self::STATE_CORRUPT === $this->getRevision()->state;
+        } catch (\Exception $e) {
+            var_dump($this); die();
+        }
     }
 
     /**
@@ -120,6 +130,14 @@ class File extends ResponseNamespace
     public function isCompleted()
     {
         return self::STATE_COMPLETED === $this->getRevision()->state;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIncomplete()
+    {
+        return self::STATE_INCOMPLETE === $this->getRevision()->state;
     }
 
     /**

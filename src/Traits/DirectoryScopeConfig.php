@@ -36,6 +36,11 @@ trait DirectoryScopeConfig
     protected $completed = true;
 
     /**
+     * @var bool
+     */
+    protected $incomplete = false;
+
+    /**
      * @var string
      */
     protected $regex = null;
@@ -103,6 +108,25 @@ trait DirectoryScopeConfig
     public function withCompleted()
     {
         return $this->completed;
+    }
+
+    /**
+     * @param bool $incomplete
+     * @return $this
+     */
+    public function incomplete($incomplete = false)
+    {
+        $this->incomplete = $incomplete;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function withIncomplete()
+    {
+        return $this->incomplete;
     }
 
     /**
@@ -175,6 +199,10 @@ trait DirectoryScopeConfig
             }
 
             if ($item instanceof File && !$this->withCompleted() && !$item->isCompleted()) {
+                return false;
+            }
+
+            if ($item instanceof File && !$this->withIncomplete() && $item->isIncomplete()) {
                 return false;
             }
 
